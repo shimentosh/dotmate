@@ -1,6 +1,6 @@
 {
   "name": "dotmate",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "DotMate — free, open-source, offline desktop toolbox for creators: video trimmer & merger, image/carousel to video, YouTube & TikTok downloader, on-device Whisper speech-to-text, Kokoro text-to-speech and local-LLM script writer. No account, no cloud.",
   "license": "MIT",
