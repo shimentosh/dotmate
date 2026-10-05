@@ -1,0 +1,517 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ── Frameless title-bar safe area ──────────────────────────────────────────
+   The Tauri desktop window is frameless (decorations:false); a slim strip at the
+   top of every screen doubles as the draggable title bar + window controls
+   (TopBar / WindowChrome). Modal overlays must NOT
+   cover that strip, or the window can't be dragged or closed while a modal is
+   open — which is what the native window manager would normally guarantee.
+   `--titlebar-h` is 0 on the web build (the browser owns the chrome) and the
+   strip height inside Tauri. Modal overlays use the `inset-below-titlebar`
+   utility (instead of `inset-0`) so they begin just under the title bar. */
+:root { --titlebar-h: 0px; }
+html[data-tauri="true"] { --titlebar-h: 36px; }
+
+@utility inset-below-titlebar {
+  inset: var(--titlebar-h) 0 0 0;
+}
+
+/* ── Brand palette (DotMirror blue) ───────────────────────────────────────────
+   The UI was written against Tailwind's violet/purple scales; remapping them here
+   recolours every `violet-*` / `purple-*` utility to the DotMirror brand in one
+   place (#0057FC = --brand on dotmirror.com, 600/700 = its hover/press). */
+@theme {
+  --color-violet-50:  #f0f5ff;
+  --color-violet-100: #dce7ff;
+  --color-violet-200: #b9d0ff;
+  --color-violet-300: #7fa5fe;
+  --color-violet-400: #3d7efd;
+  --color-violet-500: #0057fc;
+  --color-violet-600: #0047d1;
+  --color-violet-700: #003aac;
+  --color-violet-800: #0a2f7d;
+  --color-violet-900: #0c2659;
+  --color-violet-950: #08183a;
+  --color-purple-50:  #f0f5ff;
+  --color-purple-100: #dce7ff;
+  --color-purple-200: #b9d0ff;
+  --color-purple-300: #7fa5fe;
+  --color-purple-400: #3d7efd;
+  --color-purple-500: #0057fc;
+  --color-purple-600: #0047d1;
+  --color-purple-700: #003aac;
+  --color-purple-800: #0a2f7d;
+  --color-purple-900: #0c2659;
+  --color-purple-950: #08183a;
+}
+
+@theme inline {
+  --color-background:                  var(--background);
+  --color-foreground:                  var(--foreground);
+  --color-card:                        var(--card);
+  --color-card-foreground:             var(--card-foreground);
+  --color-popover:                     var(--popover);
+  --color-popover-foreground:          var(--popover-foreground);
+  --color-primary:                     var(--primary);
+  --color-primary-foreground:          var(--primary-foreground);
+  --color-secondary:                   var(--secondary);
+  --color-secondary-foreground:        var(--secondary-foreground);
+  --color-muted:                       var(--muted);
+  --color-muted-foreground:            var(--muted-foreground);
+  --color-accent:                      var(--accent);
+  --color-accent-foreground:           var(--accent-foreground);
+  --color-destructive:                 var(--destructive);
+  --color-border:                      var(--border);
+  --color-input:                       var(--input);
+  --color-ring:                        var(--ring);
+  --color-sidebar:                     var(--sidebar);
+  --color-sidebar-foreground:          var(--sidebar-foreground);
+  --color-sidebar-primary:             var(--sidebar-primary);
+  --color-sidebar-primary-foreground:  var(--sidebar-primary-foreground);
+  --color-sidebar-accent:              var(--sidebar-accent);
+  --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
+  --color-sidebar-border:              var(--sidebar-border);
+  --color-sidebar-ring:                var(--sidebar-ring);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+/* ── Light theme tokens ── */
+:root {
+  --background:           #fafafa;
+  --foreground:           #18181b;
+  --card:                 #ffffff;
+  --card-foreground:      #18181b;
+  --popover:              #ffffff;
+  --popover-foreground:   #18181b;
+  --primary:              #0057FC;
+  --primary-foreground:   #ffffff;
+  --secondary:            #f4f4f5;
+  --secondary-foreground: #18181b;
+  --muted:                #f4f4f5;
+  --muted-foreground:     #71717a;
+  --accent:               #f4f4f5;
+  --accent-foreground:    #18181b;
+  --destructive:          #dc2626;
+  --border:               #e4e4e7;
+  --input:                #d4d4d8;
+  --ring:                 #0057FC;
+  --radius:               0.5rem;
+
+  /* Surface layers (light) */
+  --c-surface-1: rgba(0,0,0,0.03);
+  --c-surface-2: rgba(0,0,0,0.04);
+  --c-surface-3: rgba(0,0,0,0.05);
+  --c-surface-4: rgba(0,0,0,0.06);
+  --c-surface-5: rgba(0,0,0,0.09);
+
+  /* Borders (light) */
+  --c-border-1: rgba(0,0,0,0.06);
+  --c-border-2: rgba(0,0,0,0.09);
+  --c-border-3: rgba(0,0,0,0.12);
+  --c-border-4: rgba(0,0,0,0.16);
+
+  /* Text (light) */
+  --c-text-primary:   #18181b;
+  --c-text-secondary: #3f3f46;
+  --c-text-muted:     #52525b;
+  --c-text-dim:       #71717a;
+
+  /* Shadows (light) */
+  --c-shadow-sm: rgba(0,0,0,0.06);
+  --c-shadow-md: rgba(0,0,0,0.10);
+  --c-shadow-lg: rgba(0,0,0,0.14);
+
+  /* Backdrop (light - solid cards, no blur needed) */
+  --c-backdrop: none;
+  --c-backdrop-heavy: blur(8px);
+
+  /* Sidebar (light) */
+  --sidebar:                    #ffffff;
+  --sidebar-foreground:         #18181b;
+  --sidebar-primary:            #0057FC;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:             #f4f4f5;
+  --sidebar-accent-foreground:  #3f3f46;
+  --sidebar-border:             #e4e4e7;
+  --sidebar-ring:               #0057FC;
+}
+
+/* ── Dark theme tokens ── */
+.dark {
+  --background:           #09090b;
+  --foreground:           #f4f4f5;
+  --card:                 #18181b;
+  --card-foreground:      #f4f4f5;
+  --popover:              #18181b;
+  --popover-foreground:   #f4f4f5;
+  --primary:              #0057FC;
+  --primary-foreground:   #ffffff;
+  --secondary:            #27272a;
+  --secondary-foreground: #f4f4f5;
+  --muted:                #27272a;
+  --muted-foreground:     #a1a1aa;
+  --accent:               #27272a;
+  --accent-foreground:    #f4f4f5;
+  --destructive:          #dc2626;
+  --border:               rgba(255,255,255,0.05);
+  --input:                rgba(255,255,255,0.10);
+  --ring:                 #0057FC;
+
+  /* Surface layers (dark) */
+  --c-surface-1: rgba(255,255,255,0.03);
+  --c-surface-2: rgba(255,255,255,0.05);
+  --c-surface-3: rgba(255,255,255,0.07);
+  --c-surface-4: rgba(255,255,255,0.09);
+  --c-surface-5: rgba(255,255,255,0.13);
+
+  /* Borders (dark) */
+  --c-border-1: rgba(255,255,255,0.05);
+  --c-border-2: rgba(255,255,255,0.08);
+  --c-border-3: rgba(255,255,255,0.11);
+  --c-border-4: rgba(255,255,255,0.15);
+
+  /* Text (dark) */
+  --c-text-primary:   #f4f4f5;
+  --c-text-secondary: #d4d4d8;
+  --c-text-muted:     #a1a1aa;
+  --c-text-dim:       #71717a;
+
+  /* Shadows (dark) */
+  --c-shadow-sm: rgba(0,0,0,0.25);
+  --c-shadow-md: rgba(0,0,0,0.35);
+  --c-shadow-lg: rgba(0,0,0,0.45);
+
+  /* Backdrop (dark) */
+  --c-backdrop: blur(16px) saturate(180%);
+  --c-backdrop-heavy: blur(32px) saturate(180%);
+
+  /* Sidebar (dark) */
+  --sidebar:                    #0c0c0e;
+  --sidebar-foreground:         #f4f4f5;
+  --sidebar-primary:            #0057FC;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent:             rgba(255,255,255,0.06);
+  --sidebar-accent-foreground:  #d4d4d8;
+  --sidebar-border:             rgba(255,255,255,0.05);
+  --sidebar-ring:               #0057FC;
+}
+
+html {
+  height: 100%;
+}
+
+@layer base {
+  * { @apply border-border; }
+  body {
+    @apply bg-background text-foreground;
+    /* Native OS UI font — Segoe UI Variable on Windows, SF on macOS — so the
+       desktop app reads like a native app rather than a web page. */
+    font-family: "Segoe UI Variable Text", "Segoe UI Variable", "Segoe UI",
+      system-ui, -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    height: 100%;
+  }
+}
+
+/* ── Scrollbars ──
+   NOTE: this is a Chromium webview (Tauri WebView2). Setting the *standard*
+   `scrollbar-width`/`scrollbar-color` makes Chromium IGNORE the ::-webkit-*
+   pseudo-elements and render its own scrollbar (wider, with an un-overridable
+   bright hover). So we DON'T set those here — we drive everything through the
+   ::-webkit-* rules instead, which gives full control over width AND hover. */
+::-webkit-scrollbar       { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.18);
+  border: 2px solid transparent;     /* inset the pill so it reads as a thin bar */
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+::-webkit-scrollbar-thumb:hover      { background: rgba(0,0,0,0.28); background-clip: padding-box; }
+.dark ::-webkit-scrollbar-thumb      { background: rgba(255,255,255,0.08); background-clip: padding-box; }
+.dark ::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.13); background-clip: padding-box; }
+
+/* ── Utilities ── */
+.no-scrollbar { scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
+
+/* Save-button "Saved ✓" pop */
+@keyframes savedPop {
+  0%   { transform: scale(0.4); opacity: 0; }
+  60%  { transform: scale(1.25); opacity: 1; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+/* WYSIWYG script editor — Tailwind preflight strips heading/list visuals, so the
+   contenteditable surface re-declares them to render formatting in place. */
+.rich-editor:focus { outline: none; }
+.rich-editor h1 { font-size: 1.45rem; font-weight: 700; line-height: 1.25; margin: 0.8em 0 0.3em; color: #18181b; }
+.rich-editor h2 { font-size: 1.18rem; font-weight: 700; line-height: 1.3; margin: 0.7em 0 0.3em; color: #18181b; }
+.rich-editor h3 { font-size: 1.02rem; font-weight: 600; margin: 0.6em 0 0.25em; color: #18181b; }
+.dark .rich-editor h1, .dark .rich-editor h2, .dark .rich-editor h3 { color: #fafafa; }
+.rich-editor p { margin: 0 0 0.85em; }
+.rich-editor strong, .rich-editor b { font-weight: 600; color: #18181b; }
+.dark .rich-editor strong, .dark .rich-editor b { color: #fafafa; }
+.rich-editor em, .rich-editor i { font-style: italic; }
+.rich-editor code { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 0.86em; background: rgba(0,0,0,0.06); padding: 0.1em 0.4em; border-radius: 6px; color: #003AAC; }
+.dark .rich-editor code { background: rgba(255,255,255,0.1); color: #B9D0FF; }
+.rich-editor ul { list-style: disc; padding-left: 1.4em; margin: 0.5em 0; }
+.rich-editor ol { list-style: decimal; padding-left: 1.55em; margin: 0.5em 0; }
+.rich-editor li { margin: 0.2em 0; }
+.rich-editor:empty::before { content: attr(data-placeholder); color: #a1a1aa; pointer-events: none; }
+
+/* ── Primary gradient button ── */
+.btn-primary {
+  background: linear-gradient(135deg, #3D7EFD 0%, #0047D1 100%);
+  color: #fff;
+  border: none;
+  border-radius: 0.7rem; /* rounded-xl — the app button radius, NOT a full pill */
+  font-weight: 600;
+  cursor: pointer;
+  transition: box-shadow 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
+  box-shadow: 0 2px 8px rgba(0, 87, 252, 0.25);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  text-decoration: none;
+  flex-shrink: 0;
+}
+.btn-primary:hover { box-shadow: 0 5px 16px rgba(0, 87, 252, 0.38); transform: translateY(-1px); }
+.btn-primary:active { transform: translateY(0) scale(0.985); opacity: 0.92; box-shadow: 0 2px 8px rgba(0, 87, 252, 0.30); }
+
+/* ── Native-app feel (desktop only) ─────────────────────────────────────────
+   The UI chrome shouldn't be drag-selectable like a web page. Disable text
+   selection app-wide (inherits), then re-enable it where it actually matters:
+   form fields, contenteditable, and anything tagged `.selectable` (e.g. script
+   output / transcripts the user may want to copy). Scoped to `.app-native`
+   (set on the desktop <body>) so the admin/portal web apps are unaffected. */
+.app-native { -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; }
+/* Native feel: no web-style drag ghost when dragging images / links. */
+.app-native img, .app-native a { -webkit-user-drag: none; }
+.app-native input,
+.app-native textarea,
+.app-native [contenteditable]:not([contenteditable="false"]),
+.app-native .selectable,
+.app-native .selectable * { -webkit-user-select: text; user-select: text; }
+
+/* ── Ambient app background ────────────────────────────────────────────────
+   Soft CapCut-style gradient glow behind the app content. The topbar, sidebar
+   and main area are transparent so this shows through as one seamless surface
+   (no grid, no edges). Theme-aware via the glow vars below. */
+.app-bg-gradient {
+  position: absolute;
+  inset: 0;
+  /* Larger radii that bleed well past the top/bottom edges into the body, so the
+     ambient glow reads across the WHOLE app (not just behind the title bar). */
+  background:
+    radial-gradient(100% 80% at 12% -12%, var(--app-bg-glow-1), transparent 78%),
+    radial-gradient(72% 66% at 106% -4%, var(--app-bg-glow-2), transparent 74%),
+    radial-gradient(130% 95% at 50% 114%, var(--app-bg-glow-3), transparent 78%);
+}
+:root {
+  --app-bg-glow-1: rgba(0, 87, 252, 0.09);
+  --app-bg-glow-2: rgba(0, 71, 209, 0.06);
+  --app-bg-glow-3: rgba(61, 126, 253, 0.06);
+}
+.dark {
+  --app-bg-glow-1: rgba(0, 87, 252, 0.18);
+  --app-bg-glow-2: rgba(0, 71, 209, 0.13);
+  --app-bg-glow-3: rgba(0, 87, 252, 0.12);
+}
+
+/* Glassy card — translucent surface + the same purple glow wash used app-wide,
+   so panels read as frosted glass over the ambient gradient instead of flat. */
+.glass-card {
+  background:
+    radial-gradient(130% 90% at 100% -10%, var(--app-bg-glow-1), transparent 58%),
+    radial-gradient(120% 95% at 0% 115%, var(--app-bg-glow-2), transparent 62%),
+    rgba(255, 255, 255, 0.70);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.dark .glass-card {
+  background:
+    radial-gradient(130% 90% at 100% -10%, var(--app-bg-glow-1), transparent 58%),
+    radial-gradient(120% 95% at 0% 115%, var(--app-bg-glow-2), transparent 62%),
+    rgba(255, 255, 255, 0.04);
+}
+
+/* Glass modal — a richer purple wash than the cards (more visible), on a
+   near-opaque base so a focused dialog stays readable over the page behind it. */
+.glass-modal {
+  background:
+    radial-gradient(115% 75% at 100% -6%, rgba(0, 87, 252, 0.16), transparent 56%),
+    radial-gradient(105% 80% at 0% 108%, rgba(0, 71, 209, 0.12), transparent 60%),
+    linear-gradient(135deg, rgba(0, 87, 252, 0.05), transparent 60%),
+    rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+.dark .glass-modal {
+  background:
+    radial-gradient(115% 75% at 100% -6%, rgba(140, 70, 250, 0.30), transparent 56%),
+    radial-gradient(105% 80% at 0% 108%, rgba(0, 71, 209, 0.24), transparent 60%),
+    linear-gradient(135deg, rgba(0, 87, 252, 0.12), transparent 58%),
+    rgba(20, 20, 24, 0.92);
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes lbFadeIn {
+  from { opacity: 0; transform: scale(0.96) translateY(6px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+.lb-card { animation: lbFadeIn 0.2s cubic-bezier(0.22, 1, 0.36, 1); }
+
+/* ── Launch splash (Discord-style loading screen) ─────────────────────────
+   Markup lives in app/layout.tsx (#app-splash) so it paints from the static
+   HTML before hydration. Animations are class-driven here. */
+
+/* Ambient violet halo behind the logo */
+.app-splash-glow {
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,87,252,0.30) 0%, rgba(0,87,252,0.11) 36%, transparent 68%);
+  filter: blur(8px);
+  z-index: 0;
+  pointer-events: none;
+  animation: appSplashGlow 3.8s ease-in-out infinite;
+}
+@keyframes appSplashGlow {
+  0%,100% { opacity: 0.55; transform: scale(0.94); }
+  50%     { opacity: 0.95; transform: scale(1.06); }
+}
+
+/* Gently breathing logo mark */
+.app-splash-logo {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 0 30px rgba(0,87,252,0.5));
+  animation: appSplashLogo 2.8s ease-in-out infinite;
+}
+@keyframes appSplashLogo {
+  0%,100% { transform: translateY(0) scale(1); }
+  50%     { transform: translateY(-3px) scale(1.045); }
+}
+
+/* Indeterminate progress bar */
+.app-splash-bar {
+  position: relative;
+  width: 208px; height: 3px;
+  margin-top: 2px;
+  border-radius: 999px;
+  background: rgba(255,255,255,0.08);
+  overflow: hidden;
+}
+.app-splash-bar-fill {
+  position: absolute;
+  top: 0; bottom: 0; left: 0;
+  width: 40%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, #3D7EFD, #0047D1, transparent);
+  transform: translateX(-120%);
+  animation: appSplashBar 1.35s cubic-bezier(0.45, 0, 0.35, 1) infinite;
+}
+@keyframes appSplashBar {
+  0%   { transform: translateX(-120%); }
+  100% { transform: translateX(360%); }
+}
+
+/* Rotating tip lines — each fades in, holds, fades out on a staggered loop */
+.app-splash-tips {
+  position: absolute;
+  left: 0; right: 0; bottom: 44px;
+  height: 16px;
+  text-align: center;
+  pointer-events: none;
+}
+.app-splash-tip {
+  position: absolute;
+  left: 0; right: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-size: 12.5px;
+  color: rgba(255,255,255,0.34);
+  opacity: 0;
+  animation: appSplashTip 12.8s ease-in-out infinite;
+}
+@keyframes appSplashTip {
+  0%   { opacity: 0; transform: translateY(6px); }
+  3%   { opacity: 1; transform: translateY(0); }
+  22%  { opacity: 1; transform: translateY(0); }
+  25%  { opacity: 0; transform: translateY(-6px); }
+  100% { opacity: 0; transform: translateY(-6px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-splash-glow, .app-splash-logo, .app-splash-bar-fill, .app-splash-tip {
+    animation: none;
+  }
+  .app-splash-tip:first-child { opacity: 1; }
+  .app-splash-bar-fill { transform: none; width: 100%; opacity: 0.5; }
+}
+
+@keyframes indeterminate {
+  0%   { transform: translateX(-100%) scaleX(0.4); }
+  50%  { transform: translateX(0%)    scaleX(0.6); }
+  100% { transform: translateX(100%)  scaleX(0.4); }
+}
+
+/* AI "writing" skeleton — a neutral bar with a violet highlight sweeping across
+   it, reads as the model drafting. Theme-aware via --foreground; per-bar
+   animation-delay staggers the sweep down the page. */
+@keyframes shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+.shimmer {
+  background-image: linear-gradient(
+    100deg,
+    color-mix(in oklab, var(--foreground) 7%, transparent) 20%,
+    color-mix(in oklab, var(--foreground) 13%, transparent) 40%,
+    rgba(61, 126, 253, 0.30) 50%,
+    color-mix(in oklab, var(--foreground) 13%, transparent) 60%,
+    color-mix(in oklab, var(--foreground) 7%, transparent) 80%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .shimmer {
+    animation: none;
+    background-image: none;
+    background-color: color-mix(in oklab, var(--foreground) 9%, transparent);
+  }
+}
+
+/* ── Colour-picker popover theme (components/editor/paint-picker.tsx) ── */
+.cap-panel-adaptive {
+  --cap-bg:         #ffffff;
+  --cap-bg-deep:    #f4f4f5;
+  --cap-bg-hover:   rgba(0, 0, 0, 0.05);
+  --cap-border:     rgba(0, 0, 0, 0.10);
+  --cap-text:       #18181b;
+  --cap-text-muted: #52525b;
+  --cap-text-dim:   #71717a;
+}
+.dark .cap-panel-adaptive {
+  --cap-bg:         #212126;
+  --cap-bg-deep:    #1c1c20;
+  --cap-bg-hover:   rgba(255, 255, 255, 0.07);
+  --cap-border:     rgba(255, 255, 255, 0.08);
+  --cap-text:       #e4e4ea;
+  --cap-text-muted: #8b8b9a;
+  --cap-text-dim:   #6e6e7a;
+}

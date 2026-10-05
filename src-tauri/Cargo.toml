@@ -1,0 +1,74 @@
+[package]
+name = "dotmate"
+version = "0.1.0"
+description = "DotMate — local-first desktop toolbox (Tauri shell)"
+authors = ["Shimanto <hello@shimantoneer.com>", "DotMirror <https://dotmirror.com>"]
+repository = "https://github.com/shimentosh/dotmate"
+homepage = "https://shimentosh.github.io/dotmate/"
+license = "MIT"
+publish = false
+edition = "2021"
+rust-version = "1.77.2"
+
+[lib]
+name = "dotmate_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6.1", features = [] }
+
+# WHY sherpa-onnx is ALSO a (Windows-only) build-dependency — build ORDERING.
+#
+# `tauri.windows.conf.json` bundles four DLLs (onnxruntime + sherpa-*) that are
+# produced by `sherpa-onnx-sys`'s OWN build script (it downloads the prebuilt
+# archive and copies the DLLs into the profile dir). build.rs mirrors them into
+# `bundle-dlls/` and tauri_build::build() then validates that every declared
+# resource exists. A crate's build script does NOT wait for its normal
+# dependencies, so without this edge a fresh build can run build.rs before the
+# DLLs exist. Declaring sherpa-onnx as a build-dependency forces Cargo to build it
+# (→ run sherpa-onnx-sys's build script) first. Feature set MUST match the normal
+# dep (via crates/tts) so Cargo reuses the same prebuilt archive. Keep the version
+# in lockstep with crates/tts/Cargo.toml.
+[target.'cfg(windows)'.build-dependencies]
+sherpa-onnx = { version = "1.13", default-features = false, features = ["shared"] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+# Decodes the base64 headers of raw-body IPC requests (staging.rs).
+base64 = "0.22"
+# On-device Whisper (whisper.cpp) — whisper_command.rs is the glue.
+local-whisper = { path = "../crates/whisper" }
+# On-device Kokoro TTS (sherpa-onnx) — tts_command.rs is the glue.
+local-tts = { path = "../crates/tts" }
+# Supertonic 3 TTS (ort/ONNX Runtime, load-dynamic) — only reachable when a
+# download source is configured at build time (see sources.rs).
+supertonic-tts = { path = "../crates/supertonic" }
+# HTTP client for the first-run downloads (ffmpeg, yt-dlp, models).
+ureq = "2"
+# Extract downloaded archives: sherpa TTS models = .tar.bz2; the Supertonic
+# bundle = .tar.gz; ffmpeg = .zip.
+tar = "0.4"
+bzip2 = "0.4"
+flate2 = "1"
+zip = "2"
+# "tray-icon": system tray for the "Minimize to system tray" close option.
+tauri = { version = "2.11.1", features = ["tray-icon"] }
+tauri-plugin-log = "2"
+# Native folder/file pickers + Save dialogs.
+tauri-plugin-dialog = "2"
+# Opens URLs in the system browser and files/folders with the OS default app.
+tauri-plugin-opener = "2"
+# A second launch focuses the running window instead of starting another copy.
+tauri-plugin-single-instance = "2"
+
+# Release-build hardening (lib.rs): turns off the WebView2 default context menu
+# and devtools. Versions MUST match wry/tauri's so the COM types unify with what
+# tauri's PlatformWebview::controller() returns.
+[target.'cfg(windows)'.dependencies]
+webview2-com = "0.38"
+windows = { version = "0.61", features = ["Win32_Foundation"] }
+
+[profile.release]
+lto = "thin"

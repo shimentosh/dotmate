@@ -1,0 +1,31 @@
+# dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+next-env.d.ts
+*.tsbuildinfo
+
+# Tauri / Rust
+src-tauri/target/
+src-tauri/gen/schemas/
+src-tauri/bundle-dlls/
+target/
+
+# logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# env files
+.env*
+!.env.example
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+src-tauri/supertonic-staging/
+src-tauri/dist-assets/

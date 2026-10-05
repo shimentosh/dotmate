@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+message: "If you use DotMate, please cite it as below."
+title: "DotMate: a free, open-source, offline video, voice and AI toolbox for creators"
+type: software
+authors:
+  - given-names: Shimanto
+    alias: shimentosh
+    website: "https://shimanto.xyz"
+  - name: DotMirror
+    website: "https://dotmirror.com"
+repository-code: "https://github.com/shimentosh/dotmate"
+url: "https://shimentosh.github.io/dotmate/"
+license: MIT
+version: 0.1.0
+date-released: "2026-10-05"
+keywords:
+  - video editor
+  - text-to-speech
+  - speech-to-text
+  - whisper
+  - kokoro
+  - ollama
+  - local-first
+  - tauri

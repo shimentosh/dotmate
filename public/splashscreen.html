@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>DotMate</title>
+    <!--
+      Startup splash — its OWN self-contained window (label "splashscreen" in
+      tauri.conf.json). It loads INSTANTLY (a static file, no Next.js compile /
+      React hydration / WebView-app boot), so it can appear the moment the app
+      launches and cover the whole heavy startup while the hidden "main" window
+      loads in the background. Rust (on_page_load + app_ready + a fallback timer)
+      shows the main window and closes this one once the app is ready.
+
+      Kept visually identical to the in-app loader (#app-splash in app/layout.tsx)
+      and both windows are screen-centered, so the logo/wordmark stay in the same
+      spot across the handoff — no jump. Fully inline (CSP-safe: no external CSS,
+      JS or fonts). The product name here is literal: update it together with
+      brand.config.ts when rebranding.
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body {
+        width: 100%; height: 100%;
+        background: radial-gradient(120% 100% at 50% 42%, #0e1426 0%, #0d0d0f 62%);
+        overflow: hidden;
+        -webkit-user-select: none; user-select: none;
+        cursor: default;
+      }
+      .wrap {
+        width: 100%; height: 100%;
+        display: flex; flex-direction: column;
+        align-items: center; justify-content: center;
+        gap: 24px;
+        font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      }
+
+      /* logo + violet halo */
+      .logo-box { position: relative; display: grid; place-items: center; }
+      .glow {
+        position: absolute; width: 300px; height: 300px; border-radius: 50%;
+        background: radial-gradient(circle, rgba(0,87,252,0.30) 0%, rgba(0,87,252,0.11) 36%, transparent 68%);
+        filter: blur(8px); z-index: 0; pointer-events: none;
+        animation: glow 3.8s ease-in-out infinite;
+      }
+      @keyframes glow {
+        0%,100% { opacity: .55; transform: scale(.94); }
+        50%     { opacity: .95; transform: scale(1.06); }
+      }
+      .logo {
+        position: relative; z-index: 1;
+        filter: drop-shadow(0 0 30px rgba(0,87,252,0.5));
+        animation: breathe 2.8s ease-in-out infinite;
+      }
+      @keyframes breathe {
+        0%,100% { transform: translateY(0) scale(1); }
+        50%     { transform: translateY(-3px) scale(1.045); }
+      }
+
+      /* wordmark */
+      .name { font-size: 27px; font-weight: 800; letter-spacing: -0.03em; color: #fff; line-height: 1; text-align: center; }
+      .sub  { margin-top: 9px; font-size: 11.5px; font-weight: 600; letter-spacing: 0.22em; text-transform: uppercase; color: rgba(255,255,255,0.42); text-align: center; }
+
+      /* indeterminate progress bar */
+      .bar { position: relative; width: 200px; height: 3px; margin-top: 2px; border-radius: 999px; background: rgba(255,255,255,0.08); overflow: hidden; }
+      .bar > span {
+        position: absolute; top: 0; bottom: 0; left: 0; width: 40%; border-radius: 999px;
+        background: linear-gradient(90deg, transparent, #3D7EFD, #0047D1, transparent);
+        transform: translateX(-120%);
+        animation: sweep 1.35s cubic-bezier(0.45, 0, 0.35, 1) infinite;
+      }
+      @keyframes sweep {
+        0%   { transform: translateX(-120%); }
+        100% { transform: translateX(360%); }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .glow, .logo, .bar > span { animation: none; }
+        .bar > span { transform: none; width: 100%; opacity: .5; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <div class="logo-box">
+        <div class="glow"></div>
+        <svg class="logo" width="78" height="78" viewBox="0 -1.5 38 38" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12.5789 15.9892H20.9785C21.103 15.9892 21.2178 15.9277 21.2857 15.8243L30.7347 1.52637H11.6218C7.99514 1.52637 4.90694 4.16832 4.34589 7.7529L0.661063 31.2717C0.486442 32.389 1.34985 33.3979 2.48003 33.3979H4.31032L9.439 18.2415C9.89495 16.8946 11.1561 15.9892 12.5789 15.9892Z" fill="#0057FC" />
+          <path d="M35.4865 1.52637H34.2673L23.7448 17.4492C23.1288 18.3805 22.0956 18.9367 20.98 18.9367H12.5804C12.4219 18.9367 12.2829 19.037 12.2311 19.1873L7.42261 33.3995H25.9922C29.5801 33.3995 32.6456 30.8158 33.2519 27.2797L37.3006 3.68002C37.493 2.55469 36.628 1.52637 35.4865 1.52637Z" fill="#FFFFFF" />
+        </svg>
+      </div>
+
+      <div>
+        <div class="name">DotMate</div>
+      </div>
+
+      <div class="bar"><span></span></div>
+    </div>
+    <div style="position:fixed;left:0;right:0;bottom:26px;display:flex;flex-direction:column;align-items:center;gap:7px;opacity:0.75">
+      <span style="font-size:9.5px;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:rgba(255,255,255,0.45)">Developed by</span>
+      <img src="/brand/dotmirror-logo-light-text.svg" alt="DotMirror" style="height:15px;width:auto" />
+    </div>
+  </body>
+</html>

@@ -1,0 +1,1 @@
+(function(){try{var t=localStorage.getItem('free-tools:theme')||'system';var d=window.matchMedia('(prefers-color-scheme: dark)').matches;var dark=t==='dark'||(t==='system'&&d);var r=document.documentElement;r.classList.toggle('dark',dark);if('__TAURI_INTERNALS__' in window)r.setAttribute('data-tauri','true');}catch(e){}})();

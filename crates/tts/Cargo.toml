@@ -1,0 +1,25 @@
+[package]
+name = "local-tts"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.77.2"
+publish = false
+license = "MIT"
+description = "On-device neural TTS (Kokoro via sherpa-onnx). Tauri-free and standalone-testable."
+
+[lib]
+name = "local_tts"
+
+[dependencies]
+# Offline neural TTS (Kokoro) over ONNX Runtime. `shared` (not the default
+# `static`) link mode ON PURPOSE: sherpa's Windows prebuilts are compiled `/MT`
+# (static CRT) while whisper-rs builds whisper.cpp `/MD` (dynamic CRT). Statically
+# linking both into one binary fails with MSVC LNK2038 ("RuntimeLibrary
+# mismatch"). `shared` links sherpa-onnx-c-api + onnxruntime as DLLs instead. The
+# crate's build script copies the DLLs next to the built exe (target/<profile>/);
+# the installer bundles them too (src-tauri/tauri.windows.conf.json). Needs no
+# CMake/libclang. Keep the version in lockstep with src-tauri/Cargo.toml.
+sherpa-onnx = { version = "1.13", default-features = false, features = ["shared"] }
+anyhow = "1.0"
+# Encode the f32 samples into a 16-bit PCM WAV the webview <audio> plays directly.
+hound = "3.5"

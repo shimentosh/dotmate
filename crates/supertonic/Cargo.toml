@@ -1,0 +1,27 @@
+[package]
+name = "supertonic-tts"
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.77.2"
+publish = false
+license = "MIT"
+description = "Supertonic 3 on-device neural TTS (ONNX Runtime via `ort`). Tauri-free and standalone-testable."
+
+[lib]
+name = "supertonic_tts"
+
+[dependencies]
+# ONNX Runtime via `ort`, built with `load-dynamic` so it loads `onnxruntime.dll`
+# at RUNTIME (from the downloaded Supertonic archive, via ORT_DYLIB_PATH) instead
+# of static-linking a second ONNX Runtime next to sherpa-onnx's. Pin a known-good
+# rc; bump deliberately (Cargo.lock pins the resolved version).
+ort = { version = "2.0.0-rc.7", features = ["load-dynamic", "ndarray"] }
+ndarray = "0.17"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+rand = "0.8"
+rand_distr = "0.4"
+unicode-normalization = "0.1"
+regex = "1.10"
+hound = "3.5"
+anyhow = "1.0"

@@ -1,0 +1,16 @@
+title: DotMate
+description: Free, open-source, offline video, voice and AI toolbox for creators.
+url: https://shimentosh.github.io
+baseurl: /dotmate
+lang: en
+author: Shimanto
+logo: /assets/icon-128.png
+image: /assets/social-preview.png
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-optional-front-matter
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false

@@ -1,0 +1,26 @@
+{
+  "supertonic": {
+    "M1": "supertonic/M1.mp3",
+    "M2": "supertonic/M2.mp3",
+    "M3": "supertonic/M3.mp3",
+    "M4": "supertonic/M4.mp3",
+    "M5": "supertonic/M5.mp3",
+    "F1": "supertonic/F1.mp3",
+    "F2": "supertonic/F2.mp3",
+    "F3": "supertonic/F3.mp3",
+    "F4": "supertonic/F4.mp3",
+    "F5": "supertonic/F5.mp3"
+  },
+  "kokoro": {
+    "2": "kokoro/2.mp3",
+    "3": "kokoro/3.mp3",
+    "6": "kokoro/6.mp3",
+    "9": "kokoro/9.mp3",
+    "10": "kokoro/10.mp3",
+    "11": "kokoro/11.mp3",
+    "12": "kokoro/12.mp3",
+    "13": "kokoro/13.mp3",
+    "16": "kokoro/16.mp3",
+    "18": "kokoro/18.mp3"
+  }
+}

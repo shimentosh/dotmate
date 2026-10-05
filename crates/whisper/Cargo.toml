@@ -1,0 +1,16 @@
+[package]
+name = "local-whisper"
+version = "0.1.0"
+edition = "2021"
+publish = false
+license = "MIT"
+description = "On-device Whisper transcription (whisper.cpp via whisper-rs). Tauri-free and standalone-testable."
+
+[lib]
+name = "local_whisper"
+
+[dependencies]
+# Compiles whisper.cpp from source: needs cmake + LLVM/libclang on the build machine.
+whisper-rs = "0.16"
+anyhow = "1.0"
+serde = { version = "1.0", features = ["derive"] }
