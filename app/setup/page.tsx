@@ -14,6 +14,11 @@
  *
  * Gated by FirstRunGate via the `setup-done` flag. Everything here is also
  * reachable later from Settings → Local AI, so nothing is ever installed by hand.
+ *
+ * Repair mode (`/setup?repair=1`): FirstRunGate sends a set-up install here when
+ * FFmpeg or yt-dlp has gone missing. It skips the component picker, re-downloads
+ * just the essentials and returns home; if that fails (e.g. offline) the user can
+ * retry or skip, so the tools that don't need them stay usable.
  */
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -25,6 +30,7 @@ import { ensureTtsModel, ttsModelStatus } from "@/lib/tts/local-tts";
 import { WindowChrome } from "@/components/layout/window-chrome";
 import { BrandMark } from "@/components/brand-mark";
 import { humanizeError } from "@/lib/error/app-error";
+import { useClientValue } from "@/lib/use-client-value";
 import { logDebug } from "@/lib/log";
 import { Check, Bot, Mic, Ear } from "lucide-react";
 import { brand } from "@/brand.config";
@@ -106,8 +112,16 @@ export default function SetupPage() {
   const [overall, setOverall] = useState(0);
   const [log, setLog] = useState("");
   const [err, setErr] = useState("");
+  const repair = useClientValue(() => new URLSearchParams(window.location.search).get("repair") === "1", false);
 
   useEffect(() => { if (!isDesktop()) router.replace("/"); }, [router]);
+  useEffect(() => {
+    if (!isDesktop() || !repair) return;
+    // Deferred so the install's state updates don't run synchronously in the effect.
+    const t = setTimeout(() => void runInstall({ essentialsOnly: true }), 0);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- runs once, when repair mode is known
+  }, [repair]);
   useEffect(() => {
     if (!isDesktop()) return;
     ttsModelStatus("supertonic")
@@ -124,7 +138,7 @@ export default function SetupPage() {
     setItems((arr) => arr.map((it) => (it.id === id ? { ...it, ...patch } : it)));
   }
 
-  async function runInstall() {
+  async function runInstall({ essentialsOnly = false }: { essentialsOnly?: boolean } = {}) {
     setErr("");
     const plan: (Item & { essential?: boolean; run: (onPct: (pct: number) => void) => Promise<void> })[] = [
       {
@@ -133,22 +147,22 @@ export default function SetupPage() {
         run: async (p) => { await ensureFfmpeg((x) => p(Math.max(0, x.pct))); await ensureYtdlp((x) => p(Math.max(0, x.pct))); },
       },
     ];
-    if (wantWhisper) plan.push({
+    if (!essentialsOnly && wantWhisper) plan.push({
       id: "stt", label: "Transcription · Whisper (base)", sub: "On-device speech-to-text",
       status: "queued", pct: 0,
       run: (p) => ensureWhisperModel("base", (x) => p(Math.max(0, x.pct))),
     });
-    if (wantKokoro) plan.push({
+    if (!essentialsOnly && wantKokoro) plan.push({
       id: "voice", label: "On-device voice · Kokoro", sub: "Offline text-to-speech (multi-voice)",
       status: "queued", pct: 0,
       run: (p) => ensureTtsModel("kokoro", (x) => p(Math.max(0, x.pct))),
     });
-    if (supertonicAvailable && wantSupertonic) plan.push({
+    if (!essentialsOnly && supertonicAvailable && wantSupertonic) plan.push({
       id: "supertonic", label: "On-device voice · Supertonic", sub: "Offline 44.1 kHz voices",
       status: "queued", pct: 0,
       run: (p) => ensureTtsModel("supertonic", (x) => p(Math.max(0, x.pct))),
     });
-    if (wantOllama) plan.push({
+    if (!essentialsOnly && wantOllama) plan.push({
       id: "llm", label: "Local LLM · Ollama + Llama 3.2", sub: "Write scripts offline",
       status: "queued", pct: 0,
       run: async (p) => {
@@ -182,6 +196,7 @@ export default function SetupPage() {
       setOverall(Math.round(((i + 1) / n) * 100));
     }
     setLog("");
+    if (essentialsOnly) { finish(); return; }
     setStep("done");
   }
 
@@ -221,13 +236,32 @@ export default function SetupPage() {
               ))}
             </div>
           </div>
-          <div className="absolute bottom-[18px] left-[30px] z-[1] text-[11px] tracking-[.3px] text-white/55">First-run setup</div>
+          <div className="absolute bottom-[18px] left-[30px] z-[1] text-[11px] tracking-[.3px] text-white/55">{repair ? "Repair" : "First-run setup"}</div>
         </div>
 
         {/* ── RIGHT: content panel ── */}
         <div className="relative flex flex-1 flex-col" style={{ background: "linear-gradient(180deg,#12121b,#0e0e15)" }}>
+          {/* REPAIR: essentials missing and the re-download failed */}
+          {step === "addons" && repair && (
+            <>
+              <div className={`flex-1 overflow-y-auto px-11 pt-10 ${scrollCls}`}>
+                <div className="text-[11.5px] font-semibold uppercase tracking-[.6px]" style={{ color: BRAND2 }}>Repair</div>
+                <h2 className="mt-2.5 text-[25px] font-bold">Some required tools are missing</h2>
+                <p className="mt-2 max-w-[460px] text-[13.5px] text-[#9aa0b4]">
+                  {brand.name} needs FFmpeg and yt-dlp for the video, audio and download tools, and couldn&apos;t download them.
+                  Check your internet connection and try again. Quick Trim, Image to Video, Carousel Video and File Shuffler work without them.
+                </p>
+                {err && <p className="mt-4 rounded-lg px-3 py-2 text-[12.5px]" style={{ background: "rgba(239,68,68,.1)", color: "#f4b9b9" }}>{err}</p>}
+              </div>
+              <div className="flex items-center gap-3 px-11 pb-6 pt-3.5">
+                <button onClick={finish} className="mr-auto bg-transparent text-[13px] text-[#9aa0b4] hover:text-white">Skip for now</button>
+                <PrimaryBtn onClick={() => void runInstall({ essentialsOnly: true })}>Retry download</PrimaryBtn>
+              </div>
+            </>
+          )}
+
           {/* COMPONENTS */}
-          {step === "addons" && (
+          {step === "addons" && !repair && (
             <>
               <div className={`flex-1 overflow-y-auto px-11 pt-10 ${scrollCls}`}>
                 <div className="text-[11.5px] font-semibold uppercase tracking-[.6px]" style={{ color: BRAND2 }}>Step 1 of 3</div>
@@ -258,7 +292,7 @@ export default function SetupPage() {
               </div>
               <div className="flex items-center gap-3 px-11 pb-6 pt-3.5">
                 <span className="mr-auto" />
-                <PrimaryBtn onClick={runInstall}>Install &amp; continue</PrimaryBtn>
+                <PrimaryBtn onClick={() => void runInstall()}>Install &amp; continue</PrimaryBtn>
               </div>
             </>
           )}
@@ -267,9 +301,13 @@ export default function SetupPage() {
           {step === "installing" && (
             <>
               <div className={`flex-1 overflow-y-auto px-11 pt-10 ${scrollCls}`}>
-                <div className="text-[11.5px] font-semibold uppercase tracking-[.6px]" style={{ color: BRAND2 }}>Step 2 of 3</div>
-                <h2 className="mt-2.5 text-[25px] font-bold">Setting up {brand.name}…</h2>
-                <p className="mt-2 max-w-[460px] text-[13.5px] text-[#9aa0b4]">Installing your on-device components. This runs once — then everything works offline.</p>
+                <div className="text-[11.5px] font-semibold uppercase tracking-[.6px]" style={{ color: BRAND2 }}>{repair ? "Repair" : "Step 2 of 3"}</div>
+                <h2 className="mt-2.5 text-[25px] font-bold">{repair ? "Restoring required tools…" : `Setting up ${brand.name}…`}</h2>
+                <p className="mt-2 max-w-[460px] text-[13.5px] text-[#9aa0b4]">
+                  {repair
+                    ? "FFmpeg or yt-dlp went missing since the last launch, so they are downloading again. This only takes a moment."
+                    : "Installing your on-device components. This runs once — then everything works offline."}
+                </p>
                 <div className="mt-[22px] h-[9px] overflow-hidden rounded-md bg-white/[.07]">
                   <div className="h-full rounded-md transition-all" style={{ width: `${overall}%`, background: `linear-gradient(90deg,${BRAND},${BRAND2})` }} />
                 </div>
