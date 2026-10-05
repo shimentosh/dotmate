@@ -66,7 +66,7 @@ server, and put the useful parts behind a paywall. **DotMate** is the opposite:
 
 | Tool | What it does |
 |---|---|
-| **Quick Trim** | Batch-trim many videos with a draggable range and re-encode them to MP4. |
+| **Quick Trim** | **Batch Clips:** drop several long recordings, mark as many short moments as you like (2.5 s by default, drag to slide or resize, edit any clip later) and export the whole queue as `clip_001.mp4 … clip_500.mp4` at the source resolution and frame rate. **Trim Files:** batch-trim many whole videos with one draggable range. |
 | **Clip Merger** | Pair main clips with random B-roll, add background music, pick aspect-ratio presets, run in batches. |
 | **Image to Video** | Turn photos into a slideshow video with effects, colour adjustment, a progress bar, your own watermark and music. |
 | **Carousel Video** | Mix images and videos with 18 cinematic transitions, layout styles, sound effects and music — great for Reels, Shorts and TikTok. |
