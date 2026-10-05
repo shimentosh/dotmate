@@ -1,28 +1,54 @@
 name: Release
 
-# Push a tag like `v0.1.0` to build DotMate for Windows (NSIS .exe + .msi) and
-# macOS (Apple Silicon + Intel .dmg) and attach everything to a GitHub Release.
+# Push a tag like `v0.1.2` to build DotMate and publish a GitHub Release with
+# exactly two downloads: the Windows .msi and the macOS (Apple Silicon) .dmg.
 on:
   push:
     tags: ["v*"]
-  workflow_dispatch:
 
 permissions:
   contents: write
 
 jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: softprops/action-gh-release@v2
+        with:
+          name: DotMate ${{ github.ref_name }}
+          body: |
+            ## Download
+
+            | Platform | File |
+            |---|---|
+            | **Windows 10/11 (x64)** | `DotMate_*_x64_en-US.msi` |
+            | **macOS 11+ — Apple Silicon (M1–M4)** | `DotMate_*_aarch64.dmg` |
+
+            **Windows:** the installer is not code-signed yet. If SmartScreen appears, click **More info → Run anyway**.
+
+            **macOS:** the app is not notarized yet. Drag DotMate to Applications, then run once in Terminal:
+            ```
+            xattr -cr /Applications/DotMate.app
+            ```
+
+            See [CHANGELOG.md](https://github.com/shimentosh/dotmate/blob/main/CHANGELOG.md) for what's new.
+
   build:
     name: Build ${{ matrix.name }}
+    needs: release
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: Windows x64
+          - name: Windows (.msi)
             os: windows-latest
-          - name: macOS Apple Silicon
+            bundle: msi
+            file: src-tauri/target/release/bundle/msi/*.msi
+          - name: macOS Apple Silicon (.dmg)
             os: macos-latest
-          - name: macOS Intel
-            os: macos-15-intel
+            bundle: dmg
+            file: src-tauri/target/release/bundle/dmg/*.dmg
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -53,32 +79,9 @@ jobs:
           echo "LIBCLANG_PATH=C:/Program Files/LLVM/bin" >> "$GITHUB_ENV"
 
       - run: pnpm install --frozen-lockfile
+      - run: pnpm tauri build --bundles ${{ matrix.bundle }}
 
-      - uses: tauri-apps/tauri-action@v0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: softprops/action-gh-release@v2
         with:
-          tauriScript: pnpm tauri
-          tagName: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', '__VERSION__') }}
-          releaseName: DotMate v__VERSION__
-          releaseBody: |
-            ## Download
-
-            | Platform | File |
-            |---|---|
-            | **Windows 10/11 (x64)** — installer | `DotMate_*_x64-setup.exe` |
-            | **Windows 10/11 (x64)** — MSI (IT / Group Policy) | `DotMate_*_x64_en-US.msi` |
-            | **macOS 11+ Apple Silicon (M1–M4)** | `DotMate_*_aarch64.dmg` |
-            | **macOS 11+ Intel** | `DotMate_*_x64.dmg` |
-
-            **Windows:** the installers are not code-signed yet. If SmartScreen appears, click **More info → Run anyway**.
-
-            **macOS:** the app is not notarized yet. Drag DotMate to Applications, then run once in Terminal:
-            ```
-            xattr -cr /Applications/DotMate.app
-            ```
-            macOS support is new — please [report anything that doesn't work](https://github.com/shimentosh/dotmate/issues/new/choose).
-
-            See [CHANGELOG.md](https://github.com/shimentosh/dotmate/blob/main/CHANGELOG.md) for what's new.
-          releaseDraft: false
-          prerelease: false
+          files: ${{ matrix.file }}
+          fail_on_unmatched_files: true

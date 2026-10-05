@@ -11,7 +11,7 @@
 No account. No subscription. No cloud. No telemetry. Open source under the MIT licence.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0057FC.svg)](LICENSE)
-[![Platform: Windows](https://img.shields.io/badge/platform-Windows%2010%20%7C%2011-0078D6?logo=windows&logoColor=white)](#-download--install)
+[![Platform: Windows | macOS](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-0078D6?logo=windows&logoColor=white)](#-download--install)
 [![Built with Tauri 2](https://img.shields.io/badge/Tauri-2-24C8DB?logo=tauri&logoColor=white)](https://tauri.app)
 [![Next.js 16](https://img.shields.io/badge/Next.js-16-000000?logo=nextdotjs&logoColor=white)](https://nextjs.org)
 [![Rust](https://img.shields.io/badge/Rust-stable-DEA584?logo=rust&logoColor=black)](https://www.rust-lang.org)
@@ -129,25 +129,33 @@ running export, and minimise-to-tray.
 
 ## 📥 Download & install
 
-1. Download the latest **`DotMate_x.y.z_x64-setup.exe`** from
-   [**GitHub Releases**](https://github.com/shimentosh/dotmate/releases/latest).
-2. Run the installer (per-user or per-machine).
-3. On first launch DotMate opens a short **setup screen**:
+Get the latest version from [**GitHub Releases**](https://github.com/shimentosh/dotmate/releases/latest):
+
+| Platform | Download |
+|---|---|
+| **Windows 10 / 11 (x64)** | `DotMate_x.y.z_x64_en-US.msi` |
+| **macOS 11+ (Apple Silicon M1–M4)** | `DotMate_x.y.z_aarch64.dmg` |
+
+1. **Windows:** run the `.msi`. **macOS:** open the `.dmg`, drag DotMate to
+   Applications, then run `xattr -cr /Applications/DotMate.app` once in Terminal
+   (the app is not notarized yet).
+2. On first launch DotMate opens a short **setup screen**:
    - **FFmpeg** and **yt-dlp** are always installed (downloaded once from their official publishers).
    - **Whisper (base)** and **Kokoro** voices are pre-selected and optional.
    - **Ollama + Llama 3.2** is optional, for the writing tools.
 
-Everything can be installed, changed or removed later in **Settings → Local AI**.
+Everything can be installed, changed or removed later in **Settings → Local AI**. If
+FFmpeg or yt-dlp ever goes missing, DotMate downloads it again automatically.
 
-**Requirements:** Windows 10 or 11 (x64), the Microsoft Edge WebView2 runtime (built
-into Windows 11; the installer fetches it on Windows 10), and internet once for the
+**Requirements:** Windows 10/11 (x64) with the Microsoft Edge WebView2 runtime
+(built into Windows 11), or macOS 11+ on Apple Silicon — plus internet once for the
 first-run downloads.
 
 > [!NOTE]
-> Releases may not be code-signed yet, so Windows SmartScreen can show
-> "Windows protected your PC". Click **More info → Run anyway**, or
-> [build it yourself](docs/BUILDING.md). macOS configuration exists but is
-> untested — see [macOS status](docs/BUILDING.md#macos-status).
+> Releases are not code-signed yet. On Windows, SmartScreen may show "Windows
+> protected your PC" — click **More info → Run anyway**. macOS support is new;
+> please [report anything that doesn't work](https://github.com/shimentosh/dotmate/issues/new/choose).
+> You can also [build it yourself](docs/BUILDING.md).
 
 ## 🧠 Local AI: how it works
 
@@ -198,7 +206,8 @@ in **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**.
 ## 🗺️ Roadmap
 
 - [ ] Signed Windows releases built by GitHub Actions
-- [ ] Fully working macOS build (Apple Silicon + Intel)
+- [x] macOS build (Apple Silicon)
+- [ ] macOS Intel build
 - [ ] Linux build (AppImage / .deb)
 - [ ] Custom watermarks in Carousel Video
 - [ ] More languages and voices
@@ -257,8 +266,8 @@ and transcripts — yes, and it runs offline. It is not a full timeline editor.
 <details>
 <summary><b>Does it run on macOS or Linux?</b></summary>
 
-Windows 10/11 is the supported platform today. macOS configuration exists but is
-untested, and Linux is on the roadmap. Help is very welcome!
+Windows 10/11 and macOS 11+ on Apple Silicon have ready-made downloads. Linux is
+on the roadmap — help is very welcome!
 </details>
 
 <details>

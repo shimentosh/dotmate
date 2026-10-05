@@ -6,6 +6,22 @@ All notable changes to DotMate are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.2] — 2026-10-05
+
+### Fixed
+
+- **Clip Merger** no longer fails when the computer runs low on memory: it retries
+  with lighter encoder settings, then at 1080p, and explains what to do if it
+  still can't finish.
+- **FFmpeg / yt-dlp are downloaded on the spot** if they are missing when you use
+  Clip Merger, Audio Toolkit, Speech to Text or Video Downloader (Video Downloader
+  no longer asks you to install yt-dlp yourself).
+- The setup screen shows the full DotMate logo.
+
+### Changed
+
+- Releases now ship two downloads: a Windows `.msi` and a macOS Apple Silicon `.dmg`.
+
 ## [0.1.1] — 2026-10-05
 
 ### Added
@@ -32,6 +48,7 @@ First open-source release. 🎉
 - First-run setup, Settings (General / Local AI / About), render dock, task
   guard, minimise to tray, light and dark themes.
 
-[Unreleased]: https://github.com/shimentosh/dotmate/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/shimentosh/dotmate/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/shimentosh/dotmate/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/shimentosh/dotmate/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/shimentosh/dotmate/releases/tag/v0.1.0
