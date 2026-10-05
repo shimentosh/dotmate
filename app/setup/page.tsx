@@ -223,8 +223,9 @@ export default function SetupPage() {
         >
           <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(90% 45% at 20% 0%, rgba(255,255,255,.14), transparent 60%)" }} />
           <div className="relative z-[1]">
-            <div className="grid h-[54px] w-[54px] place-items-center rounded-[15px] bg-white" style={{ boxShadow: "0 12px 26px -8px rgba(0,0,0,.5)" }}>
-              <BrandMark size={38} />
+            {/* Dark tile like the app icon: the mark's second piece is white, so it disappears on a white tile. */}
+            <div className="grid h-[54px] w-[54px] place-items-center rounded-[15px]" style={{ background: "#0B1222", boxShadow: "0 12px 26px -8px rgba(0,0,0,.5), inset 0 0 0 1px rgba(255,255,255,.08)" }}>
+              <BrandMark size={36} tone="light" />
             </div>
             <div className="mt-[18px] text-[22px] font-bold tracking-[.2px]">{brand.name}</div>
             <div className="mt-1.5 max-w-[210px] text-[12.5px] leading-[1.5] text-white/70">
