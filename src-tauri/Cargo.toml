@@ -46,7 +46,7 @@ local-tts = { path = "../crates/tts" }
 # download source is configured at build time (see sources.rs).
 supertonic-tts = { path = "../crates/supertonic" }
 # HTTP client for the first-run downloads (ffmpeg, yt-dlp, models).
-ureq = "2"
+ureq = "3"
 # Extract downloaded archives: sherpa TTS models = .tar.bz2; the Supertonic
 # bundle = .tar.gz; ffmpeg = .zip.
 tar = "0.4"
