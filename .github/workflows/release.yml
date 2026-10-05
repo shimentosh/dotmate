@@ -1,7 +1,7 @@
 name: Release
 
-# Push a tag like `v0.1.0` to build the Windows installer and attach it to a
-# DRAFT GitHub Release. Review the draft, then publish it.
+# Push a tag like `v0.1.0` to build DotMate for Windows (NSIS .exe + .msi) and
+# macOS (Apple Silicon + Intel .dmg) and attach everything to a GitHub Release.
 on:
   push:
     tags: ["v*"]
@@ -11,12 +11,19 @@ permissions:
   contents: write
 
 jobs:
-  windows:
-    name: Build Windows installer
-    runs-on: windows-latest
-    env:
-      CARGO_BUILD_JOBS: "2"
-      LIBCLANG_PATH: C:/Program Files/LLVM/bin
+  build:
+    name: Build ${{ matrix.name }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Windows x64
+            os: windows-latest
+          - name: macOS Apple Silicon
+            os: macos-latest
+          - name: macOS Intel
+            os: macos-15-intel
+    runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -28,20 +35,50 @@ jobs:
       - uses: Swatinem/rust-cache@v2
         with:
           workspaces: src-tauri -> target
+          key: ${{ matrix.os }}
+
+      # WiX (the .msi bundler) runs VBScript custom actions during validation;
+      # newer Windows runner images ship without the VBScript feature.
+      - name: Enable VBScript for WiX
+        if: runner.os == 'Windows'
+        continue-on-error: true
+        shell: pwsh
+        run: DISM /Online /Add-Capability /CapabilityName:VBSCRIPT~~~~ /NoRestart
+
+      - name: Windows build settings
+        if: runner.os == 'Windows'
+        shell: bash
+        run: |
+          echo "CARGO_BUILD_JOBS=2" >> "$GITHUB_ENV"
+          echo "LIBCLANG_PATH=C:/Program Files/LLVM/bin" >> "$GITHUB_ENV"
+
       - run: pnpm install --frozen-lockfile
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tauriScript: pnpm tauri
-          tagName: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
-          releaseName: DotMate ${{ github.ref_name }}
+          tagName: ${{ github.ref_type == 'tag' && github.ref_name || format('v{0}', '__VERSION__') }}
+          releaseName: DotMate v__VERSION__
           releaseBody: |
             ## Download
-            Get **`DotMate_*_x64-setup.exe`** below and run it. Windows 10/11 (x64).
 
-            The installer is not code-signed yet — if SmartScreen appears, click **More info → Run anyway**.
+            | Platform | File |
+            |---|---|
+            | **Windows 10/11 (x64)** — installer | `DotMate_*_x64-setup.exe` |
+            | **Windows 10/11 (x64)** — MSI (IT / Group Policy) | `DotMate_*_x64_en-US.msi` |
+            | **macOS 11+ Apple Silicon (M1–M4)** | `DotMate_*_aarch64.dmg` |
+            | **macOS 11+ Intel** | `DotMate_*_x64.dmg` |
+
+            **Windows:** the installers are not code-signed yet. If SmartScreen appears, click **More info → Run anyway**.
+
+            **macOS:** the app is not notarized yet. Drag DotMate to Applications, then run once in Terminal:
+            ```
+            xattr -cr /Applications/DotMate.app
+            ```
+            macOS support is new — please [report anything that doesn't work](https://github.com/shimentosh/dotmate/issues/new/choose).
 
             See [CHANGELOG.md](https://github.com/shimentosh/dotmate/blob/main/CHANGELOG.md) for what's new.
-          releaseDraft: true
+          releaseDraft: false
           prerelease: false

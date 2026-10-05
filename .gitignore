@@ -11,6 +11,7 @@ next-env.d.ts
 src-tauri/target/
 src-tauri/gen/schemas/
 src-tauri/bundle-dlls/
+src-tauri/bundle-dylibs/
 target/
 
 # logs

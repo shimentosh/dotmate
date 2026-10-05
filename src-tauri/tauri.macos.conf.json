@@ -25,7 +25,12 @@
     "targets": ["app", "dmg"],
     "category": "public.app-category.utilities",
     "macOS": {
-      "minimumSystemVersion": "11.0"
+      "minimumSystemVersion": "11.0",
+      "signingIdentity": "-",
+      "frameworks": [
+        "bundle-dylibs/libsherpa-onnx-c-api.dylib",
+        "bundle-dylibs/libonnxruntime.1.24.4.dylib"
+      ]
     }
   }
 }

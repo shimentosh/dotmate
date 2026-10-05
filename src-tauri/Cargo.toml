@@ -17,7 +17,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 [build-dependencies]
 tauri-build = { version = "2.6.1", features = [] }
 
-# WHY sherpa-onnx is ALSO a (Windows-only) build-dependency — build ORDERING.
+# WHY sherpa-onnx is ALSO a (Windows + macOS) build-dependency — build ORDERING.
 #
 # `tauri.windows.conf.json` bundles four DLLs (onnxruntime + sherpa-*) that are
 # produced by `sherpa-onnx-sys`'s OWN build script (it downloads the prebuilt
@@ -29,7 +29,7 @@ tauri-build = { version = "2.6.1", features = [] }
 # (→ run sherpa-onnx-sys's build script) first. Feature set MUST match the normal
 # dep (via crates/tts) so Cargo reuses the same prebuilt archive. Keep the version
 # in lockstep with crates/tts/Cargo.toml.
-[target.'cfg(windows)'.build-dependencies]
+[target.'cfg(any(windows, target_os = "macos"))'.build-dependencies]
 sherpa-onnx = { version = "1.13", default-features = false, features = ["shared"] }
 
 [dependencies]
