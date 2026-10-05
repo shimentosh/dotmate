@@ -13,6 +13,7 @@ import { isTauri } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
 import { safeInvoke } from "./tauri-invoke";
 import { invokeWithBytes } from "./tauri-bytes";
+import { ensureToolDeps } from "./deps-local";
 import type { VoiceAnalysis } from "./voice-analyze-api";
 import { storageKey } from "@/brand.config";
 
@@ -109,6 +110,8 @@ export async function transcribeLocal(
 ): Promise<VoiceAnalysis> {
   const size = opts.model ?? getWhisperModel();
   await ensureWhisperModel(size, opts.onModelProgress);
+  // Audio/video is decoded with FFmpeg — fetch it here if it went missing.
+  await ensureToolDeps(["ffmpeg"]);
 
   const unlisten = opts.onProgress
     ? await listen<TranscribeProgress>("transcribe_progress", (e) => opts.onProgress!(e.payload))

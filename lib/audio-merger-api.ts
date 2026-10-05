@@ -21,6 +21,8 @@ async function fileToTempPath(file: File): Promise<string> {
  *  each unique file is still written to temp only once. */
 async function localMergeAudio(files: File[], format: "mp3" | "wav", loops = 1): Promise<Blob> {
   const { invoke } = await import("@tauri-apps/api/core");
+  const { ensureToolDeps } = await import("./deps-local");
+  await ensureToolDeps(["ffmpeg"]);
   const clipPaths: string[] = [];
   for (const f of files) clipPaths.push(await fileToTempPath(f));
   const buf = await invoke<ArrayBuffer>("ffmpeg_merge_audio", { clipPaths, format, loops });

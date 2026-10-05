@@ -29,3 +29,20 @@ jobs:
       - run: pnpm test
       - name: Static build
         run: pnpm build
+
+  rust:
+    name: Rust check & test
+    # macOS: the whole native stack (whisper.cpp, sherpa-onnx) builds there with
+    # no extra setup, and its runners are the fastest.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src-tauri -> target
+      # tauri::generate_context! embeds the frontend; an empty dist is enough to compile.
+      - run: mkdir -p out
+      - name: cargo test
+        working-directory: src-tauri
+        run: cargo test --locked

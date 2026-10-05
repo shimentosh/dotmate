@@ -51,6 +51,9 @@ export async function apiMergePair(
   if (!core.isTauri()) {
     throw new Error(`Video merging runs in the ${brand.name} desktop app.`);
   }
+  // Download FFmpeg here if it went missing, instead of failing with "not found".
+  const { ensureToolDeps } = await import("./deps-local");
+  await ensureToolDeps(["ffmpeg"]);
   const aspect    = opts.aspect ?? "auto";
   const mainIndex = opts.mainIndex ?? 0;
   onProgress?.(5);

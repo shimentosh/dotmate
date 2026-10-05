@@ -485,6 +485,24 @@ const JobCard = memo(function JobCard({ job, onCancel, onRemove, onOpen, onRevea
 export default function VideoDownloaderPage() {
   const [ytdlpVersion, setYtdlpVersion] = useState<string | null>(null);
   const [ytdlpMissing, setYtdlpMissing] = useState(false);
+  const [ytdlpInstalling, setYtdlpInstalling] = useState(false);
+
+  /** yt-dlp (or the FFmpeg it merges with) is missing → download both, then re-check. */
+  const installYtdlp = useCallback(async () => {
+    setYtdlpInstalling(true);
+    try {
+      const { ensureToolDeps } = await import("@/lib/deps-local");
+      await ensureToolDeps(["ytdlp", "ffmpeg"]);
+      const { invoke } = await import("@tauri-apps/api/core");
+      setYtdlpVersion(await invoke<string>("ytdlp_check"));
+      setYtdlpMissing(false);
+    } catch (e) {
+      logWarn("video-downloader", "yt-dlp install failed", e);
+      setYtdlpMissing(true);
+    } finally {
+      setYtdlpInstalling(false);
+    }
+  }, []);
   // `isTauri` is only knowable on the client, so the SSR markup and the first client
   // render must NOT branch on it (that causes a hydration mismatch). Gate any
   // Tauri-dependent UI on `mounted`, which flips true only after hydration.
@@ -545,7 +563,7 @@ export default function VideoDownloaderPage() {
 
       invoke<string>("ytdlp_check")
         .then(v => setYtdlpVersion(v))
-        .catch(() => setYtdlpMissing(true));
+        .catch(() => void installYtdlp());
 
       const u1 = await listen<ProgressPayload>("ytdlp_progress", ({ payload: p }) => {
         setJobs(prev => prev.map(j => j.id !== p.id ? j : {
@@ -580,7 +598,7 @@ export default function VideoDownloaderPage() {
     })();
 
     return () => cleanup.forEach(fn => fn());
-  }, []);
+  }, [installYtdlp]);
 
   // Derived once per input change (not on every progress-tick re-render) — splitting
   // a 1000-line paste each tick was a needless cost while downloads were running.
@@ -599,7 +617,7 @@ export default function VideoDownloaderPage() {
   const errorCount   = jobs.filter(j => j.status === "error").length;
   // Any failure that a cookies.txt would fix → drives the top "needs sign-in" banner.
   const needsSignIn  = useMemo(() => jobs.some(j => j.status === "error" && humanizeError(j.error).needsCookies), [jobs]);
-  const canDownload  = isTauri && !ytdlpMissing && urls.length > 0 && outputDir.trim().length > 0;
+  const canDownload  = isTauri && !ytdlpMissing && !ytdlpInstalling && urls.length > 0 && outputDir.trim().length > 0;
 
   // Let the user pick / clear a cookies.txt for site sign-in (persisted, all platforms).
   // useCallback so JobCard's "Add cookies.txt" prop stays stable (keeps memo effective).
@@ -663,7 +681,7 @@ export default function VideoDownloaderPage() {
     if (fetchingInfo) return;
     setInfoError(null);
     if (!isTauri) { setInfoError(`Length fetching needs the ${brand.name} desktop app.`); return; }
-    if (ytdlpMissing) { setInfoError("yt-dlp not found — install it first."); return; }
+    if (ytdlpMissing || ytdlpInstalling) { setInfoError("yt-dlp isn't ready yet — wait for the download to finish."); return; }
     if (urls.length === 0) { setInfoError("Paste a video link first."); return; }
     setFetchingInfo(true);
     try {
@@ -1151,16 +1169,30 @@ export default function VideoDownloaderPage() {
                   </div>
                 </div>
               )}
-              {ytdlpMissing && (
-                <div className="flex items-start gap-3 px-4 py-3 rounded-2xl bg-amber-500/[0.07] border border-amber-500/20">
-                  <AlertCircle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+              {ytdlpInstalling && (
+                <div className="flex items-start gap-3 px-4 py-3 rounded-2xl bg-blue-500/[0.07] border border-blue-500/20">
+                  <Loader2 size={16} className="text-blue-500 shrink-0 mt-0.5 animate-spin" />
                   <div>
-                    <p className="text-[13px] font-semibold text-amber-700 dark:text-amber-400">yt-dlp not found</p>
-                    <p className="text-[11.5px] text-amber-600/70 dark:text-amber-500/60 mt-0.5">
-                      Install yt-dlp and ensure it is in your PATH.{" "}
-                      <span className="font-mono bg-amber-500/10 px-1.5 py-0.5 rounded text-[10.5px]">winget install yt-dlp</span>
+                    <p className="text-[13px] font-semibold text-blue-700 dark:text-blue-400">Downloading yt-dlp…</p>
+                    <p className="text-[11.5px] text-blue-600/70 dark:text-blue-400/60 mt-0.5">
+                      The downloader engine is missing, so {brand.name} is fetching it now. This happens only once.
                     </p>
                   </div>
+                </div>
+              )}
+              {ytdlpMissing && !ytdlpInstalling && (
+                <div className="flex items-start gap-3 px-4 py-3 rounded-2xl bg-amber-500/[0.07] border border-amber-500/20">
+                  <AlertCircle size={16} className="text-amber-500 shrink-0 mt-0.5" />
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[13px] font-semibold text-amber-700 dark:text-amber-400">Couldn&apos;t download yt-dlp</p>
+                    <p className="text-[11.5px] text-amber-600/70 dark:text-amber-500/60 mt-0.5">
+                      Check your internet connection and try again.
+                    </p>
+                  </div>
+                  <button onClick={() => void installYtdlp()}
+                    className="shrink-0 rounded-lg border border-amber-500/30 px-3 py-1.5 text-[12px] font-semibold text-amber-700 dark:text-amber-400 hover:bg-amber-500/10">
+                    Retry
+                  </button>
                 </div>
               )}
               {needsSignIn && (

@@ -174,6 +174,108 @@ fn confine_inputs(app: &tauri::AppHandle, paths: &[String]) -> Result<Vec<String
     paths.iter().map(|p| confine_one(app, p)).collect()
 }
 
+/// Short side of the memory-saving fallback encode.
+const LEAN_SHORT_SIDE: u32 = 1080;
+
+/// One encode attempt of `ffmpeg_merge_videos`.
+struct Encode {
+    w: u32,
+    h: u32,
+    crf: &'static str,
+    preset: &'static str,
+    /// Fewer threads, a short look-ahead and fewer reference frames: a fraction of
+    /// the default encoder memory, for machines that ran out.
+    lean: bool,
+}
+
+/// ffmpeg args that normalise every clip to `enc.w`×`enc.h` + 30fps (+ stereo
+/// 44.1k audio when `with_audio`) and concat them into `dest`.
+fn concat_args(clip_paths: &[String], enc: &Encode, with_audio: bool, dest: &Path) -> Vec<String> {
+    let (tw, th) = (enc.w, enc.h);
+    let n = clip_paths.len();
+    // Lanczos keeps upscaled clips sharp (the default bicubic softens them).
+    let mut parts: Vec<String> = Vec::new();
+    for i in 0..n {
+        parts.push(format!(
+            "[{i}:v]scale={tw}:{th}:force_original_aspect_ratio=decrease:flags=lanczos,\
+             pad={tw}:{th}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30,format=yuv420p[v{i}]"
+        ));
+        if with_audio {
+            parts.push(format!(
+                "[{i}:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a{i}]"
+            ));
+        }
+    }
+    let seg: String = (0..n)
+        .map(|i| if with_audio { format!("[v{i}][a{i}]") } else { format!("[v{i}]") })
+        .collect();
+    let a = if with_audio { 1 } else { 0 };
+    let outs = if with_audio { "[v][a]" } else { "[v]" };
+    let filter = format!("{};{seg}concat=n={n}:v=1:a={a}{outs}", parts.join(";"));
+
+    let mut args: Vec<String> = vec![s("-y")];
+    for p in clip_paths {
+        if enc.lean {
+            // Per-input decoder threads; all inputs stay open for the whole concat.
+            args.extend([s("-threads"), s("2")]);
+        }
+        push_input(&mut args, p);
+    }
+    if enc.lean {
+        args.extend([s("-filter_complex_threads"), s("1")]);
+    }
+    args.extend([s("-filter_complex"), filter, s("-map"), s("[v]")]);
+    if with_audio {
+        args.extend([s("-map"), s("[a]")]);
+    }
+    args.extend([s("-c:v"), s("libx264"), s("-crf"), s(enc.crf), s("-preset"), s(enc.preset)]);
+    if enc.lean {
+        args.extend([s("-threads"), s("2"), s("-x264-params"), s("rc-lookahead=10:ref=2")]);
+    }
+    if with_audio {
+        args.extend([s("-c:a"), s("aac"), s("-b:a"), s("192k")]);
+    }
+    args.extend([s("-movflags"), s("+faststart"), dest.to_string_lossy().to_string()]);
+    args
+}
+
+/// Scale `w`×`h` down so its short side is at most `max_short` (even dimensions).
+fn cap_short_side(w: u32, h: u32, max_short: u32) -> (u32, u32) {
+    let short = w.min(h);
+    if short <= max_short {
+        return (w, h);
+    }
+    let k = max_short as f64 / short as f64;
+    let even = |v: f64| ((v / 2.0).round() as u32).max(8) * 2;
+    (even(w as f64 * k), even(h as f64 * k))
+}
+
+/// ffmpeg failed because the machine ran out of memory (or libx264 could not
+/// allocate its buffers, which it reports as a generic external-library error).
+fn is_resource_error(err: &str) -> bool {
+    const SIGNS: [&str; 5] = [
+        "Cannot allocate memory",
+        "Generic error in an external library",
+        "Could not open encoder",
+        "Error while opening encoder",
+        "out of memory",
+    ];
+    SIGNS.iter().any(|sig| err.contains(sig))
+}
+
+/// A short, actionable message instead of ffmpeg's raw stderr tail.
+fn friendly_merge_error(err: &str) -> String {
+    if is_resource_error(err) {
+        "Not enough free memory to render this merge, even at 1080p. Close other apps, \
+         set Parallel jobs to 1 or Render quality to Fast, and try again."
+            .into()
+    } else if err.contains("Invalid data found") || err.contains("moov atom not found") {
+        "One of the clips can't be read — it may be damaged or still downloading.".into()
+    } else {
+        err.to_string()
+    }
+}
+
 /// Concatenate 2+ video clips (+ optional looped background music) into one MP4.
 /// `(async)` — the ffmpeg subprocess wait must not block the webview main thread.
 #[tauri::command(async)]
@@ -214,75 +316,52 @@ pub fn ffmpeg_merge_videos(
     let concat_dest = if music_path.is_some() { &concat_path } else { &out_path };
 
     let (tw, th) = resolve_merge_size(&clip_paths, aspect.as_deref(), main_index);
-    let n = clip_paths.len();
 
-    // Normalise every clip to the target W×H + 30fps + stereo 44100, then concat.
-    // Lanczos keeps upscaled clips sharp (the default bicubic softens them).
-    let mut per_clip: Vec<String> = Vec::new();
-    for i in 0..n {
-        per_clip.push(format!(
-            "[{i}:v]scale={tw}:{th}:force_original_aspect_ratio=decrease:flags=lanczos,\
-             pad={tw}:{th}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30,format=yuv420p[v{i}]"
-        ));
-        per_clip.push(format!(
-            "[{i}:a]aresample=44100,aformat=sample_fmts=fltp:channel_layouts=stereo[a{i}]"
-        ));
+    // Encode, stepping down when the machine runs out of memory instead of failing:
+    // a 4K target with `-preset slow` and 2+ parallel jobs can need several GB, and
+    // libx264 then fails to open ("Generic error in an external library") or a
+    // decoder reports "Cannot allocate memory". Each rung uses less memory: first
+    // the same size with a lean encoder, then capped to 1080p.
+    let (lw, lh) = cap_short_side(tw, th, LEAN_SHORT_SIDE);
+    let mut rungs = vec![
+        Encode { w: tw, h: th, crf, preset, lean: false },
+        Encode { w: tw, h: th, crf, preset: "veryfast", lean: true },
+    ];
+    if (lw, lh) != (tw, th) {
+        rungs.push(Encode { w: lw, h: lh, crf, preset: "veryfast", lean: true });
     }
-    let seg_in: String = (0..n).map(|i| format!("[v{i}][a{i}]")).collect();
-    let full_filter = format!("{};{seg_in}concat=n={n}:v=1:a=1[v][a]", per_clip.join(";"));
 
-    let mut args: Vec<String> = vec![s("-y")];
-    for p in &clip_paths {
-        push_input(&mut args, p);
+    let mut last_err = String::new();
+    let mut encoded = false;
+    for (i, enc) in rungs.iter().enumerate() {
+        if i > 0 {
+            log::warn!("merge: retrying at {}x{} with lean settings after: {last_err}", enc.w, enc.h);
+        }
+        // With audio first; if a clip has no audio stream, video-only at the same rung.
+        let mut res = run_ffmpeg(&concat_args(&clip_paths, enc, true, concat_dest));
+        if let Err(e) = &res {
+            if !is_resource_error(e) {
+                res = run_ffmpeg(&concat_args(&clip_paths, enc, false, concat_dest));
+            }
+        }
+        match res {
+            Ok(()) => {
+                encoded = true;
+                break;
+            }
+            Err(e) => {
+                let resource = is_resource_error(&e);
+                last_err = e;
+                if !resource {
+                    break;
+                }
+            }
+        }
     }
-    args.push(s("-filter_complex"));
-    args.push(full_filter);
-    args.push(s("-map"));
-    args.push(s("[v]"));
-    args.push(s("-map"));
-    args.push(s("[a]"));
-    args.extend(
-        [
-            "-c:v", "libx264", "-crf", crf, "-preset", preset,
-            "-c:a", "aac", "-b:a", "192k", "-movflags", "+faststart",
-        ]
-        .iter()
-        .map(|x| s(x)),
-    );
-    args.push(concat_dest.to_string_lossy().to_string());
-
-    if run_ffmpeg(&args).is_err() {
-        // Fallback: one or more clips have no audio → video-only concat.
-        let mut per_v: Vec<String> = Vec::new();
-        for i in 0..n {
-            per_v.push(format!(
-                "[{i}:v]scale={tw}:{th}:force_original_aspect_ratio=decrease:flags=lanczos,\
-                 pad={tw}:{th}:(ow-iw)/2:(oh-ih)/2,setsar=1,fps=30,format=yuv420p[v{i}]"
-            ));
-        }
-        let vseg: String = (0..n).map(|i| format!("[v{i}]")).collect();
-        let vfilter = format!("{};{vseg}concat=n={n}:v=1:a=0[v]", per_v.join(";"));
-        let mut vargs: Vec<String> = vec![s("-y")];
-        for p in &clip_paths {
-            push_input(&mut vargs, p);
-        }
-        vargs.push(s("-filter_complex"));
-        vargs.push(vfilter);
-        vargs.push(s("-map"));
-        vargs.push(s("[v]"));
-        vargs.extend(
-            [
-                "-c:v", "libx264", "-crf", crf, "-preset", preset, "-movflags",
-                "+faststart",
-            ]
-            .iter()
-            .map(|x| s(x)),
-        );
-        vargs.push(concat_dest.to_string_lossy().to_string());
-        if let Err(e) = run_ffmpeg(&vargs) {
-            cleanup(&dir);
-            return Err(e);
-        }
+    if !encoded {
+        cleanup(&dir);
+        log::warn!("merge failed: {last_err}");
+        return Err(friendly_merge_error(&last_err));
     }
 
     // Mix background music (optional): loop it, apply volume, amix with clip audio.
@@ -444,6 +523,20 @@ mod tests {
         assert_eq!(merge_target_size(&[(4320, 7680)], "auto", 0), (2160, 3840));
         let (w, h) = merge_target_size(&[(721, 1283)], "auto", 0);
         assert!(w % 2 == 0 && h % 2 == 0);
+    }
+
+    #[test]
+    fn caps_short_side_for_the_lean_retry() {
+        assert_eq!(cap_short_side(2160, 3840, 1080), (1080, 1920));
+        assert_eq!(cap_short_side(3840, 2160, 1080), (1920, 1080));
+        assert_eq!(cap_short_side(720, 1280, 1080), (720, 1280));
+    }
+
+    #[test]
+    fn spots_out_of_memory_failures() {
+        assert!(is_resource_error("[dec:h264] Error while opening decoder: Cannot allocate memory"));
+        assert!(is_resource_error("Task finished with error code: -542398533 (Generic error in an external library)"));
+        assert!(!is_resource_error("Stream specifier ':a' in filtergraph description matches no streams."));
     }
 
     #[test]
