@@ -52,7 +52,7 @@ ureq = "2"
 tar = "0.4"
 bzip2 = "0.4"
 flate2 = "1"
-zip = "2"
+zip = "8"
 # "tray-icon": system tray for the "Minimize to system tray" close option.
 tauri = { version = "2.11.1", features = ["tray-icon"] }
 tauri-plugin-log = "2"
