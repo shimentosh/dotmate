@@ -8,7 +8,7 @@
 
 **Trim and merge videos, turn images into videos, download from YouTube & TikTok, transcribe with Whisper, generate voiceovers with Kokoro TTS and write scripts with a local LLM — all in one desktop app that runs 100% on your own computer.**
 
-No account. No subscription. No cloud. No telemetry. Open source under the MIT licence.
+No account. No subscription. No cloud required. No telemetry. Open source under the MIT licence.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-0057FC.svg)](LICENSE)
 [![Platform: Windows | macOS](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-0078D6?logo=windows&logoColor=white)](#-download--install)
@@ -49,13 +49,15 @@ No account. No subscription. No cloud. No telemetry. Open source under the MIT l
 Most creator tools live in the browser, need an account, upload your files to a
 server, and put the useful parts behind a paywall. **DotMate** is the opposite:
 
-- 🔒 **Private by design** — your videos, audio and scripts never leave your computer.
+- 🔒 **Private by design** — your videos, audio and scripts never leave your computer
+  (unless you choose to plug in your own cloud AI key — it's off by default).
 - 💸 **Free forever** — no credits, no watermark, no subscription, no "pro" tier.
 - ✈️ **Works offline** — after a one-time download of FFmpeg and the models you pick,
   every tool except the Video Downloader works without internet.
 - 🧠 **Local AI** — speech-to-text with [Whisper](https://github.com/ggml-org/whisper.cpp),
   text-to-speech with [Kokoro](https://huggingface.co/hexgrad/Kokoro-82M), and script
-  writing with [Ollama](https://ollama.com) or the Claude Code / Codex / Gemini CLIs you already use.
+  writing with [Ollama](https://ollama.com) or the Claude Code / Codex / Gemini CLIs you already use —
+  or, if you prefer, **your own API key** for Claude, OpenAI, Gemini or OpenRouter.
 - ⚡ **Fast and small** — a ~12 MB installer built on [Tauri 2](https://tauri.app) and Rust,
   with hardware-accelerated video encoding through WebCodecs where your PC supports it.
 - 🧰 **12 tools in one app** — replace a handful of websites and single-purpose apps.
@@ -81,7 +83,7 @@ server, and put the useful parts behind a paywall. **DotMate** is the opposite:
 | **Bulk Voice** | Turn many scripts into many voice files in one run. |
 | **Speech to Text** | Transcribe audio, video or a microphone recording with on-device Whisper (tiny / base / small models). |
 
-### ✍️ Writing (local LLM)
+### ✍️ Writing (local LLM or your own API key)
 
 | Tool | What it does |
 |---|---|
@@ -94,9 +96,10 @@ server, and put the useful parts behind a paywall. **DotMate** is the opposite:
 |---|---|
 | **Video Downloader** | Download videos and audio from YouTube, TikTok, Instagram, X (Twitter) and [1000+ sites supported by yt-dlp](https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md) — playlists, sections and optional cookies.txt. |
 
-**Plus:** a guided first-run setup, light & dark themes, a render dock that keeps
-progress visible while you switch tools, a guard that stops you from losing a
-running export, and minimise-to-tray.
+**Plus:** a guided first-run setup, tool search on the home screen (<kbd>Ctrl</kbd>+<kbd>K</kbd>),
+light & dark themes, a render dock that keeps progress visible while you switch
+tools, a guard that stops you from losing a running export, and minimise-to-tray.
+Missing a tool? Click **Request a tool** on the home screen.
 
 ## 📸 Screenshots
 
@@ -166,14 +169,25 @@ first-run downloads.
 | Text to speech (optional) | [Supertonic 3](https://github.com/supertone-inc/supertonic) | — | Self-hosted archive ([how](docs/BUILDING.md#optional-supertonic-voices)) |
 | Script writing | [Ollama](https://ollama.com) (Llama 3.2, Qwen 2.5, any chat model) | your choice | Installed from Settings → Local AI → Brain |
 | Script writing | Claude Code, Codex CLI or Gemini CLI | — | Install and sign in yourself; DotMate detects them |
+| Script writing (optional, cloud) | Your own API key — Anthropic, OpenAI, Google Gemini, OpenRouter or any OpenAI-compatible endpoint | — | Settings → **API Keys**; nothing is enabled until you add a key |
 
 CLI "brains" run in read-only / plan mode with the prompt on stdin, inside a scratch
 folder — they cannot touch your files.
+
+**Bring your own API key (optional).** If your computer is too slow for a local model,
+paste an API key in **Settings → API Keys** and the provider appears in Script Writer
+and Script → Image Prompts under *Your API keys (cloud)*. Usage is billed to your own
+account; DotMate adds nothing on top.
 
 ## 🔒 Privacy
 
 - The UI **never talks to a remote server**. Its only network access is to a local
   Ollama (`localhost`); the Content-Security-Policy blocks everything else.
+- **Optional cloud AI is strictly opt-in.** Only if you save an API key in
+  Settings → API Keys *and* pick that model does the text of your topic / script go
+  — directly from your PC, via the Rust side — to the provider you chose. Your videos
+  and audio never do. Keys are stored only on your computer, are never shown again in
+  the app, and are never sent anywhere except that provider.
 - All downloads (FFmpeg, yt-dlp, models) are made by the Rust side from the
   official URLs listed in [`src-tauri/src/sources.rs`](src-tauri/src/sources.rs).
 - No analytics, no crash reporting, no login. Settings live on your PC.
@@ -246,7 +260,18 @@ except Video Downloader works without an internet connection.
 <summary><b>Do my files get uploaded anywhere?</b></summary>
 
 No. All processing happens on your computer. The app has no server and no
-telemetry.
+telemetry. The one exception is opt-in: if you add your own API key and choose a
+cloud model for Script Writer or Script → Image Prompts, the text you write is sent
+to that provider. Videos and audio are never uploaded.
+</details>
+
+<details>
+<summary><b>Can I use ChatGPT, Claude or Gemini instead of a local model?</b></summary>
+
+Yes — optionally. Open **Settings → API Keys**, paste a key for Anthropic, OpenAI,
+Google Gemini, OpenRouter or any OpenAI-compatible endpoint, and press
+**Save & test**. That model then shows up in the writing tools. Remove the key any
+time to go back to fully local.
 </details>
 
 <details>

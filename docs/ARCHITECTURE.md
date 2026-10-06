@@ -31,6 +31,7 @@ dotmate/
 │       ├── whisper_command.rs   model download + transcription
 │       ├── tts_command.rs       Kokoro / Supertonic download + synthesis
 │       ├── cli_brain_command.rs Claude Code / Codex / Gemini CLI runner
+│       ├── api_brain_command.rs optional bring-your-own-key cloud brains
 │       ├── staging.rs           raw-body IPC, chunked uploads, temp clip sink
 │       ├── fs_command.rs        open / reveal / copy / save / read / delete
 │       ├── security.rs          path confinement, no-shell open/reveal
@@ -49,14 +50,19 @@ dotmate/
 | Video Downloader | yt-dlp + FFmpeg | Rust → yt-dlp process |
 | Speech to Text | whisper.cpp (`crates/whisper`) | Rust, in-process |
 | AI Voiceover, Bulk Voice | Kokoro / Supertonic (`crates/tts`, `crates/supertonic`) | Rust, in-process |
-| Script Writer, Script to Image Prompts | Ollama (HTTP on localhost) or a CLI | WebView → Ollama, or Rust → CLI process |
+| Script Writer, Script to Image Prompts | Ollama (HTTP on localhost), a CLI, or (opt-in) the user's own API key | WebView → Ollama, Rust → CLI process, or Rust → provider HTTPS |
 
 ## Key design decisions
 
-- **No server, no cloud.** The only HTTP calls from the WebView go to a local
+- **No server, no cloud by default.** The only HTTP calls from the WebView go to a local
   Ollama (`http://localhost:11434` by default, configurable). The CSP in
   `src-tauri/tauri.conf.json` allows `http://localhost:*` and
   `http://127.0.0.1:*` and nothing else remote.
+- **Opt-in API brains.** If the user saves an API key in Settings → API Keys,
+  `api_brain_command.rs` calls that provider from Rust (the CSP stays
+  localhost-only). Keys live in `<app-data>/secrets/`, are write-only from the UI
+  (only the last 4 characters are ever returned), and `security.rs` refuses that
+  folder in every file command so a key can't be read back over IPC.
 - **All downloads in Rust.** FFmpeg, yt-dlp, models and the Ollama installer are
   fetched from the URLs in `src-tauri/src/sources.rs` into the app-data folder
   (`%APPDATA%\com.dotmirror.dotmate\` → `bin\`, `models\whisper\`,

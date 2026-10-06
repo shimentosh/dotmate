@@ -6,6 +6,29 @@ All notable changes to DotMate are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Bring your own API key (optional).** New **Settings → API Keys** page: paste a
+  key for Anthropic (Claude), OpenAI, Google Gemini, OpenRouter or any
+  OpenAI-compatible endpoint and that model appears in Script Writer and
+  Script → Image Prompts under *Your API keys (cloud)*. Off until you add a key.
+  Keys stay on your computer, are never shown again in the app, and requests go
+  straight from your PC to the provider you chose.
+- **Tool search** on the home screen — press <kbd>Ctrl</kbd>+<kbd>K</kbd> or <kbd>/</kbd>.
+- **Request a tool** and **Follow** links on the home screen.
+
+### Changed
+
+- **Refreshed design across the whole app:** calmer colours from one shared set of
+  design tokens, a cleaner sidebar and title bar, solid surfaces instead of glass
+  effects, consistent buttons, inputs, toggles and section labels, and neutral
+  disabled buttons that stay readable in dark mode.
+- The first-run setup screen now uses the DotMate blue instead of purple.
+
+### Security
+
+- The app's file commands can no longer read, delete or copy the stored API keys.
+
 ## [0.1.2] — 2026-10-05
 
 ### Fixed

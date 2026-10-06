@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DotMate — Free Offline Video, Voice &amp; AI Toolbox for Creators (Open Source)</title>
-<meta name="description" content="DotMate is a free, open-source Windows app for creators: trim and merge videos, image and carousel to video, YouTube &amp; TikTok downloader, offline Whisper speech-to-text, Kokoro text-to-speech and local AI script writing. No account, no cloud.">
+<meta name="description" content="DotMate is a free, open-source Windows app for creators: trim and merge videos, image and carousel to video, YouTube &amp; TikTok downloader, offline Whisper speech-to-text, Kokoro text-to-speech and local AI script writing. No account, no cloud required.">
 <meta name="keywords" content="free video editor, offline text to speech, whisper speech to text app, kokoro tts, youtube downloader gui, yt-dlp gui, image to video, carousel video maker, ai script writer, ollama, local ai, open source, windows, content creator tools">
 <meta name="author" content="Shimanto, DotMirror">
 <meta name="robots" content="index, follow, max-image-preview:large">
@@ -25,7 +25,7 @@
 <meta property="og:image:alt" content="DotMate app screenshot and logo">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="DotMate — Free Offline Video, Voice & AI Toolbox">
-<meta name="twitter:description" content="Open-source creator toolbox that runs 100% on your computer. No account, no cloud.">
+<meta name="twitter:description" content="Open-source creator toolbox that runs 100% on your computer. No account, no cloud required.">
 <meta name="twitter:image" content="https://shimentosh.github.io/dotmate/assets/social-preview.png">
 
 <script type="application/ld+json">
@@ -245,7 +245,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
       <a class="btn btn-primary" href="https://github.com/shimentosh/dotmate/releases/latest"><svg aria-hidden="true"><use href="#i-dl"/></svg>Download for Windows</a>
       <a class="btn btn-ghost" href="https://github.com/shimentosh/dotmate"><svg aria-hidden="true"><use href="#i-gh"/></svg>Star on GitHub</a>
     </div>
-    <p class="meta">Windows 10 &amp; 11 · ~12 MB installer · No account · No cloud · No telemetry</p>
+    <p class="meta">Windows 10 &amp; 11 · ~12 MB installer · No account · No cloud required · No telemetry</p>
     <img class="shot" src="assets/screenshots/home.png" width="1440" height="900" alt="DotMate home screen with video, audio, voice, writing and download tools" fetchpriority="high">
     <div class="strip">
       <div><strong>12</strong><span>tools in one app</span></div>
@@ -319,7 +319,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
     <div class="split">
       <ul class="list">
         <li><svg><use href="#i-check"/></svg><div><b>No account, no login</b><span>Open the app and start working.</span></div></li>
-        <li><svg><use href="#i-check"/></svg><div><b>No uploads, no telemetry</b><span>The app's security policy blocks every remote connection except a local Ollama.</span></div></li>
+        <li><svg><use href="#i-check"/></svg><div><b>No uploads, no telemetry</b><span>The app's security policy blocks every remote connection except a local Ollama. Cloud AI is strictly optional — it only runs if you add your own API key.</span></div></li>
         <li><svg><use href="#i-check"/></svg><div><b>Works offline</b><span>After setup, every tool except the downloader works without internet.</span></div></li>
         <li><svg><use href="#i-check"/></svg><div><b>Open source</b><span>Every line is on GitHub under the MIT licence — audit it, fork it, improve it.</span></div></li>
       </ul>
@@ -328,7 +328,7 @@ footer nav{display:flex;gap:18px;flex-wrap:wrap}
         <tbody>
           <tr><td>Speech to text</td><td>whisper.cpp <small>· tiny / base / small</small></td></tr>
           <tr><td>Text to speech</td><td>Kokoro-82M via sherpa-onnx <small>· ~330 MB</small></td></tr>
-          <tr><td>Script writing</td><td>Ollama (Llama 3.2, Qwen 2.5…) or Claude Code / Codex / Gemini CLI</td></tr>
+          <tr><td>Script writing</td><td>Ollama (Llama 3.2, Qwen 2.5…) or Claude Code / Codex / Gemini CLI — or, optionally, your own Claude, OpenAI, Gemini or OpenRouter API key</td></tr>
           <tr><td>Video &amp; audio</td><td>WebCodecs + FFmpeg</td></tr>
           <tr><td>Downloads</td><td>yt-dlp</td></tr>
         </tbody>
@@ -363,7 +363,8 @@ pnpm tauri:build</pre>
       <details><summary>Is DotMate really free?</summary><p>Yes. DotMate is free and open source under the MIT licence. There are no credits, watermarks, accounts or paid tiers.</p></details>
       <details><summary>Does DotMate work offline?</summary><p>Yes. After a one-time download of FFmpeg and the AI models you choose, every tool except the Video Downloader works without internet.</p></details>
       <details><summary>Are my videos or voice recordings uploaded?</summary><p>No. All processing happens on your computer. DotMate has no server, no login and no telemetry.</p></details>
-      <details><summary>Do I need a GPU for the AI tools?</summary><p>No. Whisper and Kokoro run on a normal CPU. Ollama models run faster with a GPU, but small models like Llama 3.2 3B work on most modern laptops.</p></details>
+      <details><summary>Can I use ChatGPT, Claude or Gemini instead of a local model?</summary><p>Yes, optionally. Paste your own API key in Settings → API Keys and that model appears in the writing tools. Only the text you write is sent to that provider — your videos and audio never leave your computer. Remove the key any time to go back to fully local.</p></details>
+<details><summary>Do I need a GPU for the AI tools?</summary><p>No. Whisper and Kokoro run on a normal CPU. Ollama models run faster with a GPU, but small models like Llama 3.2 3B work on most modern laptops.</p></details>
       <details><summary>Is it an alternative to CapCut, Descript or ElevenLabs?</summary><p>For many everyday jobs — batch trimming, slideshows, carousel videos, voiceovers and transcripts — yes, and it runs offline. It is not a full timeline editor.</p></details>
       <details><summary>Does it work on macOS or Linux?</summary><p>Windows 10 and 11 are supported today. macOS and Linux builds are on the roadmap — contributions welcome!</p></details>
     </div>
