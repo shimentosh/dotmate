@@ -25,7 +25,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
     <html lang="en">
       <body style={{ margin: 0, background: "#0d0d0f", color: "#fff", fontFamily: "system-ui,-apple-system,sans-serif" }}>
         <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 18, textAlign: "center", padding: 24 }}>
-          <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(135deg,#3D7EFD,#0047D1)", boxShadow: "0 0 32px rgba(0,87,252,0.45)" }} />
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "linear-gradient(180deg,#1A66FD,#0052F0)" }} />
           <div>
             <h1 style={{ fontSize: 22, fontWeight: 800, margin: 0, letterSpacing: "-0.02em" }}>The app ran into a problem</h1>
             <p style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", marginTop: 8, maxWidth: 420 }}>
@@ -35,7 +35,7 @@ export default function GlobalError({ error, reset }: { error: Error & { digest?
           <div style={{ display: "flex", gap: 10 }}>
             <button
               onClick={reset}
-              style={{ height: 38, padding: "0 18px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700, color: "#fff", background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}
+              style={{ height: 38, padding: "0 18px", borderRadius: 12, border: "none", cursor: "pointer", fontSize: 13, fontWeight: 700, color: "#fff", background: "#0057FC" }}
             >
               Try again
             </button>

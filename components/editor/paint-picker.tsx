@@ -485,7 +485,7 @@ function PaintPopover({ anchorRef, value, onChange, swatches, onClose, allowGrad
       {isGrad && (
         <div className="px-3 pb-2.5">
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: T.textMuted }}>Stops</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: T.textMuted }}>Stops</span>
             <button type="button" title="Add stop" onClick={() => addStop(value, onChange, setSel)}
               className="w-5 h-5 flex items-center justify-center rounded cursor-pointer" style={{ background: T.bgDeep, border: `1px solid ${T.border}`, color: T.textMuted }}>
               <Plus size={12} />

@@ -153,7 +153,7 @@ function ScriptCard({ item, index, onUpdate, onRemove, disabled, onGenerateScrip
           className="shrink-0 flex items-center gap-1 h-6 px-2 rounded-md text-[10px] font-semibold text-violet-600 dark:text-violet-400 bg-violet-500/10 border border-violet-200 dark:border-violet-500/25 hover:bg-violet-500/15 cursor-pointer font-[inherit] transition-all disabled:opacity-40">
           <Sparkles size={11} /> Generate
         </button>
-        <span className="shrink-0 text-[9.5px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.06em] px-2 py-0.5 rounded-full"
           style={{ background: cfg.bg, color: cfg.color }}>
           {item.status === "generating"
             ? <span className="flex items-center gap-1"><Loader2 size={8} className="animate-spin inline" /> {cfg.label}</span>
@@ -258,7 +258,7 @@ function ModelDropdown({
         return (
           <Fragment key={m.id}>
             {showHeader && (
-              <div className="px-3.5 pt-2.5 pb-1 text-[9px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-600">
+              <div className="px-3.5 pt-2.5 pb-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-600">
                 Local AI
               </div>
             )}
@@ -324,7 +324,7 @@ function Slider({ value, onChange, min, max, step = 1 }: {
   return (
     <div className="relative w-full h-5 flex items-center">
       <div className="absolute left-0 right-0 h-1 rounded-full bg-zinc-200 dark:bg-white/10" />
-      <div className="absolute left-0 h-1 rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1]" style={{ width: `${pct}%` }} />
+      <div className="absolute left-0 h-1 rounded-full bg-brand-gradient" style={{ width: `${pct}%` }} />
       <div className="absolute w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-sm" style={{ left: `calc(${pct}% - 7px)` }} />
       <input
         type="range" min={min} max={max} step={step} value={value}
@@ -829,8 +829,8 @@ export default function TextToSpeechPage() {
             </div>
 
             {/* ── LEFT (fixed panel, scrolls independently): model + voice + settings + generate ──
-                Transparent so the app background gradient shows through (cards bring their own bg). */}
-            <div className="w-96 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 overflow-hidden order-1">
+                Sits on the shared panel surface (bg-panel), like every tool's side panel. */}
+            <div className="w-96 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden order-1">
             <div className="flex-1 overflow-y-auto px-5 py-5 space-y-4">
 
               {/* Model & Voice */}
@@ -861,7 +861,7 @@ export default function TextToSpeechPage() {
                   {modelStatus === "checking" && (
                     <div>
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Voices</span>
+                        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Voices</span>
                         <Loader2 size={12} className="text-violet-500 animate-spin" />
                       </div>
                       <div className="grid grid-cols-1 gap-1.5">
@@ -883,7 +883,7 @@ export default function TextToSpeechPage() {
                     <div>
                       {/* Header: counts */}
                       <div className="flex items-center justify-between mb-2">
-                        <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Voices</span>
+                        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Voices</span>
                         <span className="text-[10px] text-zinc-400 tabular-nums flex items-center gap-1">
                           {voiceList.length} of {allVoices.length}
                         </span>
@@ -1004,7 +1004,7 @@ export default function TextToSpeechPage() {
                                 disabled={!!loadingSample && loadingSample !== v.id}
                                 className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 cursor-pointer border-none transition-all ${
                                   isPlaying
-                                    ? "bg-violet-500 shadow-md shadow-violet-500/35"
+                                    ? "bg-violet-500 shadow-md"
                                     : isLoading
                                       ? "bg-zinc-100 dark:bg-white/8"
                                       : "bg-white dark:bg-white/10 hover:bg-violet-500/10 hover:scale-110"
@@ -1060,12 +1060,12 @@ export default function TextToSpeechPage() {
                     <audio ref={audioRef} src={audioUrl} className="hidden" />
                     <div className="flex items-center gap-2.5 bg-zinc-50 dark:bg-white/4 border border-zinc-200 dark:border-white/8 rounded-xl px-3 py-2.5">
                       <button onClick={togglePlay}
-                        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 cursor-pointer border-none bg-linear-to-br from-[#3D7EFD] to-[#0047D1] hover:brightness-110 transition-all duration-150 shadow-md shadow-violet-500/25">
+                        className="w-9 h-9 rounded-full flex items-center justify-center shrink-0 cursor-pointer border-none bg-brand-gradient hover:brightness-110 transition-all duration-150 shadow-md">
                         {playing ? <Pause size={13} className="text-white fill-white" /> : <Play size={13} className="text-white fill-white" style={{ marginLeft: 1 }} />}
                       </button>
                       <div className="flex-1 min-w-0">
                         <div className="h-1 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
-                          <div className="h-full rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1] transition-all" style={{ width: `${progress * 100}%` }} />
+                          <div className="h-full rounded-full bg-brand-gradient transition-all" style={{ width: `${progress * 100}%` }} />
                         </div>
                         <p className="text-[10px] text-zinc-400 mt-1 tabular-nums">
                           {fmtDur(curTime)} / {audioDur ? fmtDur(audioDur) : fmtDur(estSeconds)}
@@ -1103,7 +1103,7 @@ export default function TextToSpeechPage() {
                       ].map(s => (
                         <div key={s.label} className="flex flex-col items-center gap-0.5 py-2 rounded-xl bg-zinc-50 dark:bg-white/3 border border-zinc-100 dark:border-white/6">
                           <span className="text-[18px] font-extrabold tabular-nums" style={{ color: s.value > 0 ? s.color : "#71717a" }}>{s.value}</span>
-                          <span className="text-[9.5px] font-semibold text-zinc-400 uppercase tracking-widest">{s.label}</span>
+                          <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.08em]">{s.label}</span>
                         </div>
                       ))}
                     </div>
@@ -1125,7 +1125,7 @@ export default function TextToSpeechPage() {
                       <div className="border-t border-zinc-100 dark:border-white/6 pt-3 flex flex-col gap-1">
                         <div className="flex items-center gap-1.5 mb-1">
                           <CheckCircle2 size={11} className="text-emerald-500" />
-                          <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">Completed</span>
+                          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Completed</span>
                         </div>
                         {bulkScripts.filter(s => s.status === "done").map((s, i) => (
                           <div key={s.id} className="flex items-center gap-2 py-1 border-b border-zinc-100 dark:border-white/6 last:border-0">
@@ -1152,7 +1152,7 @@ export default function TextToSpeechPage() {
               {!tipDismissed && (
               <div className="rounded-xl border border-violet-200/60 dark:border-violet-500/15 bg-violet-50/40 dark:bg-violet-500/5 px-4 py-3">
                 <div className="flex items-start justify-between gap-2 mb-1.5">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-violet-500">Tip</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-violet-500">Tip</p>
                   <button onClick={dismissTip} title="Dismiss" aria-label="Dismiss tip"
                     className="-mt-0.5 -mr-1 w-5 h-5 rounded-md flex items-center justify-center shrink-0 cursor-pointer border-none bg-transparent text-violet-400/70 hover:text-violet-500 hover:bg-violet-500/10 transition">
                     <X size={12} />
@@ -1168,8 +1168,8 @@ export default function TextToSpeechPage() {
             </div>
 
             {/* ── Pinned footer: the primary Generate action, always visible ──
-                Frosted translucency anchors the action while still revealing the app gradient. */}
-            <div className="shrink-0 border-t border-zinc-200 dark:border-white/8 px-4 py-3 bg-white/50 dark:bg-white/[0.04] backdrop-blur-sm flex flex-col gap-2.5">
+                A hairline divider anchors the action at the foot of the panel. */}
+            <div className="shrink-0 border-t border-zinc-200 dark:border-white/8 px-4 py-3 bg-panel flex flex-col gap-2.5">
               {/* Active model pill */}
               <div className="flex items-center gap-2 bg-zinc-50 dark:bg-white/4 border border-zinc-200 dark:border-white/8 rounded-lg px-3 py-2">
                 <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: modelStatus === "ready" ? "#10b981" : "#71717a" }} />
@@ -1193,7 +1193,7 @@ export default function TextToSpeechPage() {
                   className={`w-full flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-semibold transition-all duration-200 cursor-pointer border-none font-[inherit] ${
                     generating ? "bg-violet-500/80 text-white cursor-wait"
                     : !canGenerate ? "bg-zinc-100 dark:bg-white/6 text-zinc-400 cursor-not-allowed"
-                    : "bg-linear-to-br from-[#3D7EFD] to-[#0047D1] text-white hover:brightness-110"
+                    : "bg-brand-gradient text-white hover:brightness-110"
                   }`}>
                   {generating ? <><Loader2 size={14} className="animate-spin" />Generating…</> : <><Headphones size={14} />Generate Speech</>}
                 </button>
@@ -1208,7 +1208,7 @@ export default function TextToSpeechPage() {
                       <span className="text-[11px] font-semibold text-violet-500 tabular-nums">{bulkDone} / {bulkTotal}</span>
                     </div>
                     <div className="h-1.5 rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
-                      <div className="h-full rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1] transition-all duration-500"
+                      <div className="h-full rounded-full bg-brand-gradient transition-all duration-500"
                         style={{ width: `${bulkTotal > 0 ? (bulkDone / bulkTotal) * 100 : 0}%` }} />
                     </div>
                   </div>
@@ -1221,7 +1221,7 @@ export default function TextToSpeechPage() {
                 ) : (
                   <button onClick={bulkGenerateAll} disabled={!canBulk}
                     className={`w-full flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-semibold cursor-pointer border-none font-[inherit] transition-all ${
-                      canBulk ? "bg-linear-to-br from-[#3D7EFD] to-[#0047D1] text-white hover:brightness-110"
+                      canBulk ? "bg-brand-gradient text-white hover:brightness-110"
                               : "bg-zinc-100 dark:bg-white/6 text-zinc-400 cursor-not-allowed"
                     }`}>
                     <Headphones size={14} />

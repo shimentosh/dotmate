@@ -8,6 +8,8 @@
  *   1. **CLI brains** — Claude Code / Codex / Gemini already installed on this
  *      machine, driven as a local process (runs on the user's own CLI sign-in).
  *   2. **Ollama models** — rendered by the parent section, below this panel.
+ *   3. **API brains** — providers the user saved a key for in Settings → API Keys
+ *      (opt-in, cloud). Only offered here as a default choice.
  *
  * This panel only chooses a *default*; every engine picker still offers every
  * detected brain, so a user can switch per task. With no default set, pickers
@@ -25,8 +27,9 @@ import {
   type CliBrainId, type CliBrainStatus,
 } from "@/lib/brain/cli-brain";
 import {
-  cliPathOverrides, type LocalAIConfig,
+  LOCAL_AI_CHANGED, cliPathOverrides, type LocalAIConfig,
 } from "@/lib/brain/local-ai-config";
+import { apiBrainDef, listApiBrains, type ApiBrainStatus } from "@/lib/brain/api-brain";
 import { humanizeError } from "@/lib/error/app-error";
 import { logDebug } from "@/lib/log";
 
@@ -69,6 +72,15 @@ export function BrainTab({
   }, [JSON.stringify(cliPathOverrides(cfg))]);
 
   useEffect(() => { detect(); }, [detect]);
+
+  // Providers with a saved API key — re-read whenever keys change.
+  const [apiBrains, setApiBrains] = useState<ApiBrainStatus[]>([]);
+  useEffect(() => {
+    const load = () => { listApiBrains().then((rows) => setApiBrains(rows.filter((r) => r.configured))); };
+    load();
+    window.addEventListener(LOCAL_AI_CHANGED, load);
+    return () => window.removeEventListener(LOCAL_AI_CHANGED, load);
+  }, []);
 
   /** A real round-trip, so "detected" can't be confused with "signed in and working". */
   async function runTest(id: CliBrainId) {
@@ -115,6 +127,11 @@ export function BrainTab({
       label: m.replace(/:latest$/, ""),
       sub: "Ollama",
     })),
+    ...apiBrains.map((a) => ({
+      id: `api:${a.id}`,
+      label: apiBrainDef(a.id)?.label ?? a.id,
+      sub: `${a.model} · API key`,
+    })),
   ];
 
   const defaultId = cfg.brainDefault ?? "";
@@ -125,7 +142,7 @@ export function BrainTab({
       {/* ── Default brain ───────────────────────────────────────────────── */}
       <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-white/[0.02] overflow-hidden">
         <div className="px-4 py-2.5 border-b border-zinc-100 dark:border-white/6 flex items-center justify-between gap-2">
-          <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Default brain</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Default brain</p>
           <button onClick={detect} title="Re-detect"
             className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-zinc-100 dark:hover:bg-white/6 text-zinc-400 border-none bg-transparent cursor-pointer transition">
             {detecting ? <Loader2 size={11} className="animate-spin" /> : <RefreshCw size={11} strokeWidth={1.8} />}
@@ -164,7 +181,7 @@ export function BrainTab({
       <div>
         <div className="flex items-center gap-2.5 mb-3">
           <Terminal size={13} className="text-violet-500" />
-          <h2 className="text-[11px] font-bold uppercase tracking-widest shrink-0 text-violet-500">
+          <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] shrink-0 text-violet-500">
             AI CLI on your machine
           </h2>
           <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-600 tabular-nums shrink-0">
@@ -208,10 +225,10 @@ export function BrainTab({
                       <span className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-zinc-100 dark:bg-white/6 text-zinc-500">
                         {b.bin}
                       </span>
-                      <span className="text-[9.5px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 leading-none">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.06em] px-1.5 py-0.5 rounded-full bg-violet-50 dark:bg-violet-500/10 text-violet-600 dark:text-violet-400 leading-none">
                         vision + text
                       </span>
-                      <span className="text-[9.5px] font-bold uppercase tracking-wide px-1.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 leading-none">
+                      <span className="text-[10px] font-semibold uppercase tracking-[0.06em] px-1.5 py-0.5 rounded-full bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 leading-none">
                         local
                       </span>
                     </div>

@@ -1,10 +1,11 @@
 /**
  * The ONE list of local brains, shared by every engine picker.
  *
- * A "local brain" is a text/vision LLM that runs on (or is driven from) this
- * machine. Two kinds:
+ * A "brain" is a text/vision LLM the user brings. Three kinds:
  *   - `cli:<id>`            — the user's Claude Code / Codex / Gemini CLI (a process)
  *   - `local:<ollamaModel>` — a model served by Ollama on localhost (HTTP)
+ *   - `api:<provider>`      — the user's own cloud provider via an API key they
+ *                             saved in Settings → API Keys (opt-in; see api-brain.ts)
  *
  * Every surface uses `useLocalBrains()` + `runLocalBrain()`, so adding a brain
  * kind is one edit.
@@ -18,6 +19,7 @@ import {
   CLI_BRAINS, cliBrainDef, cliBrainGenerate, detectCliBrains, parseCliEngine,
   type CliBrainId,
 } from "./cli-brain";
+import { apiBrainDef, apiBrainGenerate, listApiBrains, parseApiEngine } from "./api-brain";
 import {
   LOCAL_AI_CHANGED, cliPathOverrides, cliPrefs, loadLocalAIConfig, ollamaUrl,
   type LocalAIConfig,
@@ -28,7 +30,7 @@ export interface LocalBrainOption {
   /** `cli:claude-code` or `local:llama3.2` */
   id: string;
   label: string;
-  kind: "cli" | "ollama";
+  kind: "cli" | "ollama" | "api";
   /** True when this brain can take images. */
   vision: boolean;
   /** Version string / model tag, for a secondary line in the picker. */
@@ -76,6 +78,20 @@ async function probeCli(cfg: LocalAIConfig): Promise<LocalBrainOption[]> {
     });
 }
 
+/** Providers with a saved API key (none on the web build). */
+async function probeApi(): Promise<LocalBrainOption[]> {
+  const statuses = await listApiBrains();
+  return statuses
+    .filter((s) => s.configured)
+    .map((s) => ({
+      id: `api:${s.id}`,
+      label: apiBrainDef(s.id)?.label ?? s.id,
+      kind: "api" as const,
+      vision: false, // text-only for now: no caller sends images to an API brain
+      sub: s.model,
+    }));
+}
+
 /**
  * Discover every local brain available on this machine.
  *
@@ -112,13 +128,14 @@ export function useLocalBrains(): {
     (async () => {
       // Probe both kinds in parallel — the CLI probe spawns processes and is the
       // slow one, so serialising would make every picker wait on it.
-      const [cli, ollama] = await Promise.all([
+      const [cli, ollama, api] = await Promise.all([
         probeCli(cfg).catch(() => [] as LocalBrainOption[]),
         probeOllama(ollamaUrl(cfg)).catch(() => [] as LocalBrainOption[]),
+        probeApi().catch(() => [] as LocalBrainOption[]),
       ]);
       if (cancelled || !alive.current) return;
-      // CLI brains first: they're the more capable option when present.
-      setBrains([...cli, ...ollama]);
+      // Local first (CLI, then Ollama); the user's API keys after them.
+      setBrains([...cli, ...ollama, ...api]);
       setLoading(false);
     })();
     return () => { cancelled = true; };
@@ -132,11 +149,11 @@ export function useLocalBrains(): {
 
 /** True for any engine id this module can execute locally. */
 export function isLocalBrainEngine(engineId: string): boolean {
-  return engineId.startsWith("cli:") || engineId === "local" || engineId.startsWith("local:");
+  return engineId.startsWith("cli:") || engineId.startsWith("api:") || engineId === "local" || engineId.startsWith("local:");
 }
 
 export interface RunLocalBrainOpts {
-  /** `cli:<id>` · `local:<model>` · bare `local` (first Ollama model). */
+  /** `cli:<id>` · `api:<provider>` · `local:<model>` · bare `local` (first Ollama model). */
   engineId: string;
   system?: string;
   prompt: string;
@@ -148,15 +165,23 @@ export interface RunLocalBrainOpts {
 }
 
 /**
- * Run one turn on a local brain — the single execution path for `cli:*` and
+ * Run one turn on a brain — the single execution path for `cli:*`, `api:*` and
  * `local:*`, so every surface behaves identically.
  *
  * Note the asymmetry callers must handle: Ollama streams token-by-token, while a
- * CLI brain returns its whole answer at once (they buffer internally). `onChunk`
+ * CLI or API brain returns its whole answer at once. `onChunk`
  * therefore fires many times for Ollama and exactly once for a CLI.
  */
 export async function runLocalBrain(opts: RunLocalBrainOpts): Promise<string> {
   const cfg = loadLocalAIConfig();
+
+  const apiId = parseApiEngine(opts.engineId);
+  if (apiId) {
+    const text = await apiBrainGenerate({ id: apiId, system: opts.system, prompt: opts.prompt });
+    opts.onChunk?.(text);
+    return text;
+  }
+
   const cliId = parseCliEngine(opts.engineId);
 
   if (cliId) {
@@ -225,6 +250,8 @@ export async function runLocalBrain(opts: RunLocalBrainOpts): Promise<string> {
 export function localBrainLabel(engineId: string): string {
   const cli = parseCliEngine(engineId);
   if (cli) return cliBrainDef(cli)?.label ?? cli;
+  const api = parseApiEngine(engineId);
+  if (api) return apiBrainDef(api)?.label ?? api;
   if (engineId.startsWith("local:")) return engineId.slice("local:".length);
   if (engineId === "local") return "Local (Ollama)";
   return engineId;

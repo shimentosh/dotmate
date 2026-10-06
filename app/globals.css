@@ -75,15 +75,72 @@ html[data-tauri="true"] { --titlebar-h: 36px; }
   --color-sidebar-accent-foreground:   var(--sidebar-accent-foreground);
   --color-sidebar-border:              var(--sidebar-border);
   --color-sidebar-ring:                var(--sidebar-ring);
+
+  /* DotMate semantic surfaces — prefer these over raw zinc/white/hex in new code. */
+  --color-surface:                     var(--surface);
+  --color-surface-elevated:            var(--surface-elevated);
+  --color-surface-muted:               var(--surface-muted);
+  --color-panel:                       var(--panel);
+  --color-chrome:                      var(--chrome);
+  --color-border-strong:               var(--border-strong);
+  --color-brand:                       var(--brand);
+  --color-brand-hover:                 var(--brand-hover);
+  --color-brand-soft:                  var(--brand-soft);
+  --color-success:                     var(--success);
+  --color-warning:                     var(--warning);
+  --color-info:                        var(--info);
+
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
   --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.75);
+  --radius-3xl: calc(var(--radius) * 2.25);
+}
+
+/* ── Elevation scale ──────────────────────────────────────────────────────────
+   Quiet, tight shadows: depth comes from surface contrast + hairline borders,
+   not from blur. Overrides Tailwind's defaults so every `shadow-*` utility in the
+   app picks up the calmer scale. */
+@theme {
+  --shadow-xs:  0 1px 1px rgb(16 24 40 / 0.04);
+  --shadow-sm:  0 1px 2px rgb(16 24 40 / 0.05), 0 1px 1px rgb(16 24 40 / 0.03);
+  --shadow:     0 1px 3px rgb(16 24 40 / 0.07), 0 1px 2px rgb(16 24 40 / 0.04);
+  --shadow-md:  0 4px 10px -2px rgb(16 24 40 / 0.07), 0 2px 4px -2px rgb(16 24 40 / 0.04);
+  --shadow-lg:  0 10px 24px -6px rgb(16 24 40 / 0.12), 0 3px 6px -3px rgb(16 24 40 / 0.05);
+  --shadow-xl:  0 18px 40px -12px rgb(16 24 40 / 0.18), 0 4px 10px -4px rgb(16 24 40 / 0.06);
+  --shadow-2xl: 0 28px 64px -18px rgb(16 24 40 / 0.30);
+}
+
+/* Brand fill — the single primary-action surface (buttons, active toggles,
+   progress fills). A near-flat ramp: reads as solid blue with a hint of lift. */
+@utility bg-brand-gradient {
+  background-image: var(--brand-gradient);
 }
 
 /* ── Light theme tokens ── */
 :root {
-  --background:           #fafafa;
+  /* Brand (DotMirror blue) — the one place brand colour is defined for CSS. */
+  --brand:                #0057FC;
+  --brand-hover:          #004BE0;
+  --brand-active:         #0042C4;
+  --brand-soft:           rgb(0 87 252 / 0.08);
+  --brand-gradient:       linear-gradient(180deg, #1A66FD 0%, #0052F0 100%);
+
+  /* Surfaces: background → panel/chrome → surface (cards) → elevated (popovers). */
+  --surface:              #ffffff;
+  --surface-elevated:     #ffffff;
+  --surface-muted:        #f4f4f5;
+  --panel:                #ffffff;
+  --chrome:               #fbfbfc;
+  --border-strong:        #d4d4d8;
+
+  /* Status */
+  --success:              #16a34a;
+  --warning:              #d97706;
+  --info:                 #0057FC;
+
+  --background:           #f6f6f7;
   --foreground:           #18181b;
   --card:                 #ffffff;
   --card-foreground:      #18181b;
@@ -98,7 +155,7 @@ html[data-tauri="true"] { --titlebar-h: 36px; }
   --accent:               #f4f4f5;
   --accent-foreground:    #18181b;
   --destructive:          #dc2626;
-  --border:               #e4e4e7;
+  --border:               #e6e6e9;
   --input:                #d4d4d8;
   --ring:                 #0057FC;
   --radius:               0.5rem;
@@ -132,23 +189,40 @@ html[data-tauri="true"] { --titlebar-h: 36px; }
   --c-backdrop-heavy: blur(8px);
 
   /* Sidebar (light) */
-  --sidebar:                    #ffffff;
+  --sidebar:                    #fbfbfc;
   --sidebar-foreground:         #18181b;
   --sidebar-primary:            #0057FC;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent:             #f4f4f5;
-  --sidebar-accent-foreground:  #3f3f46;
-  --sidebar-border:             #e4e4e7;
+  --sidebar-accent:             rgb(0 87 252 / 0.07);
+  --sidebar-accent-foreground:  #0047D1;
+  --sidebar-border:             #e6e6e9;
   --sidebar-ring:               #0057FC;
 }
 
 /* ── Dark theme tokens ── */
 .dark {
-  --background:           #09090b;
+  --brand:                #2A6FFD;
+  --brand-hover:          #4682FD;
+  --brand-active:         #1F63F0;
+  --brand-soft:           rgb(61 126 253 / 0.14);
+  --brand-gradient:       linear-gradient(180deg, #2A6FFD 0%, #0057FC 100%);
+
+  --surface:              #141417;
+  --surface-elevated:     #1a1a1e;
+  --surface-muted:        #1c1c20;
+  --panel:                #0f0f12;
+  --chrome:               #0d0d10;
+  --border-strong:        rgba(255,255,255,0.14);
+
+  --success:              #22c55e;
+  --warning:              #f59e0b;
+  --info:                 #3D7EFD;
+
+  --background:           #0a0a0c;
   --foreground:           #f4f4f5;
-  --card:                 #18181b;
+  --card:                 #141417;
   --card-foreground:      #f4f4f5;
-  --popover:              #18181b;
+  --popover:              #1a1a1e;
   --popover-foreground:   #f4f4f5;
   --primary:              #0057FC;
   --primary-foreground:   #ffffff;
@@ -159,7 +233,7 @@ html[data-tauri="true"] { --titlebar-h: 36px; }
   --accent:               #27272a;
   --accent-foreground:    #f4f4f5;
   --destructive:          #dc2626;
-  --border:               rgba(255,255,255,0.05);
+  --border:               rgba(255,255,255,0.07);
   --input:                rgba(255,255,255,0.10);
   --ring:                 #0057FC;
 
@@ -192,13 +266,13 @@ html[data-tauri="true"] { --titlebar-h: 36px; }
   --c-backdrop-heavy: blur(32px) saturate(180%);
 
   /* Sidebar (dark) */
-  --sidebar:                    #0c0c0e;
+  --sidebar:                    #0d0d10;
   --sidebar-foreground:         #f4f4f5;
   --sidebar-primary:            #0057FC;
   --sidebar-primary-foreground: #ffffff;
-  --sidebar-accent:             rgba(255,255,255,0.06);
-  --sidebar-accent-foreground:  #d4d4d8;
-  --sidebar-border:             rgba(255,255,255,0.05);
+  --sidebar-accent:             rgb(61 126 253 / 0.12);
+  --sidebar-accent-foreground:  #dce7ff;
+  --sidebar-border:             rgba(255,255,255,0.07);
   --sidebar-ring:               #0057FC;
 }
 
@@ -219,6 +293,16 @@ html {
     text-rendering: optimizeLegibility;
     height: 100%;
   }
+
+  /* One keyboard-focus treatment for every interactive control. Mouse clicks
+     don't trigger it (:focus-visible), so it never adds visual noise. */
+  :where(button, a, [role="button"], [role="tab"], [role="switch"], [role="option"], summary, select, [tabindex]:not([tabindex="-1"])):focus-visible {
+    outline: 2px solid color-mix(in oklab, var(--ring) 65%, transparent);
+    outline-offset: 2px;
+  }
+  :where(input, textarea, select)::placeholder { color: var(--c-text-dim); opacity: 0.85; }
+  ::selection { background: color-mix(in oklab, var(--brand) 22%, transparent); }
+  :where(button:disabled) { cursor: not-allowed; }
 }
 
 /* ── Scrollbars ──
@@ -268,16 +352,16 @@ html {
 .rich-editor li { margin: 0.2em 0; }
 .rich-editor:empty::before { content: attr(data-placeholder); color: #a1a1aa; pointer-events: none; }
 
-/* ── Primary gradient button ── */
+/* ── Primary button ── */
 .btn-primary {
-  background: linear-gradient(135deg, #3D7EFD 0%, #0047D1 100%);
+  background: var(--brand-gradient);
   color: #fff;
   border: none;
   border-radius: 0.7rem; /* rounded-xl — the app button radius, NOT a full pill */
   font-weight: 600;
   cursor: pointer;
-  transition: box-shadow 0.18s ease, transform 0.18s ease, opacity 0.18s ease;
-  box-shadow: 0 2px 8px rgba(0, 87, 252, 0.25);
+  transition: filter 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+  box-shadow: 0 1px 2px rgb(0 40 120 / 0.18), inset 0 1px 0 rgb(255 255 255 / 0.12);
   display: inline-flex;
   align-items: center;
   gap: 6px;
@@ -285,8 +369,21 @@ html {
   text-decoration: none;
   flex-shrink: 0;
 }
-.btn-primary:hover { box-shadow: 0 5px 16px rgba(0, 87, 252, 0.38); transform: translateY(-1px); }
-.btn-primary:active { transform: translateY(0) scale(0.985); opacity: 0.92; box-shadow: 0 2px 8px rgba(0, 87, 252, 0.30); }
+.btn-primary:hover { filter: brightness(1.06); }
+.btn-primary:active { transform: scale(0.985); filter: brightness(0.96); }
+
+/* Disabled primary actions read as a neutral, still-legible control rather than
+   a washed-out brand colour (which turns muddy navy in dark mode). Applies to
+   every brand-filled button, whether the fill comes from the utility or the
+   inline `var(--brand-gradient)` style — hence the !important over inline. */
+button:disabled:is(.btn-primary, .bg-brand-gradient, [style*="--brand-gradient"]) {
+  background: var(--surface-muted) !important;
+  color: var(--c-text-dim) !important;
+  box-shadow: inset 0 0 0 1px var(--border) !important;
+  opacity: 1 !important;
+  filter: none !important;
+  transform: none !important;
+}
 
 /* ── Native-app feel (desktop only) ─────────────────────────────────────────
    The UI chrome shouldn't be drag-selectable like a web page. Disable text
@@ -304,65 +401,30 @@ html {
 .app-native .selectable * { -webkit-user-select: text; user-select: text; }
 
 /* ── Ambient app background ────────────────────────────────────────────────
-   Soft CapCut-style gradient glow behind the app content. The topbar, sidebar
-   and main area are transparent so this shows through as one seamless surface
-   (no grid, no edges). Theme-aware via the glow vars below. */
+   A single, barely-there brand tint at the top of the work area — enough to give
+   the canvas some warmth without competing with content. Theme-aware via the
+   glow vars below (also reused by a few overlays). */
 .app-bg-gradient {
   position: absolute;
   inset: 0;
-  /* Larger radii that bleed well past the top/bottom edges into the body, so the
-     ambient glow reads across the WHOLE app (not just behind the title bar). */
-  background:
-    radial-gradient(100% 80% at 12% -12%, var(--app-bg-glow-1), transparent 78%),
-    radial-gradient(72% 66% at 106% -4%, var(--app-bg-glow-2), transparent 74%),
-    radial-gradient(130% 95% at 50% 114%, var(--app-bg-glow-3), transparent 78%);
+  background: radial-gradient(90% 60% at 50% -20%, var(--app-bg-glow-1), transparent 70%);
 }
 :root {
-  --app-bg-glow-1: rgba(0, 87, 252, 0.09);
-  --app-bg-glow-2: rgba(0, 71, 209, 0.06);
-  --app-bg-glow-3: rgba(61, 126, 253, 0.06);
+  --app-bg-glow-1: rgba(0, 87, 252, 0.035);
+  --app-bg-glow-2: transparent;
+  --app-bg-glow-3: transparent;
 }
 .dark {
-  --app-bg-glow-1: rgba(0, 87, 252, 0.18);
-  --app-bg-glow-2: rgba(0, 71, 209, 0.13);
-  --app-bg-glow-3: rgba(0, 87, 252, 0.12);
+  --app-bg-glow-1: rgba(61, 126, 253, 0.06);
+  --app-bg-glow-2: transparent;
+  --app-bg-glow-3: transparent;
 }
 
-/* Glassy card — translucent surface + the same purple glow wash used app-wide,
-   so panels read as frosted glass over the ambient gradient instead of flat. */
-.glass-card {
-  background:
-    radial-gradient(130% 90% at 100% -10%, var(--app-bg-glow-1), transparent 58%),
-    radial-gradient(120% 95% at 0% 115%, var(--app-bg-glow-2), transparent 62%),
-    rgba(255, 255, 255, 0.70);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-}
-.dark .glass-card {
-  background:
-    radial-gradient(130% 90% at 100% -10%, var(--app-bg-glow-1), transparent 58%),
-    radial-gradient(120% 95% at 0% 115%, var(--app-bg-glow-2), transparent 62%),
-    rgba(255, 255, 255, 0.04);
-}
+/* Card surface (historical name) — now a clean, solid card: no blur, no wash. */
+.glass-card { background: var(--surface); }
 
-/* Glass modal — a richer purple wash than the cards (more visible), on a
-   near-opaque base so a focused dialog stays readable over the page behind it. */
-.glass-modal {
-  background:
-    radial-gradient(115% 75% at 100% -6%, rgba(0, 87, 252, 0.16), transparent 56%),
-    radial-gradient(105% 80% at 0% 108%, rgba(0, 71, 209, 0.12), transparent 60%),
-    linear-gradient(135deg, rgba(0, 87, 252, 0.05), transparent 60%),
-    rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-.dark .glass-modal {
-  background:
-    radial-gradient(115% 75% at 100% -6%, rgba(140, 70, 250, 0.30), transparent 56%),
-    radial-gradient(105% 80% at 0% 108%, rgba(0, 71, 209, 0.24), transparent 60%),
-    linear-gradient(135deg, rgba(0, 87, 252, 0.12), transparent 58%),
-    rgba(20, 20, 24, 0.92);
-}
+/* Modal surface (historical name) — solid elevated surface. */
+.glass-modal { background: var(--surface-elevated); }
 
 @keyframes spin {
   from { transform: rotate(0deg); }

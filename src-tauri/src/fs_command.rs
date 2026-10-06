@@ -25,6 +25,8 @@ pub fn copy_files(app: AppHandle, files: Vec<String>, dest_dir: String) -> Resul
         let src_path = std::path::Path::new(src);
         let Some(name) = src_path.file_name() else { continue };
         if !src_path.is_file() { continue; }
+        // Never let a copy exfiltrate the stored API keys.
+        if security::is_secret_path(&app, src_path) { continue; }
         let target = dest.join(name);
         // Don't copy a file onto itself (e.g. saving back into Downloads).
         if src_path == target { copied += 1; continue; }
@@ -63,7 +65,7 @@ pub fn save_bytes(app: AppHandle, request: tauri::ipc::Request<'_>) -> Result<St
 /// be used to read arbitrary files. `(async)` — never block the UI.
 #[tauri::command(async)]
 pub fn read_file_bytes(app: AppHandle, path: String) -> Result<tauri::ipc::Response, String> {
-    let safe = security::confine_existing(&path, &security::app_managed_roots(&app))?;
+    let safe = security::confine_app_file(&app, &path)?;
     std::fs::read(&safe)
         .map(tauri::ipc::Response::new)
         .map_err(|e| e.to_string())
@@ -73,7 +75,7 @@ pub fn read_file_bytes(app: AppHandle, path: String) -> Result<tauri::ipc::Respo
 /// directories (legit callers only delete app temp files).
 #[tauri::command]
 pub fn delete_file(app: AppHandle, path: String) -> Result<(), String> {
-    match security::confine_existing(&path, &security::app_managed_roots(&app)) {
+    match security::confine_app_file(&app, &path) {
         Ok(safe) => match std::fs::remove_file(&safe) {
             Ok(()) => Ok(()),
             Err(e) if e.kind() == std::io::ErrorKind::NotFound => Ok(()),

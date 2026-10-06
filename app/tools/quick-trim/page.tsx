@@ -36,7 +36,7 @@ export default function QuickTrimPage() {
   return (
     <AppLayout>
       <div className="flex flex-col flex-1 min-h-0 overflow-hidden">
-        <div className="shrink-0 flex items-center gap-3 px-4 h-11 border-b border-zinc-200 dark:border-white/8 bg-white/60 dark:bg-white/[0.02] backdrop-blur-xl">
+        <div className="shrink-0 flex items-center gap-3 px-4 h-11 border-b border-zinc-200 dark:border-white/8 bg-panel">
           <div role="tablist" aria-label="Quick Trim tools" className="flex items-center gap-1 p-0.5 rounded-lg bg-zinc-100 dark:bg-white/[0.05]">
             {TABS.map(({ id, label, icon: Icon }) => {
               const on = id === active;

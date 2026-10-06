@@ -30,7 +30,7 @@ export default function AboutPage() {
     <div className="flex flex-col gap-6">
       <SettingsHeader title="About" subtitle="Version, support and third-party notices." />
 
-      <div className="rounded-2xl border border-zinc-200 dark:border-white/8 glass-card px-5 py-4 flex items-center gap-4">
+      <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-surface shadow-xs px-5 py-4 flex items-center gap-4">
         <BrandMark size={40} className="shrink-0" />
         <div className="flex-1 min-w-0">
           <p className="text-[15px] font-semibold text-zinc-900 dark:text-zinc-100">{brand.name}</p>
@@ -50,14 +50,14 @@ export default function AboutPage() {
       <DevelopedBy variant="card" />
 
       <div>
-        <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 mb-2">Third-party notices</p>
+        <h3 className="text-[14px] font-semibold text-zinc-900 dark:text-zinc-100 mb-1">Third-party notices</h3>
         <p className="text-[12px] text-zinc-500 dark:text-zinc-400 leading-relaxed mb-3">
           {brand.name} is built on the open-source components below. Their licences apply to
           those components; the full notices ship in THIRD_PARTY_NOTICES.md with the source.
         </p>
         <div className="flex flex-col gap-4">
           {GROUPS.map(({ key, label }) => (
-            <div key={key} className="rounded-xl border border-zinc-200 dark:border-white/8 overflow-hidden">
+            <div key={key} className="rounded-xl border border-zinc-200 dark:border-white/8 bg-surface overflow-hidden">
               <p className="px-4 py-2 text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 bg-zinc-50 dark:bg-white/[0.03] border-b border-zinc-100 dark:border-white/6">{label}</p>
               <div className="divide-y divide-zinc-100 dark:divide-white/5">
                 {THIRD_PARTY_NOTICES.filter((n) => n.delivery === key).map((n) => (

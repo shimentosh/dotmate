@@ -1707,7 +1707,7 @@ export default function ImageToVideoPage() {
 
         <div className="relative flex flex-1 min-h-0">
           {/* ── LEFT: inputs panel ── */}
-          <div className="w-86 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white dark:bg-zinc-900 overflow-hidden">
+          <div className="w-86 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             <div className="flex-1 overflow-y-auto px-5 py-5 space-y-6">
 
             {/* Errors */}
@@ -1726,7 +1726,7 @@ export default function ImageToVideoPage() {
             {/* ── Images ── */}
             <div>
               <div className="mb-3">
-                <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Images</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Images</p>
               </div>
               {separateMode && slides.length > 0 && (
                 <div className="flex items-center gap-1.5 mb-3 px-3 py-2 rounded-lg bg-violet-500/5 border border-violet-500/15">
@@ -1758,7 +1758,7 @@ export default function ImageToVideoPage() {
               {slides.length > 0 && (
                 <div className="mb-3 space-y-2">
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mr-1">Bulk fit:</span>
+                    <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mr-1">Bulk fit:</span>
                     {(["contain","cover","blur-fill"] as FitMode[]).map(f => (
                       <button key={f} onClick={() => applyBulkFit(f)}
                         className="h-6 px-2.5 rounded-md text-[10px] font-semibold cursor-pointer border transition-all"
@@ -1877,7 +1877,7 @@ export default function ImageToVideoPage() {
                   <span>{Math.min(Math.round(genProgress), 100)}%</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
-                  <div className="h-full rounded-full transition-all" style={{ width:`${Math.min(genProgress,100)}%`, background:"linear-gradient(90deg,#3D7EFD,#003AAC)" }} />
+                  <div className="h-full rounded-full transition-all" style={{ width:`${Math.min(genProgress,100)}%`, background:"var(--brand-gradient)" }} />
                 </div>
               </div>
             )}
@@ -1893,7 +1893,7 @@ export default function ImageToVideoPage() {
                 onClick={generate}
                 disabled={genState === "generating" || slides.length === 0}
                 className="flex-1 h-10 rounded-xl text-[13px] font-bold text-white cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity hover:opacity-90"
-                style={{ background: "linear-gradient(135deg,#3D7EFD,#003AAC)" }}>
+                style={{ background: "var(--brand-gradient)" }}>
                 {genState === "generating"
                   ? <><Loader2 size={13} className="animate-spin" /> Rendering…</>
                   : genState === "done"
@@ -1927,12 +1927,12 @@ export default function ImageToVideoPage() {
 
         {/* ── RIGHT: styling panel ── */}
         {rightOpen && (
-        <div className="w-95 shrink-0 order-last flex flex-col border-l border-zinc-200 dark:border-white/8 bg-white dark:bg-zinc-900 overflow-hidden">
+        <div className="w-95 shrink-0 order-last flex flex-col border-l border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
           {/* Header */}
           <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100 dark:border-white/8 shrink-0">
             <div className="flex items-center gap-2">
-              <SlidersHorizontal size={14} className="text-violet-500" />
-              <h2 className="text-[14px] font-bold text-zinc-900 dark:text-zinc-50">Styling</h2>
+              <SlidersHorizontal size={14} className="text-brand" />
+              <h2 className="text-[14px] font-semibold text-zinc-900 dark:text-zinc-50">Styling</h2>
             </div>
             <button onClick={() => setRightOpen(false)} className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/8 cursor-pointer border-none bg-transparent transition-colors">
               <X size={15} />
@@ -1947,7 +1947,7 @@ export default function ImageToVideoPage() {
               <div className="space-y-3">
                 {/* Aspect ratio — card grid (matches Voiceover to Video) */}
                 <div>
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-2">Aspect Ratio</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-2">Aspect Ratio</p>
                   <div className="grid grid-cols-4 gap-1.5">
                     {([
                       { id: "16:9", label: "Landscape", Icon: RectangleHorizontal },
@@ -2184,7 +2184,7 @@ export default function ImageToVideoPage() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <button onClick={() => toggleSection("watermark")} className="flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0 group">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-300 dark:group-hover:text-zinc-200 transition-colors">Watermark</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-300 dark:group-hover:text-zinc-200 transition-colors">Watermark</p>
                   <ChevronRight size={11} className="text-zinc-500 transition-transform duration-200" style={{ transform: collapsedSections.has("watermark") ? "rotate(0deg)" : "rotate(90deg)" }} />
                 </button>
                 <ToggleSwitch checked={wm.enabled} onChange={v => setWm(w => ({ ...w, enabled: v }))} />
@@ -2198,7 +2198,7 @@ export default function ImageToVideoPage() {
             <div>
               <div className="flex items-center justify-between mb-3">
                 <button onClick={() => toggleSection("progressbar")} className="flex items-center gap-1.5 cursor-pointer border-none bg-transparent p-0 group">
-                  <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400 group-hover:text-zinc-300 dark:group-hover:text-zinc-200 transition-colors">Progress Bar</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 group-hover:text-zinc-300 dark:group-hover:text-zinc-200 transition-colors">Progress Bar</p>
                   <ChevronRight size={11} className="text-zinc-500 transition-transform duration-200" style={{ transform: collapsedSections.has("progressbar") ? "rotate(0deg)" : "rotate(90deg)" }} />
                 </button>
                 <ToggleSwitch checked={pb.enabled} onChange={v => setPb(c => ({ ...c, enabled: v }))} />
@@ -2208,7 +2208,7 @@ export default function ImageToVideoPage() {
 
                   {/* Style grid */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-1.5">Style</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-1.5">Style</p>
                     <div className="grid grid-cols-4 gap-1">
                       {(Object.keys(PB_STYLE_LABELS) as ProgressBarStyle[]).map(s => {
                         const active = pb.style === s;
@@ -2250,7 +2250,7 @@ export default function ImageToVideoPage() {
 
                   {/* Position */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-1.5">Position</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-1.5">Position</p>
                     <div className="flex rounded-lg border border-zinc-200 dark:border-white/10 overflow-hidden p-0.5 gap-0.5 bg-zinc-100 dark:bg-white/5">
                       {(["top","bottom"] as ProgressBarPos[]).map(pos => {
                         const active = pb.position === pos;
@@ -2507,7 +2507,7 @@ export default function ImageToVideoPage() {
 
               {/* Output mode comparison */}
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2.5">Output Mode</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 mb-2.5">Output Mode</p>
                 <div className="grid grid-cols-2 gap-2.5">
                   {/* Combined */}
                   <div className="rounded-xl p-3.5 border" style={{ background: "rgba(61,126,253,0.05)", borderColor: "rgba(61,126,253,0.2)" }}>
@@ -2550,7 +2550,7 @@ export default function ImageToVideoPage() {
 
               {/* Feature list */}
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 mb-2.5">Features</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 mb-2.5">Features</p>
                 <div className="rounded-xl border border-white/8 overflow-hidden">
                   {[
                     {

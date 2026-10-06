@@ -365,7 +365,7 @@ function ClipEditorInner({
           onClick={togglePlay}
           title="Play / pause (Space)"
           className="w-9 h-8 flex items-center justify-center rounded-lg text-white border-none cursor-pointer hover:opacity-90 transition-opacity"
-          style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}
+          style={{ background: "var(--brand-gradient)" }}
         >
           {playing ? <Pause size={14} /> : <Play size={14} className="ml-0.5" />}
         </button>
@@ -415,7 +415,7 @@ function ClipEditorInner({
           onResize={(r, edge) => { applySel(r); seek(edge === "start" ? r.start : Math.max(r.start, r.end - FRAME)); }}
         />
         <div className="flex items-center gap-1">
-          <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mr-1">Zoom</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mr-1">Zoom</span>
           {ZOOMS.filter((z) => z.span === Infinity || z.span < dur).map((z) => {
             const active = z.span === Infinity ? zoom >= dur : zoom === z.span;
             return (
@@ -438,9 +438,9 @@ function ClipEditorInner({
       <div className="shrink-0 rounded-xl border border-zinc-200 dark:border-white/8 bg-white/70 dark:bg-white/[0.03] px-4 py-3 flex items-center gap-4 flex-wrap">
         <div className="min-w-[200px]">
           {editing ? (
-            <p className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400">Editing clip #{editing.number}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-emerald-600 dark:text-emerald-400">Editing clip #{editing.number}</p>
           ) : (
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Selection</p>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Selection</p>
           )}
           <p className="text-[13px] font-semibold tabular-nums text-zinc-800 dark:text-zinc-100 mt-0.5">
             {fmtTime(sel.start)} <span className="text-zinc-400 font-normal">→</span> {fmtTime(sel.end)}
@@ -488,8 +488,8 @@ function ClipEditorInner({
           <button
             onClick={addClip}
             title="Add the selection to the queue (A)"
-            className="h-10 px-5 rounded-xl text-[13px] font-bold text-white border-none cursor-pointer flex items-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-[0_6px_20px_-6px_rgba(0,87,252,0.6)]"
-            style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}
+            className="h-10 px-5 rounded-xl text-[13px] font-bold text-white border-none cursor-pointer flex items-center gap-2 hover:opacity-90 active:scale-[0.98] transition-all shadow-sm"
+            style={{ background: "var(--brand-gradient)" }}
           >
             <Plus size={15} strokeWidth={2.6} /> ADD CLIP
             <kbd className="ml-1 text-[10px] font-bold px-1.5 py-0.5 rounded bg-white/20">A</kbd>
@@ -693,7 +693,7 @@ function DurationPicker({ label, value, onChange }: { label: string; value: numb
   };
   return (
     <div className="flex items-center gap-1.5">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{label}</span>
+      <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">{label}</span>
       <div className="flex items-center rounded-lg border border-zinc-200 dark:border-white/10 overflow-hidden">
         {DURATION_PRESETS.map((d) => (
           <button key={d} onClick={() => onChange(d)}

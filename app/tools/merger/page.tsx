@@ -253,7 +253,7 @@ function UploadZone({
       {/* Header — plain uppercase label (no accent bar / divider) */}
       <div className="flex items-center justify-between mb-2.5">
         <span className="flex items-center gap-2 min-w-0">
-          <span className="text-[11px] font-bold uppercase tracking-widest truncate" style={{ color: "rgb(139,139,154)" }}>{label}</span>
+          <span className="text-[11px] font-semibold uppercase tracking-[0.08em] truncate" style={{ color: "rgb(139,139,154)" }}>{label}</span>
           {hasClips && (
             <span className="text-[10px] font-bold tabular-nums px-1.5 py-px rounded-full"
               style={{ color: accent, background: `${accent}1a` }}>
@@ -376,8 +376,8 @@ function JobRow({ job, onRetry, onPreview }: { job: MergeJob; onRetry?: () => vo
           <div className="mt-1 h-0.5 rounded-full bg-zinc-200 dark:bg-white/8 overflow-hidden">
             {/* While uploading: fill by progress%. After upload (100%) animate indeterminate while server processes */}
             {job.progress < 100
-              ? <div className="h-full rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1] transition-all" style={{ width: `${job.progress}%` }} />
-              : <div className="h-full w-1/2 rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1] origin-left" style={{ animation: "indeterminate 1.4s ease-in-out infinite" }} />
+              ? <div className="h-full rounded-full bg-brand-gradient transition-all" style={{ width: `${job.progress}%` }} />
+              : <div className="h-full w-1/2 rounded-full bg-brand-gradient origin-left" style={{ animation: "indeterminate 1.4s ease-in-out infinite" }} />
             }
           </div>
         )}
@@ -387,7 +387,7 @@ function JobRow({ job, onRetry, onPreview }: { job: MergeJob; onRetry?: () => vo
       </div>
 
       {/* Status badge */}
-      <span className="shrink-0 text-[9.5px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+      <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.06em] px-2 py-0.5 rounded-full"
         style={{ background: s.bg, color: s.color }}>
         {s.label}
       </span>
@@ -438,7 +438,7 @@ function Lightbox({ job, onClose, onDownload }: {
         {/* Header */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}>
+            <div className="w-7 h-7 rounded-lg flex items-center justify-center shrink-0" style={{ background: "var(--brand-gradient)" }}>
               <Film size={13} className="text-white" />
             </div>
             <p className="text-[13px] font-semibold text-white truncate">{outName(job)}</p>
@@ -723,7 +723,7 @@ export default function MergerPage() {
           {/* ── LEFT — controls ── */}
           {/* Glassy/translucent so the app's ambient background shows through —
               seamless with the (transparent) queue panel on the right. */}
-          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
 
               {/* Main clips */}
@@ -786,7 +786,7 @@ export default function MergerPage() {
                     </div>
                     <div className="relative flex items-center h-5">
                       <div className="absolute inset-x-0 h-1 rounded-full bg-zinc-200 dark:bg-white/10" />
-                      <div className="absolute left-0 h-1 rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1]" style={{ width: `${musicVol}%` }} />
+                      <div className="absolute left-0 h-1 rounded-full bg-brand-gradient" style={{ width: `${musicVol}%` }} />
                       <div className="absolute w-3.5 h-3.5 rounded-full bg-white border-2 border-violet-500 shadow-sm" style={{ left: `calc(${musicVol}% - 7px)` }} />
                       <input type="range" min={0} max={100} step={5} value={musicVol}
                         onChange={e => setMusicVol(Number(e.target.value))}
@@ -803,7 +803,7 @@ export default function MergerPage() {
                   onClick={() => { const n = !advancedOpen; setAdvancedOpen(n); if (!n) { setOrderOpen(false); setQualityOpen(false); } }}
                   className="w-full flex items-center gap-2 py-1.5 cursor-pointer bg-transparent border-none font-[inherit] group">
                   <ChevronRight size={13} className={`text-zinc-400 shrink-0 transition-transform duration-150 ${advancedOpen ? "rotate-90" : ""}`} />
-                  <span className="text-[11px] font-bold uppercase tracking-widest" style={{ color: "rgb(139,139,154)" }}>Advanced options</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.08em]" style={{ color: "rgb(139,139,154)" }}>Advanced options</span>
                   <span className="flex-1 h-px bg-zinc-200 dark:bg-white/8" />
                   {!advancedOpen && (
                     <span className="text-[9.5px] font-medium text-zinc-400 shrink-0">
@@ -956,7 +956,7 @@ export default function MergerPage() {
               {!running ? (
                 <button onClick={startGenerate} disabled={!canGenerate}
                   className="w-full h-10 rounded-xl text-[13px] font-bold text-white cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-                  style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}>
+                  style={{ background: "var(--brand-gradient)" }}>
                   <Zap size={14} />
                   {zoneA.length === 0 || zoneB.length === 0
                     ? "Add clips to both zones"
@@ -1040,7 +1040,7 @@ export default function MergerPage() {
                   </div>
                   <div className="h-2 rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-500"
-                      style={{ width: `${pctComplete}%`, background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+                      style={{ width: `${pctComplete}%`, background: "var(--brand-gradient)" }} />
                   </div>
                   <div className="flex items-center gap-3 mt-1.5 text-[10.5px] text-zinc-400">
                     <span className="text-emerald-500 font-semibold">{doneJobs} done</span>

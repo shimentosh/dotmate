@@ -622,7 +622,7 @@ export default function LocalAIPage() {
         {activeRoutes.length > 0 && (
           <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-white dark:bg-white/[0.02] overflow-hidden">
             <div className="px-4 py-2.5 border-b border-zinc-100 dark:border-white/6">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">Active task routing</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Active task routing</p>
             </div>
             <div className="divide-y divide-zinc-100 dark:divide-white/5">
               {activeRoutes.map(({ task, model }) => {
@@ -657,7 +657,7 @@ export default function LocalAIPage() {
             <div key={cat}>
               <div className="flex items-center gap-2.5 mb-3">
                 <CatIcon size={13} style={{ color }} />
-                <h2 className="text-[11px] font-bold uppercase tracking-widest shrink-0" style={{ color }}>{CARD_GROUP_LABEL[tab] ?? cat}</h2>
+                <h2 className="text-[11px] font-semibold uppercase tracking-[0.08em] shrink-0" style={{ color }}>{CARD_GROUP_LABEL[tab] ?? cat}</h2>
                 <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-600 tabular-nums shrink-0">{models.length}</span>
                 <div className="flex-1 h-px bg-zinc-100 dark:bg-white/6" />
               </div>
@@ -781,7 +781,7 @@ export default function LocalAIPage() {
                               </div>
                               <div className="h-1 w-full rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
                                 <div className="h-full rounded-full transition-all duration-150"
-                                  style={{ width: downloading ? `${Math.min(pct, 100)}%` : "25%", background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+                                  style={{ width: downloading ? `${Math.min(pct, 100)}%` : "25%", background: "var(--brand-gradient)" }} />
                               </div>
                             </div>
                           )}
@@ -796,7 +796,7 @@ export default function LocalAIPage() {
                       {/* Task routing when installed */}
                       {installed && (
                         <div className="border-t border-zinc-100 dark:border-white/6 px-4 py-3 bg-zinc-50/60 dark:bg-white/[0.015]">
-                          <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-2">Use for</p>
+                          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-2">Use for</p>
                           <div className="flex flex-wrap gap-2">
                             {model.tasks.map(task => {
                               const meta   = TASK_META[task] ?? { icon: MessageSquare, label: task };

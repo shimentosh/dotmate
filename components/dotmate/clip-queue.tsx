@@ -98,7 +98,7 @@ const QueueRow = memo(function QueueRow({
       {clip.status === "rendering" && (
         <div className="mt-1 ml-[52px] h-1 rounded-full bg-zinc-200/70 dark:bg-white/8 overflow-hidden">
           <div className="h-full rounded-full transition-[width] duration-150"
-            style={{ width: `${Math.round((progress ?? 0) * 100)}%`, background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+            style={{ width: `${Math.round((progress ?? 0) * 100)}%`, background: "var(--brand-gradient)" }} />
         </div>
       )}
       {clip.status === "failed" && clip.error && (
@@ -175,7 +175,7 @@ export function ClipQueue({
     <div className="flex-1 flex flex-col min-h-0">
       <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
         <div>
-          <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Clip queue · {clips.length}</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Clip queue · {clips.length}</p>
           {clips.length > 0 && <p className="text-[10.5px] text-zinc-400 mt-0.5 tabular-nums">{fmtLength(Math.round(total * 10) / 10)} total</p>}
         </div>
         {clips.length > 0 && !locked && (
@@ -281,7 +281,7 @@ export function ExportPanel({
           </div>
           <div className="h-1.5 rounded-full bg-zinc-200/70 dark:bg-white/8 overflow-hidden">
             <div className="h-full rounded-full transition-all duration-300"
-              style={{ width: `${pct}%`, background: allDone ? "linear-gradient(90deg,#10b981,#059669)" : "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+              style={{ width: `${pct}%`, background: allDone ? "linear-gradient(90deg,#10b981,#059669)" : "var(--brand-gradient)" }} />
           </div>
         </div>
       )}
@@ -306,8 +306,8 @@ export function ExportPanel({
         <button
           onClick={onExport}
           disabled={pending === 0}
-          className="w-full h-11 rounded-xl text-[13.5px] font-bold text-white border-none cursor-pointer flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity shadow-[0_8px_24px_-8px_rgba(0,87,252,0.7)]"
-          style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}
+          className="w-full h-11 rounded-xl text-[13.5px] font-bold text-white border-none cursor-pointer flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity shadow-sm"
+          style={{ background: "var(--brand-gradient)" }}
         >
           <Download size={15} />
           {pending === 0 ? "EXPORT ALL" : `EXPORT ALL · ${pending} clip${pending === 1 ? "" : "s"}`}

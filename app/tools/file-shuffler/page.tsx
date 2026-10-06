@@ -264,7 +264,7 @@ export default function FileShufflerPage() {
           {/* ── LEFT — controls ── */}
           {/* Glassy/translucent so the app's ambient background shows through —
               seamless with the (transparent) queue panel on the right. */}
-          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
 
               {/* Upload */}
@@ -360,7 +360,7 @@ export default function FileShufflerPage() {
                     <span className="text-[11px] font-bold tabular-nums" style={{ color: ACCENT }}>{progress}%</span>
                   </div>
                   <div className="h-1.5 rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
-                    <div className="h-full rounded-full transition-all duration-300 ease-out" style={{ width: `${progress}%`, background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+                    <div className="h-full rounded-full transition-all duration-300 ease-out" style={{ width: `${progress}%`, background: "var(--brand-gradient)" }} />
                   </div>
                 </div>
               ) : (
@@ -369,7 +369,7 @@ export default function FileShufflerPage() {
                     {canFolder && (
                       <button onClick={saveToFolder} disabled={!items.length}
                         className="flex-1 h-10 rounded-xl text-[13px] font-bold text-white cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-                        style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}>
+                        style={{ background: "var(--brand-gradient)" }}>
                         <FolderDown size={14} /> Save to folder
                       </button>
                     )}
@@ -379,7 +379,7 @@ export default function FileShufflerPage() {
                           ? "px-5 bg-white dark:bg-white/5 text-zinc-700 dark:text-zinc-200 border border-zinc-200 dark:border-white/10 hover:border-zinc-300"
                           : "flex-1 text-white border-none hover:opacity-90"
                       }`}
-                      style={!canFolder ? { background: "linear-gradient(135deg,#3D7EFD,#0047D1)" } : {}}>
+                      style={!canFolder ? { background: "var(--brand-gradient)" } : {}}>
                       <Download size={14} /> ZIP
                     </button>
                   </div>

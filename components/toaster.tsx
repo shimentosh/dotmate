@@ -26,11 +26,11 @@ export function Toaster() {
           <div
             key={t.id}
             role={destructive ? "alert" : "status"}
-            className="pointer-events-auto w-full flex items-start gap-2.5 rounded-xl border px-3.5 py-3 shadow-lg backdrop-blur-xl bg-white/95 dark:bg-zinc-900/95 border-zinc-200 dark:border-white/10"
+            className="pointer-events-auto w-full flex items-start gap-2.5 rounded-xl border px-3.5 py-3 shadow-lg bg-surface-elevated border-zinc-200 dark:border-white/10 animate-in fade-in slide-in-from-bottom-2 duration-200"
           >
             {destructive
-              ? <AlertTriangle size={15} className="shrink-0 mt-0.5 text-red-500" />
-              : <CheckCircle2 size={15} className="shrink-0 mt-0.5 text-emerald-500" />}
+              ? <AlertTriangle size={15} className="shrink-0 mt-0.5 text-destructive" />
+              : <CheckCircle2 size={15} className="shrink-0 mt-0.5 text-success" />}
             <div className="flex-1 min-w-0">
               <p className="text-[13px] font-semibold leading-snug text-zinc-900 dark:text-zinc-100 break-words">{t.title}</p>
               {t.description && (
@@ -41,7 +41,7 @@ export function Toaster() {
               <button
                 type="button"
                 onClick={t.action.onClick}
-                className="shrink-0 h-7 px-2.5 rounded-lg text-[12px] font-semibold text-violet-600 dark:text-violet-300 bg-violet-500/10 hover:bg-violet-500/20 border-none cursor-pointer transition-colors"
+                className="shrink-0 h-7 px-2.5 rounded-lg text-[12px] font-semibold text-brand bg-brand-soft hover:bg-brand/15 border-none cursor-pointer transition-colors"
               >
                 {t.action.label}
               </button>

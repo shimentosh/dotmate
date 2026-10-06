@@ -38,7 +38,7 @@ const SourceRow = memo(function SourceRow({
         {source.status === "error" && <AlertCircle size={14} className="text-red-500" />}
       </div>
       <div className="flex-1 min-w-0">
-        <p className="text-[10px] font-bold uppercase tracking-wider text-zinc-400">Video {String(index + 1).padStart(2, "0")}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Video {String(index + 1).padStart(2, "0")}</p>
         <p className="text-[12px] font-semibold text-zinc-800 dark:text-zinc-200 truncate" title={source.name}>{source.name}</p>
         <p className="text-[10.5px] tabular-nums text-zinc-400 truncate">
           {source.status === "missing" ? <span className="text-amber-600 dark:text-amber-400">Not connected — re-import to use</span>
@@ -94,7 +94,7 @@ export function SourceList({
       onDrop={(e) => { e.preventDefault(); setDragOver(false); onDropFiles(e.dataTransfer); }}
     >
       <div className="flex items-center justify-between px-4 pt-4 pb-2 shrink-0">
-        <p className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Source videos · {sources.length}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Source videos · {sources.length}</p>
         <button onClick={onImport}
           className="flex items-center gap-1 h-6 px-2 rounded-md text-[10.5px] font-semibold text-violet-600 dark:text-violet-300 bg-violet-500/10 hover:bg-violet-500/15 border-none cursor-pointer transition-colors">
           <Plus size={11} strokeWidth={2.6} /> Add

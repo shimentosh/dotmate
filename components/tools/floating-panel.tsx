@@ -80,7 +80,7 @@ export function FloatingPanel({
     <div
       ref={panelRef}
       style={{ left: pos.x, top: pos.y, width }}
-      className="absolute z-30 rounded-xl border border-zinc-200/70 dark:border-white/10 bg-white/75 dark:bg-zinc-900/70 backdrop-blur-2xl shadow-[0_18px_50px_-12px_rgba(0,0,0,0.5)] overflow-hidden select-none"
+      className="absolute z-30 rounded-xl border border-zinc-200 dark:border-white/10 bg-surface-elevated shadow-xl overflow-hidden select-none"
     >
       {/* Header — drag handle */}
       <div
@@ -89,7 +89,7 @@ export function FloatingPanel({
         className="flex items-center gap-1.5 h-8 pl-2.5 pr-1 cursor-grab active:cursor-grabbing border-b border-zinc-200/60 dark:border-white/8 bg-zinc-50/70 dark:bg-white/[0.04]"
       >
         <Icon size={11} className="text-violet-500 shrink-0" />
-        <span className="flex-1 text-[10px] font-bold uppercase tracking-widest text-zinc-500 dark:text-zinc-400 truncate">{title}</span>
+        <span className="flex-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 truncate">{title}</span>
         <button
           onClick={() => setMin(m => !m)}
           title={min ? "Expand" : "Minimize"}

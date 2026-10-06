@@ -114,7 +114,7 @@ function PromptCardEl({ card, style, onCheck, onCopy, onRegenerate, copiedId }: 
         isChecked ? "bg-emerald-400"
         : card.state === "error" ? "bg-red-400"
         : card.state === "generating" ? "bg-violet-400 animate-pulse"
-        : "bg-linear-to-b from-[#3D7EFD] to-[#0047D1]"
+        : "bg-brand-gradient"
       }`} />
 
       <div className="pl-4 pr-4 pt-3.5 pb-3.5">
@@ -132,7 +132,7 @@ function PromptCardEl({ card, style, onCheck, onCopy, onRegenerate, copiedId }: 
             {isChecked && <Check size={10} className="text-white" strokeWidth={3} />}
           </button>
           <span className="text-[10px] font-bold text-zinc-400 dark:text-zinc-600 tabular-nums">#{card.index}</span>
-          <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full leading-none"
+          <span className="text-[10px] font-semibold uppercase tracking-[0.06em] px-1.5 py-0.5 rounded-full leading-none"
             style={{ color: styleObj.color, background: `${styleObj.color}15`, border: `1px solid ${styleObj.color}30` }}>
             {styleObj.label}
           </span>
@@ -328,7 +328,7 @@ export default function ScriptToImagePromptsPage() {
           {/* ── LEFT: controls ── */}
           {/* Glassy/translucent so the app's ambient background shows through —
               seamless with the (transparent) result area on the right. */}
-          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-5 space-y-6">
 
               {/* ── Your Script ── */}
@@ -477,7 +477,7 @@ export default function ScriptToImagePromptsPage() {
                   className={`w-full flex items-center justify-center gap-2 h-11 rounded-xl text-[13px] font-bold cursor-pointer border-none font-[inherit] transition-all duration-200 ${
                     !canGenerate ? "bg-zinc-100 dark:bg-white/6 text-zinc-400 cursor-not-allowed" : "text-white shadow-lg hover:opacity-90 active:scale-[0.99]"
                   }`}
-                  style={canGenerate ? { background: "linear-gradient(135deg,#3D7EFD,#0047D1)", boxShadow: "0 8px 24px rgba(61,126,253,0.35)" } : {}}>
+                  style={canGenerate ? { background: "var(--brand-gradient)" } : {}}>
                   <Sparkles size={14} />
                   {effectiveCount === "auto" ? "Generate Image Prompts" : `Generate ${effectiveCount} Prompt${effectiveCount !== 1 ? "s" : ""}`}
                 </button>
@@ -499,6 +499,10 @@ export default function ScriptToImagePromptsPage() {
                     No local AI found. Run AI locally — install Ollama or an AI CLI (Claude Code, Codex, Gemini).{" "}
                     <button onClick={() => openSettings("local-ai")} className="text-violet-500 font-medium underline hover:no-underline cursor-pointer border-none bg-transparent p-0 font-[inherit]">
                       Install a local model →
+                    </button>
+                    {" "}or{" "}
+                    <button onClick={() => openSettings("api-keys")} className="text-violet-500 font-medium underline hover:no-underline cursor-pointer border-none bg-transparent p-0 font-[inherit]">
+                      use your own API key →
                     </button>
                   </p>
                 </div>

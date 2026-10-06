@@ -139,16 +139,16 @@ export function BatchClipsTool() {
         >
           <div className={`w-full max-w-xl rounded-3xl border-2 border-dashed px-10 py-14 flex flex-col items-center text-center transition-colors ${pageDrag
             ? "border-violet-400 bg-violet-500/[0.06]" : "border-zinc-300/80 dark:border-white/12 bg-white/50 dark:bg-white/[0.02]"}`}>
-            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-[0_10px_30px_-10px_rgba(0,87,252,0.7)]"
-              style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}>
+            <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-5 shadow-sm"
+              style={{ background: "var(--brand-gradient)" }}>
               <CircleDot size={26} className="text-white" strokeWidth={2} />
             </div>
             <h1 className="text-[24px] font-extrabold tracking-tight text-zinc-900 dark:text-white">Batch Clips</h1>
             <p className="mt-2 text-[14px] text-zinc-500 dark:text-zinc-400">Create hundreds of short clips from your recordings.</p>
             <button
               onClick={() => void openImport()}
-              className="mt-7 h-11 px-6 rounded-xl text-[14px] font-bold text-white border-none cursor-pointer flex items-center gap-2 hover:opacity-90 transition-opacity shadow-[0_8px_24px_-8px_rgba(0,87,252,0.7)]"
-              style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}
+              className="mt-7 h-11 px-6 rounded-xl text-[14px] font-bold text-white border-none cursor-pointer flex items-center gap-2 hover:opacity-90 transition-opacity shadow-sm"
+              style={{ background: "var(--brand-gradient)" }}
             >
               <Upload size={16} /> Import Videos
             </button>
@@ -174,7 +174,7 @@ export function BatchClipsTool() {
       {hiddenInput}
       <div className="flex flex-1 min-h-0 overflow-hidden">
         {/* Sources */}
-        <aside className="w-[264px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl">
+        <aside className="w-[264px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel">
           <SourceList
             sources={s.sources}
             clipCounts={clipCounts}
@@ -228,7 +228,7 @@ export function BatchClipsTool() {
         </section>
 
         {/* Queue + export */}
-        <aside className="w-[336px] shrink-0 flex flex-col border-l border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl">
+        <aside className="w-[336px] shrink-0 flex flex-col border-l border-zinc-200 dark:border-white/8 bg-panel">
           <ClipQueue
             clips={s.clips}
             sourceNames={sourceNames}

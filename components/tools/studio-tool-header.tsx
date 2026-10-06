@@ -25,7 +25,7 @@ export function StudioToolHeader({
 }) {
   if (!right) return null;
   return (
-    <div className="flex items-center justify-end gap-2 px-5 h-11 border-b border-zinc-200 dark:border-white/8 bg-white dark:bg-[#0e0e11] shrink-0">
+    <div className="flex items-center justify-end gap-2 px-5 h-11 border-b border-zinc-200 dark:border-white/8 bg-panel shrink-0">
       {right}
     </div>
   );

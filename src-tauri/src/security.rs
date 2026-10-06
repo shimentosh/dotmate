@@ -40,6 +40,37 @@ pub fn app_managed_roots(app: &AppHandle) -> Vec<PathBuf> {
     roots
 }
 
+/// Folder (under app-data) holding secrets the webview must never read back —
+/// currently the user's AI provider API keys (api_brain_command.rs).
+pub const SECRETS_DIR: &str = "secrets";
+
+/// `<app-data>/secrets`, created on demand by its owner.
+pub fn secrets_dir(app: &AppHandle) -> Result<PathBuf, String> {
+    app.path()
+        .app_data_dir()
+        .map(|d| d.join(SECRETS_DIR))
+        .map_err(|e| e.to_string())
+}
+
+/// True when `p` resolves inside the secrets folder. Canonicalized on both sides,
+/// so `..` / symlinks can't sneak past the prefix check.
+pub fn is_secret_path(app: &AppHandle, p: &Path) -> bool {
+    let Ok(dir) = secrets_dir(app) else { return false };
+    let Ok(dir) = std::fs::canonicalize(dir) else { return false }; // no secrets yet
+    std::fs::canonicalize(p).map(|c| c.starts_with(&dir)).unwrap_or(false)
+}
+
+/// `confine_existing` against the app-managed roots, minus the secrets folder —
+/// the check every webview-callable "app file" command (read/delete/ffmpeg input)
+/// goes through, so a stored API key can never be read back over IPC.
+pub fn confine_app_file(app: &AppHandle, requested: &str) -> Result<PathBuf, String> {
+    let safe = confine_existing(requested, &app_managed_roots(app))?;
+    if is_secret_path(app, &safe) {
+        return Err("path is outside the allowed directories".into());
+    }
+    Ok(safe)
+}
+
 /// Confine an EXISTING file path to one of `roots`. Returns the canonical path on
 /// success. Both sides are canonicalized, so `..` / symlink escapes are resolved
 /// away before the `starts_with` check (and Windows `\\?\` prefixes match).

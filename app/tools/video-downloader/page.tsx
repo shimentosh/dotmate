@@ -236,7 +236,7 @@ function ClipRangeSlider({ duration, startSec, endSec, onChange }: {
         className="relative h-6 flex items-center">
         <div className="absolute inset-x-0 h-1.5 rounded-full bg-zinc-200 dark:bg-white/10" />
         <div className="absolute h-1.5 rounded-full"
-          style={{ left: `${leftPct}%`, right: `${100 - rightPct}%`, background: "linear-gradient(90deg,#0047D1,#0057FC)" }} />
+          style={{ left: `${leftPct}%`, right: `${100 - rightPct}%`, background: "var(--brand-gradient)" }} />
         <div onPointerDown={ev => onDown("start", ev)}
           className="absolute w-4 h-4 -ml-2 rounded-full bg-white border-2 border-violet-500 shadow-md cursor-grab active:cursor-grabbing touch-none transition-transform hover:scale-110"
           style={{ left: `${leftPct}%` }} />
@@ -379,7 +379,7 @@ const JobCard = memo(function JobCard({ job, onCancel, onRemove, onOpen, onRevea
                   className={`h-full rounded-full transition-[width] duration-300 ${preparing ? "w-1/3 animate-pulse" : ""}`}
                   style={{
                     ...(preparing ? {} : { width: `${job.percent}%` }),
-                    background: "linear-gradient(90deg,#0047D1,#0057FC)",
+                    background: "var(--brand-gradient)",
                   }}
                 />
               </div>
@@ -415,7 +415,7 @@ const JobCard = memo(function JobCard({ job, onCancel, onRemove, onOpen, onRevea
                 {err.needsCookies && (
                   <button onClick={onAddCookies} title="Pick a cookies.txt and retry"
                     className="flex items-center gap-1 h-6 px-2.5 rounded-md text-[10.5px] font-semibold text-white border-none cursor-pointer hover:opacity-90"
-                    style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}>
+                    style={{ background: "var(--brand-gradient)" }}>
                     <KeyRound size={11} /> {hasCookies ? "Update cookies.txt" : "Add cookies.txt"}
                   </button>
                 )}
@@ -905,7 +905,7 @@ export default function VideoDownloaderPage() {
           {/* ── LEFT — controls ── */}
           {/* Glassy/translucent so the app's ambient background shows through —
               seamless with the (transparent) downloads panel on the right. */}
-          <div className="w-[380px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+          <div className="w-[380px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
 
               {/* Source */}
@@ -1085,7 +1085,7 @@ export default function VideoDownloaderPage() {
                 onClick={handleDownload}
                 disabled={!canDownload}
                 className="w-full h-10 flex items-center justify-center gap-2 rounded-xl text-[13px] font-bold text-white border-none cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 active:scale-[0.99]"
-                style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}
+                style={{ background: "var(--brand-gradient)" }}
               >
                 <Download size={15} />
                 {downloadLabel}
@@ -1206,7 +1206,7 @@ export default function VideoDownloaderPage() {
                   </div>
                   <button onClick={() => setCookiesOpen(true)}
                     className="shrink-0 self-center flex items-center gap-1 h-8 px-3 rounded-lg text-[11.5px] font-bold text-white border-none cursor-pointer hover:opacity-90"
-                    style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}>
+                    style={{ background: "var(--brand-gradient)" }}>
                     <KeyRound size={12} /> {cookiesPath ? "Update" : "Add cookies"}
                   </button>
                 </div>
@@ -1237,7 +1237,7 @@ export default function VideoDownloaderPage() {
             {/* Supported platforms — pinned footer */}
             <div className="shrink-0 border-t border-zinc-200 dark:border-white/8 bg-white/70 dark:bg-white/[0.03] px-5 py-2.5">
               <div className="flex items-center gap-2 overflow-x-auto" style={{ scrollbarWidth: "none" }}>
-                <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500 shrink-0 mr-0.5">Supported</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500 shrink-0 mr-0.5">Supported</span>
                 {PLATFORMS.map(p => (
                   <span key={p.name}
                     className="flex items-center gap-1.5 h-7 px-3 rounded-full text-[11.5px] font-medium border border-black/[0.06] dark:border-white/[0.08] bg-white dark:bg-white/[0.04] text-zinc-600 dark:text-zinc-400 shrink-0">
@@ -1285,7 +1285,7 @@ export default function VideoDownloaderPage() {
               )}
               <button onClick={pickCookies}
                 className="w-full h-10 flex items-center justify-center gap-1.5 rounded-xl text-[13px] font-bold text-white border-none cursor-pointer hover:opacity-90 transition-opacity"
-                style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}>
+                style={{ background: "var(--brand-gradient)" }}>
                 <KeyRound size={14} /> {cookiesPath ? "Replace cookies.txt" : "Select cookies.txt"}
               </button>
               <button onClick={() => openExternal(COOKIES_EXTENSION_URL)}

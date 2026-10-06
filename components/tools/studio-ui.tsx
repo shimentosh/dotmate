@@ -3,7 +3,7 @@ import { useRef } from "react";
 
 /* Small shared controls for the Script Writer panel. Colours come from the theme
    tokens in app/globals.css (--c-surface-*, --c-border-*). */
-const GRADIENT = "linear-gradient(135deg, #0057FC 0%, #0047D1 100%)";
+const GRADIENT = "var(--brand-gradient)";
 const FULL = 9999;
 
 export function RangeSlider({ value, onChange, min = 0, max = 100, step = 1 }: {

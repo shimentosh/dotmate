@@ -165,8 +165,7 @@ fn push_input(args: &mut Vec<String>, path: &str) {
 /// `export_save_clip`). Rejects traversal / arbitrary on-disk files / non-file URLs
 /// before the path reaches ffmpeg.
 fn confine_one(app: &tauri::AppHandle, path: &str) -> Result<String, String> {
-    let roots = crate::security::app_managed_roots(app);
-    crate::security::confine_existing(path, &roots).map(|pb| pb.to_string_lossy().to_string())
+    crate::security::confine_app_file(app, path).map(|pb| pb.to_string_lossy().to_string())
 }
 
 /// Confine a list of caller-supplied ffmpeg input paths (see `confine_one`).

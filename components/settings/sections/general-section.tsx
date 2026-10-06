@@ -14,7 +14,7 @@ const THEME_OPTIONS: { key: Theme; Icon: React.ElementType; label: string }[] = 
   { key: "system", Icon: Monitor, label: "System" },
 ];
 
-const ICON_TILE = { background: "rgba(0,87,252,0.08)", border: "1px solid rgba(0,87,252,0.18)" };
+const ICON_TILE = { background: "var(--brand-soft)" };
 
 /* ── Appearance (theme) ─────────────────────────────────────────── */
 function AppearanceCard() {
@@ -29,23 +29,23 @@ function AppearanceCard() {
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-zinc-200 dark:border-white/8 glass-card">
+    <div className="rounded-xl overflow-hidden border border-zinc-200 dark:border-white/8 bg-surface shadow-xs">
       <div className="flex items-center gap-4 px-5 py-4">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={ICON_TILE}>
-          <Palette size={14} className="text-violet-500" />
+          <Palette size={14} className="text-brand" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[13px] font-medium text-zinc-900 dark:text-zinc-100 leading-tight">Appearance</p>
-          <p className="text-[11px] text-zinc-400 mt-0.5">Choose how {brand.name} looks. System follows your device.</p>
+          <p className="text-[12px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">Choose how {brand.name} looks. System follows your device.</p>
         </div>
-        <div className="flex items-center gap-px shrink-0 rounded-full p-0.5 bg-zinc-100 dark:bg-white/5 border border-zinc-200 dark:border-white/10">
+        <div role="radiogroup" aria-label="Theme" className="flex items-center gap-px shrink-0 rounded-lg p-0.5 bg-surface-muted border border-zinc-200 dark:border-white/10">
           {THEME_OPTIONS.map(({ key, Icon, label }) => (
-            <button key={key} onClick={() => choose(key)} title={label}
+            <button key={key} onClick={() => choose(key)} title={label} role="radio" aria-checked={theme === key}
               className={[
-                "flex items-center gap-1.5 h-7 px-3 rounded-full text-[12px] font-medium transition-all cursor-pointer border-none",
+                "flex items-center gap-1.5 h-7 px-3 rounded-md text-[12px] font-medium transition-colors cursor-pointer border-none",
                 theme === key
-                  ? "bg-white dark:bg-white/15 text-zinc-800 dark:text-zinc-100 shadow-sm"
-                  : "bg-transparent text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300",
+                  ? "bg-surface dark:bg-white/12 text-zinc-900 dark:text-zinc-100 shadow-sm"
+                  : "bg-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200",
               ].join(" ")}>
               <Icon size={13} strokeWidth={1.8} />
               {label}
@@ -79,14 +79,14 @@ function DiagnosticsCard() {
   }
 
   return (
-    <div className="rounded-2xl overflow-hidden border border-zinc-200 dark:border-white/8 glass-card">
+    <div className="rounded-xl overflow-hidden border border-zinc-200 dark:border-white/8 bg-surface shadow-xs">
       <div className="flex items-center gap-4 px-5 py-4">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0" style={ICON_TILE}>
-          <FileText size={14} className="text-violet-500" />
+          <FileText size={14} className="text-brand" />
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-[13px] font-medium text-zinc-900 dark:text-zinc-100 leading-tight">Diagnostics &amp; logs</p>
-          <p className="text-[11px] text-zinc-400 mt-0.5">
+          <p className="text-[12px] text-zinc-500 dark:text-zinc-400 mt-0.5 leading-relaxed">
             Open the folder holding the app log and the focused{" "}
             <span className="font-mono text-zinc-500 dark:text-zinc-400">errors.log</span>. Logs never leave this computer.
           </p>

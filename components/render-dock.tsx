@@ -105,7 +105,7 @@ function JobRow({ job, onGo }: { job: RenderJob; onGo: (href?: string) => void }
       {running && (
         <div className="mt-2 h-1 rounded-full overflow-hidden bg-zinc-200/70 dark:bg-white/8">
           <div className="h-full rounded-full transition-all duration-200"
-            style={{ width: `${job.progress}%`, background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+            style={{ width: `${job.progress}%`, background: "var(--brand-gradient)" }} />
         </div>
       )}
     </div>
@@ -136,7 +136,7 @@ export function RenderDock() {
           <div className="relative shrink-0">
             {activeCount > 0 && (
               <div className="absolute -inset-1 rounded-2xl opacity-40 blur-md"
-                style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }} />
+                style={{ background: "var(--brand-gradient)" }} />
             )}
             <div className="relative w-9 h-9 rounded-xl flex items-center justify-center border border-violet-500/25"
               style={{ background: "linear-gradient(135deg,rgba(0,87,252,0.16),rgba(0,71,209,0.14))" }}>
@@ -161,7 +161,7 @@ export function RenderDock() {
         {activeCount > 0 && (
           <div className="h-1 bg-zinc-100 dark:bg-white/[0.06] overflow-hidden">
             <div className="h-full transition-all duration-300"
-              style={{ width: `${avg}%`, background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+              style={{ width: `${avg}%`, background: "var(--brand-gradient)" }} />
           </div>
         )}
       </div>

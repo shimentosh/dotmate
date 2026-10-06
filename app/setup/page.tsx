@@ -207,8 +207,8 @@ export default function SetupPage() {
       className="flex min-h-dvh items-center justify-center p-6 text-[#eef0f6]"
       style={{
         background:
-          "radial-gradient(1200px 700px at 82% -10%, rgba(96,67,252,.22), transparent 60%)," +
-          "radial-gradient(900px 600px at -10% 110%, rgba(130,104,253,.14), transparent 60%), #08080c",
+          "radial-gradient(1200px 700px at 82% -10%, rgba(0,87,252,.16), transparent 60%)," +
+          "radial-gradient(900px 600px at -10% 110%, rgba(61,126,253,.08), transparent 60%), #08080c",
       }}
     >
       <WindowChrome />
@@ -219,7 +219,7 @@ export default function SetupPage() {
         {/* ── LEFT: brand rail ── */}
         <div
           className="relative flex w-[312px] shrink-0 flex-col px-[30px] py-[34px]"
-          style={{ background: "linear-gradient(165deg, #533AD5 0%, #2a1a86 46%, #17103f 100%)" }}
+          style={{ background: "linear-gradient(165deg, #1A56E8 0%, #0B2C86 48%, #0A1636 100%)" }}
         >
           <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(90% 45% at 20% 0%, rgba(255,255,255,.14), transparent 60%)" }} />
           <div className="relative z-[1]">
@@ -241,7 +241,7 @@ export default function SetupPage() {
         </div>
 
         {/* ── RIGHT: content panel ── */}
-        <div className="relative flex flex-1 flex-col" style={{ background: "linear-gradient(180deg,#12121b,#0e0e15)" }}>
+        <div className="relative flex flex-1 flex-col" style={{ background: "linear-gradient(180deg,#121216,#0e0e11)" }}>
           {/* REPAIR: essentials missing and the re-download failed */}
           {step === "addons" && repair && (
             <>
@@ -345,7 +345,7 @@ export default function SetupPage() {
           {step === "done" && (
             <>
               <div className="flex flex-1 flex-col justify-center px-11 pt-10">
-                <div className="grid h-16 w-16 place-items-center rounded-full text-white" style={{ background: "linear-gradient(135deg,#22c55e,#16a34a)", boxShadow: "0 16px 34px -10px rgba(34,197,94,.6)" }}>
+                <div className="grid h-16 w-16 place-items-center rounded-full text-white" style={{ background: "linear-gradient(135deg,#22c55e,#16a34a)", boxShadow: "0 10px 24px -12px rgba(34,197,94,.45)" }}>
                   <Check size={30} />
                 </div>
                 <div className="mt-[18px] text-[11.5px] font-semibold uppercase tracking-[.6px]" style={{ color: BRAND2 }}>All done</div>
@@ -405,7 +405,7 @@ function OptionRow({ icon, title, desc, size, checked, onToggle }: {
     <button onClick={onToggle}
       className="flex w-full items-center gap-4 rounded-[14px] border p-4 text-left transition"
       style={checked
-        ? { borderColor: "rgba(96,67,252,.55)", background: "rgba(96,67,252,.09)" }
+        ? { borderColor: "rgba(61,126,253,.55)", background: "rgba(0,87,252,.10)" }
         : { borderColor: "rgba(255,255,255,.1)", background: "rgba(255,255,255,.02)" }}>
       <span className="grid h-[46px] w-[46px] shrink-0 place-items-center rounded-[13px] text-white/90" style={{ background: "rgba(255,255,255,.05)", border: "1px solid rgba(255,255,255,.08)" }}>{icon}</span>
       <span className="min-w-0 flex-1">

@@ -132,7 +132,7 @@ export function WhisperLocalCard() {
                   type="button"
                   onClick={() => download(m.size)}
                   disabled={!!downloading}
-                  className="shrink-0 inline-flex items-center gap-1 h-7 px-2.5 rounded-lg text-[11px] font-semibold text-white bg-linear-to-r from-[#3D7EFD] to-[#0047D1] hover:opacity-90 disabled:opacity-50 cursor-pointer border-none"
+                  className="shrink-0 inline-flex items-center gap-1 h-7 px-2.5 rounded-lg text-[11px] font-semibold text-white bg-brand-gradient hover:opacity-90 disabled:opacity-50 cursor-pointer border-none"
                 >
                   <Download size={12} /> Download
                 </button>

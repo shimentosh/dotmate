@@ -38,7 +38,17 @@ export const brand = {
     /** Personal site shown next to the credit. */
     personalUrl: "http://shimanto.xyz/",
     personalLabel: "shimanto.xyz",
+    /** Who the home page "Follow" row names, and their profiles (from shimanto.xyz). */
+    followName: "Shimanto",
+    socials: [
+      { platform: "youtube",   label: "YouTube",   url: "https://www.youtube.com/@sh1manto" },
+      { platform: "instagram", label: "Instagram", url: "https://www.instagram.com/shimanto.bn/" },
+      { platform: "facebook",  label: "Facebook",  url: "https://www.facebook.com/sh1manto/" },
+      { platform: "tiktok",    label: "TikTok",    url: "https://www.tiktok.com/@sh1mant0" },
+    ],
   },
+  /** Where "Request a tool" sends people — the repo's feature-request form. */
+  requestToolUrl: "https://github.com/shimentosh/dotmate/issues/new?template=feature_request.yml",
 } as const;
 
 /** Namespaced storage key: `free-tools:<key>`. Use for every localStorage key. */

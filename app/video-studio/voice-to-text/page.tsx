@@ -282,9 +282,9 @@ export default function SpeechToTextPage() {
         <div className="relative flex flex-1 min-h-0">
 
           {/* LEFT: fixed settings panel */}
-          {/* Transparent so the ambient AppBackground gradient shows through (the
-              border-r still separates it from the result area). */}
-          <div className="w-96 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 overflow-hidden order-1">
+          {/* Shared panel surface (bg-panel); the border-r separates it from the
+              result area. */}
+          <div className="w-96 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden order-1">
             {/* overflow-x-hidden: `overflow-y-auto` forces the x-axis to `auto` too
                 (CSS spec), which can surface a stray horizontal scrollbar. */}
             <div className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-5 space-y-4">
@@ -370,7 +370,7 @@ export default function SpeechToTextPage() {
                       className="h-full rounded-full transition-all duration-300"
                       style={{
                         width: status === "transcribing" ? "100%" : `${progress}%`,
-                        background: "linear-gradient(90deg,#3D7EFD,#0047D1)",
+                        background: "var(--brand-gradient)",
                         animation: status === "transcribing" ? "pulse 1.5s ease-in-out infinite" : undefined,
                       }}
                     />
@@ -390,7 +390,7 @@ export default function SpeechToTextPage() {
                 onClick={transcribe}
                 disabled={!file || busy || !svcStatus?.running}
                 className="w-full h-11 flex items-center justify-center gap-2 rounded-xl text-[14px] font-bold text-white cursor-pointer font-[inherit] border-none transition-all disabled:opacity-40 disabled:cursor-not-allowed"
-                style={{ background: "linear-gradient(135deg,#0047D1 0%,#0057FC 100%)", boxShadow: file ? "0 4px 20px rgba(0,71,209,0.28)" : "none" }}
+                style={{ background: "var(--brand-gradient)", boxShadow: "none" }}
               >
                 {busy
                   ? <><Loader2 size={16} className="animate-spin" />Transcribing…</>

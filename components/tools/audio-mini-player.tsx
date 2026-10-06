@@ -45,12 +45,12 @@ export function MiniPlayer({ url, blob, name }: { url: string; blob: Blob; name:
   return (
     <div className="flex items-center gap-2.5 mt-2 px-3 py-2 rounded-xl bg-zinc-50 dark:bg-white/4 border border-zinc-200 dark:border-white/8">
       <button onClick={toggle}
-        className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center cursor-pointer border-none bg-linear-to-br from-[#3D7EFD] to-[#0047D1] hover:brightness-110 transition shadow-md shadow-violet-500/20">
+        className="w-8 h-8 rounded-full shrink-0 flex items-center justify-center cursor-pointer border-none bg-brand-gradient hover:brightness-110 transition shadow-md">
         {playing ? <Pause size={11} className="text-white fill-white" /> : <Play size={11} className="text-white fill-white ml-0.5" />}
       </button>
       <div className="flex-1 min-w-0">
         <div className="h-1 rounded-full bg-zinc-200 dark:bg-white/10 overflow-hidden">
-          <div className="h-full rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1] transition-all" style={{ width: `${progress * 100}%` }} />
+          <div className="h-full rounded-full bg-brand-gradient transition-all" style={{ width: `${progress * 100}%` }} />
         </div>
         <p className="text-[9.5px] text-zinc-400 mt-0.5 tabular-nums">
           {fmtDur(progress * dur)} / {dur ? fmtDur(dur) : "—"}

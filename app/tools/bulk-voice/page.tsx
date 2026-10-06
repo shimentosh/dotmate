@@ -344,7 +344,7 @@ function VoiceDropdown({
                 title={isPreviewing ? "Stop preview" : "Play voice demo"}
                 className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 border-none cursor-pointer transition-all ${
                   isPreviewing
-                    ? "bg-violet-500 shadow-md shadow-violet-500/30"
+                    ? "bg-violet-500 shadow-md"
                     : isLoading
                       ? "bg-zinc-100 dark:bg-white/8"
                       : "bg-zinc-100 dark:bg-white/8 hover:bg-violet-500/15 hover:scale-110"
@@ -387,7 +387,7 @@ function Slider({ value, onChange, min, max }: { value: number; onChange: (v: nu
   return (
     <div className="relative flex items-center h-5 w-28">
       <div className="absolute inset-x-0 h-1 rounded-full bg-zinc-200 dark:bg-white/10" />
-      <div className="absolute left-0 h-1 rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1]" style={{ width: `${pct}%` }} />
+      <div className="absolute left-0 h-1 rounded-full bg-brand-gradient" style={{ width: `${pct}%` }} />
       <div className="absolute w-3 h-3 rounded-full bg-white border-2 border-violet-500 shadow-sm" style={{ left: `calc(${pct}% - 6px)` }} />
       <input type="range" min={min} max={max} step={5} value={value}
         onChange={e => onChange(Number(e.target.value))}
@@ -442,7 +442,7 @@ function ScriptCard({
         />
 
         {/* Status badge */}
-        <span className="shrink-0 text-[9.5px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full"
+        <span className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.06em] px-2 py-0.5 rounded-full"
           style={{ background: cfg.bg, color: cfg.color }}>
           {item.status === "generating"
             ? <span className="flex items-center gap-1"><Loader2 size={8} className="animate-spin inline" /> {cfg.label}</span>
@@ -725,7 +725,7 @@ export default function BulkVoicePage() {
 
           {/* Settings bar */}
           <div className="flex flex-wrap items-center gap-3 mb-6 p-3.5 rounded-2xl bg-white dark:bg-white/3 border border-zinc-200 dark:border-white/8 shadow-sm">
-            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-400 shrink-0">
+            <div className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 shrink-0">
               <Sparkles size={10} className="text-violet-500" /> Settings
             </div>
             <div className="w-px h-4 bg-zinc-200 dark:bg-white/10 shrink-0" />
@@ -857,7 +857,7 @@ export default function BulkVoicePage() {
                     ].map(s => (
                       <div key={s.label} className="flex flex-col items-center gap-0.5 py-2 rounded-xl bg-zinc-50 dark:bg-white/3 border border-zinc-100 dark:border-white/6">
                         <span className="text-[18px] font-extrabold tabular-nums" style={{ color: s.value > 0 ? s.color : "#71717a" }}>{s.value}</span>
-                        <span className="text-[9.5px] font-semibold text-zinc-400 uppercase tracking-widest">{s.label}</span>
+                        <span className="text-[11px] font-semibold text-zinc-500 dark:text-zinc-400 uppercase tracking-[0.08em]">{s.label}</span>
                       </div>
                     ))}
                   </div>
@@ -871,7 +871,7 @@ export default function BulkVoicePage() {
                       </div>
                       <div className="h-1.5 rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-linear-to-r from-[#3D7EFD] to-[#0047D1] transition-all duration-500"
+                          className="h-full rounded-full bg-brand-gradient transition-all duration-500"
                           style={{ width: `${totalScripts > 0 ? (doneCount / totalScripts) * 100 : 0}%` }}
                         />
                       </div>
@@ -892,7 +892,7 @@ export default function BulkVoicePage() {
                       disabled={!canGenerate}
                       className={`w-full flex items-center justify-center gap-2 h-10 rounded-xl text-[13px] font-semibold cursor-pointer border-none font-[inherit] transition-all ${
                         canGenerate
-                          ? "bg-linear-to-br from-[#3D7EFD] to-[#0047D1] text-white hover:brightness-110"
+                          ? "bg-brand-gradient text-white hover:brightness-110"
                           : "bg-zinc-100 dark:bg-white/6 text-zinc-400 cursor-not-allowed"
                       }`}
                     >
@@ -921,7 +921,7 @@ export default function BulkVoicePage() {
 
                   {/* Tip */}
                   <div className="rounded-xl border border-violet-200/60 dark:border-violet-500/15 bg-violet-50/40 dark:bg-violet-500/5 px-3 py-2.5">
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-violet-500 mb-1">Tip</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-violet-500 mb-1">Tip</p>
                     <p className="text-[11px] text-zinc-600 dark:text-zinc-400 leading-relaxed">
                       Scripts run <span className="font-semibold text-zinc-700 dark:text-zinc-300">one at a time</span>. Voices (Kokoro / Supertonic) run on your machine — free, and they download once, then work offline.
                     </p>

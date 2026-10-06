@@ -305,7 +305,7 @@ const ITEM_CLS        = "w-full flex items-center gap-2.5 px-3.5 py-2.5 bg-trans
 const TRIGGER_CLS     = "w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-white dark:bg-white/6 border border-zinc-200 dark:border-white/10 cursor-pointer font-[inherit] text-[13px] font-medium text-zinc-700 dark:text-zinc-300 hover:border-zinc-300 dark:hover:border-white/20 shadow-xs transition-colors";
 
 // macOS "System Settings" grouped-list styles
-const SECTION_LBL = "text-[10.5px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 px-1.5 mb-1.5";
+const SECTION_LBL = "text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500 px-1.5 mb-1.5";
 const GROUP_CLS   = "rounded-xl border border-zinc-200/70 dark:border-white/8 bg-zinc-50/70 dark:bg-white/3 overflow-hidden divide-y divide-zinc-200/55 dark:divide-white/6";
 
 /* Every brain is a local one (a CLI process or an Ollama model on this machine). */
@@ -322,14 +322,16 @@ function BrainIcon({ size = 16 }: { size?: number }) {
 
 interface BrainGroup { label: string; brains: LocalBrainOption[] }
 
-/** Only brains actually detected on THIS machine are offered (a CLI on PATH, or a
- *  model Ollama reports) — never a hardcoded fallback that would error on use. */
+/** Only brains actually available are offered (a CLI on PATH, a model Ollama
+ *  reports, or a provider with a saved API key) — never a hardcoded fallback. */
 function buildGroups(brains: LocalBrainOption[]): BrainGroup[] {
   const groups: BrainGroup[] = [];
   const cli    = brains.filter(b => b.kind === "cli");
   const ollama = brains.filter(b => b.kind === "ollama");
+  const api    = brains.filter(b => b.kind === "api");
   if (cli.length)    groups.push({ label: "AI CLI (this machine)", brains: cli });
   if (ollama.length) groups.push({ label: "Local AI (Ollama)", brains: ollama });
+  if (api.length)    groups.push({ label: "Your API keys (cloud)", brains: api });
   return groups;
 }
 
@@ -398,7 +400,7 @@ function ModelPicker({ value, onChange, brains, loading }: {
           return (
             <div key={group.label}>
               {gi > 0 && <div className="h-px bg-zinc-100 dark:bg-white/6" />}
-              <p className="text-[9.5px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-600 px-3.5 pt-2.5 pb-1">{group.label}</p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-600 px-3.5 pt-2.5 pb-1">{group.label}</p>
               {filtered.map(b => {
                 const active = b.id === value;
                 return (
@@ -534,7 +536,7 @@ function SelectBox({ value, onChange, options, disabled, searchable, label, plai
     }}>
       <button onClick={() => setOpen(false)}
         className="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 bg-violet-500/5 border-b border-violet-500/15 cursor-pointer font-[inherit] hover:bg-violet-500/8 transition-colors">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-violet-500">{label ?? "Select"}</span>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-violet-500">{label ?? "Select"}</span>
         <ChevronDown size={13} className="text-zinc-400 rotate-180 shrink-0" />
       </button>
       {searchable && (
@@ -1356,7 +1358,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
         <div className="shrink-0 flex items-center gap-2 px-3.5 py-1.5 border-t border-zinc-100 dark:border-white/6 bg-zinc-50 dark:bg-white/2">
           <div className="flex items-center gap-1.5 shrink-0">
             <Sparkles size={11} className="text-violet-500" />
-            <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">AI Model</span>
+            <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500">AI Model</span>
           </div>
           <div className="flex-1 min-w-0 flex justify-end">
             <ModelPicker value={model} onChange={setModel} brains={brains} loading={brainsLoading} />
@@ -1399,7 +1401,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
             {/* Viral mode — standalone compact row */}
             <div className={`${GROUP_CLS} ${viralMode ? "ring-1 ring-violet-500/25" : ""}`}>
               <div className="flex items-center gap-2.5 px-3 py-1.5">
-                <div className="flex items-center justify-center w-6 h-6 rounded-md shrink-0 transition-colors" style={{ background: viralMode ? "linear-gradient(135deg,#3D7EFD,#003AAC)" : undefined, backgroundColor: viralMode ? undefined : "rgba(120,120,128,0.12)" }}>
+                <div className="flex items-center justify-center w-6 h-6 rounded-md shrink-0 transition-colors" style={{ background: viralMode ? "var(--brand-gradient)" : undefined, backgroundColor: viralMode ? undefined : "rgba(120,120,128,0.12)" }}>
                   <TrendingUp size={12} className={viralMode ? "text-white" : "text-zinc-400 dark:text-zinc-500"} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -1421,7 +1423,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                   { label: "Duration", dropLabel: "Select Duration",      value: duration,   set: setDuration,   options: DURATIONS, disabled: exactLen },
                 ] as { label: string; dropLabel: string; value: string; set: (v: string) => void; options: readonly string[]; disabled?: boolean; searchable?: boolean }[]).map(({ label, dropLabel, value, set, options, disabled, searchable }) => (
                   <div key={label} className="min-w-0 rounded-xl border border-zinc-200/70 dark:border-white/8 bg-zinc-50/70 dark:bg-white/3 px-2.5 py-1.5" style={{ opacity: disabled ? 0.5 : 1 }}>
-                    <p className="flex items-center gap-1 text-[9.5px] font-semibold uppercase tracking-wide text-zinc-400 dark:text-zinc-500 mb-0.5">
+                    <p className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500 mb-0.5">
                       {label}{disabled && <Lock size={9} className="text-zinc-400 shrink-0" />}
                     </p>
                     <SelectBox plain value={value} onChange={v => set(v as never)} options={options} disabled={!!disabled} searchable={!!searchable} label={dropLabel} />
@@ -1433,7 +1435,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
             {/* Exact word count — standalone compact row */}
             <div className={GROUP_CLS}>
               <div className="flex items-center gap-2.5 px-3 py-1.5">
-                <div className="flex items-center justify-center w-6 h-6 rounded-md shrink-0 transition-colors" style={{ background: exactLen ? "linear-gradient(135deg,#3D7EFD,#003AAC)" : undefined, backgroundColor: exactLen ? undefined : "rgba(120,120,128,0.12)" }}>
+                <div className="flex items-center justify-center w-6 h-6 rounded-md shrink-0 transition-colors" style={{ background: exactLen ? "var(--brand-gradient)" : undefined, backgroundColor: exactLen ? undefined : "rgba(120,120,128,0.12)" }}>
                   <Hash size={12} className={exactLen ? "text-white" : "text-zinc-400 dark:text-zinc-500"} />
                 </div>
                 <div className="flex-1 min-w-0">
@@ -1459,10 +1461,10 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                         <button key={value} onClick={() => setWordCount(value)}
                           className={`flex-1 h-8 rounded-lg text-[11px] font-semibold cursor-pointer font-[inherit] transition-all duration-150 ${
                             wordCount === value
-                              ? "text-white shadow-sm shadow-violet-500/25"
+                              ? "text-white shadow-sm"
                               : "bg-white dark:bg-white/5 text-zinc-400 dark:text-zinc-500 border border-zinc-200 dark:border-white/8 hover:border-zinc-300 dark:hover:border-white/15 hover:text-zinc-600 dark:hover:text-zinc-300"
                           }`}
-                          style={wordCount === value ? { background: "linear-gradient(135deg,#3D7EFD,#003AAC)" } : {}}>
+                          style={wordCount === value ? { background: "var(--brand-gradient)" } : {}}>
                           {label}
                         </button>
                       ))}
@@ -1480,7 +1482,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
             {/* GROUP · Structure */}
             <div>
               <div className="flex items-center justify-between gap-2 px-1.5 mb-1.5">
-                <p className="text-[10.5px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">Structure</p>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500">Structure</p>
                 <button onClick={() => setShowSectionDetail(v => !v)}
                   className="flex items-center gap-0.5 text-[10.5px] font-semibold text-violet-500 hover:text-violet-600 cursor-pointer bg-transparent border-none p-0 font-[inherit]">
                   {showSectionDetail ? "Hide" : "Customize"}
@@ -1507,7 +1509,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                 </div>
                 {showSectionDetail && structure.includes("Hook") && (
                   <div className="px-3.5 py-2">
-                    <p className="flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
+                    <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500 mb-1">
                       <span className="w-1 h-3 rounded-full bg-green-500/70 shrink-0" />Hook
                     </p>
                     <div className="flex items-center justify-between gap-3 py-1">
@@ -1522,7 +1524,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                 )}
                 {showSectionDetail && structure.includes("Intro") && (
                   <div className="px-3.5 py-2">
-                    <p className="flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
+                    <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500 mb-1">
                       <span className="w-1 h-3 rounded-full bg-green-500/70 shrink-0" />Intro
                     </p>
                     <div className="flex items-center justify-between gap-3 py-1">
@@ -1537,7 +1539,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                 )}
                 {showSectionDetail && structure.includes("Ending") && (
                   <div className="px-3.5 py-2">
-                    <p className="flex items-center gap-1.5 text-[10.5px] font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500 mb-1">
+                    <p className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-400 dark:text-zinc-500 mb-1">
                       <span className="w-1 h-3 rounded-full bg-green-500/70 shrink-0" />Ending
                     </p>
                     <div className="flex items-center justify-between gap-3 py-1">
@@ -1580,7 +1582,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
               disabled={!topic.trim() || !modelReady}
               title={modelReady ? undefined : brainsLoading ? "Detecting local AI…" : "Install a local AI model first"}
               className="w-full h-10 flex items-center justify-center gap-2 rounded-xl text-[13px] font-bold text-white cursor-pointer transition-opacity hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed"
-              style={{ background: "linear-gradient(135deg,#3D7EFD,#003AAC)" }}>
+              style={{ background: "var(--brand-gradient)" }}>
               <Wand2 size={14} />
               {usingAgentic ? "Generate Script (Agentic)" : "Generate Script"}
             </button>
@@ -1626,7 +1628,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
             {/* Progress bar */}
             <div className="h-1.5 rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
               <div className="h-full rounded-full transition-all duration-700 ease-out"
-                style={{ width: `${genPhase.kind === "planning" ? 5 : genProgress}%`, background: "linear-gradient(to right, #3D7EFD, #003AAC)" }} />
+                style={{ width: `${genPhase.kind === "planning" ? 5 : genProgress}%`, background: "var(--brand-gradient)" }} />
             </div>
 
             {genPhase.kind === "writing" && editorWords > 0 && (
@@ -1711,7 +1713,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                           <div key={m.label} className="bg-white dark:bg-zinc-900 px-3 py-2">
                             <div className="flex items-center gap-1 text-zinc-400 dark:text-zinc-500 mb-0.5">
                               <m.icon size={10} />
-                              <span className="text-[9px] font-semibold uppercase tracking-wide">{m.label}</span>
+                              <span className="text-[11px] font-semibold uppercase tracking-[0.08em]">{m.label}</span>
                             </div>
                             <p className="text-[12px] font-bold text-zinc-700 dark:text-zinc-200 truncate">{m.value}</p>
                           </div>
@@ -1726,7 +1728,7 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
                           </div>
                         ) : (
                           <div className="flex flex-col gap-1.5">
-                            <p className="text-[9px] font-bold uppercase tracking-wide text-zinc-400">Suggestions</p>
+                            <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Suggestions</p>
                             {analysis.tips.map((t, i) => (
                               <div key={i} className="flex items-start gap-1.5 text-[11px] text-zinc-500 dark:text-zinc-400 leading-snug">
                                 <Zap size={11} className="text-violet-500 shrink-0 mt-0.5" />
@@ -1795,8 +1797,8 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
         {/* Floating action — turn the written script into a voiceover */}
         {script.trim() && !generating && (
           <button onClick={goToTextToVoice} title="Create a voiceover from this script"
-            className="absolute bottom-5 right-5 z-10 flex items-center gap-2 h-11 pl-4 pr-5 rounded-xl text-[13px] font-semibold text-white cursor-pointer shadow-lg shadow-violet-500/30 hover:shadow-xl hover:shadow-violet-500/40 hover:-translate-y-0.5 transition-all"
-            style={{ background: "linear-gradient(135deg,#3D7EFD,#003AAC)" }}>
+            className="absolute bottom-5 right-5 z-10 flex items-center gap-2 h-11 pl-4 pr-5 rounded-xl text-[13px] font-semibold text-white cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all"
+            style={{ background: "var(--brand-gradient)" }}>
             <Mic size={16} /> Generate Audio
           </button>
         )}
@@ -1810,6 +1812,10 @@ ${prevContent ? `For continuity only, the previous section ended with: "...${pre
             No local AI found. Run AI locally — install Ollama or an AI CLI (Claude Code, Codex, Gemini).{" "}
             <button onClick={() => openSettings("local-ai")} className="text-violet-500 font-medium underline hover:no-underline cursor-pointer border-none bg-transparent p-0">
               Install a local model →
+            </button>
+            {" "}or{" "}
+            <button onClick={() => openSettings("api-keys")} className="text-violet-500 font-medium underline hover:no-underline cursor-pointer border-none bg-transparent p-0 font-[inherit]">
+              use your own API key →
             </button>
           </p>
         </div>

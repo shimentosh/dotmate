@@ -313,7 +313,7 @@ function VideoRow({
               width: `${entry.status === "done" ? 100 : pct}%`,
               background: entry.status === "done"
                 ? "linear-gradient(90deg,#10b981,#059669)"
-                : "linear-gradient(90deg,#3D7EFD,#0047D1)",
+                : "var(--brand-gradient)",
             }} />
         </div>
       )}
@@ -844,7 +844,7 @@ export function TrimFilesTool() {
           {/* ── LEFT ── */}
           {/* Glassy/translucent so the app's ambient background shows through —
               seamless with the (transparent) preview panel on the right. */}
-          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
 
           <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
 
@@ -885,7 +885,7 @@ export function TrimFilesTool() {
             {videos.length > 0 && (
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-400">
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">
                     Queue · {totalCount}
                   </p>
                   <div className="flex items-center gap-2">
@@ -953,7 +953,7 @@ export function TrimFilesTool() {
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
                   <div className="h-full rounded-full transition-all"
-                    style={{ width: `${totalCount > 0 ? (doneCount / totalCount) * 100 : 0}%`, background: "linear-gradient(90deg,#3D7EFD,#0047D1)" }} />
+                    style={{ width: `${totalCount > 0 ? (doneCount / totalCount) * 100 : 0}%`, background: "var(--brand-gradient)" }} />
                 </div>
                 {fps > 0 && (
                   <div className="flex items-center gap-2 mt-1 text-[10px] text-zinc-400">
@@ -977,7 +977,7 @@ export function TrimFilesTool() {
                   onClick={startBatch}
                   disabled={readyCount === 0 && errorCount === 0}
                   className="flex-1 h-10 rounded-xl text-[13px] font-bold text-white cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-                  style={{ background: "linear-gradient(135deg,#3D7EFD,#0047D1)" }}
+                  style={{ background: "var(--brand-gradient)" }}
                 >
                   <Scissors size={14} />
                   {readyCount > 0 ? `Trim ${readyCount} Video${readyCount !== 1 ? "s" : ""}` : "Trim Videos"}

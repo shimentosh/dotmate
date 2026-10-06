@@ -10,7 +10,7 @@ import AppBackground from "@/components/layout/app-background";
  */
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="fixed inset-0 flex flex-col overflow-hidden bg-zinc-50 dark:bg-zinc-950">
+    <div className="fixed inset-0 flex flex-col overflow-hidden bg-background">
       {/* Ambient background (the main area is transparent so it shows through) */}
       <AppBackground />
       <div className="relative z-10 flex flex-col flex-1 min-h-0 overflow-hidden">

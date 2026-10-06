@@ -37,7 +37,7 @@ function BatchClipsMockup() {
         <span className="text-[9px] font-mono text-zinc-400 dark:text-white/[0.28]">clip_001.mp4 … clip_200.mp4</span>
         <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ color, background: `${color}18` }}>EXPORT ALL</span>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-6 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-6 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -70,7 +70,7 @@ function ClipMergerMockup() {
         <Film size={16} style={{ color: `${color}dd` }} strokeWidth={1.5} />
         <span className="text-[9px] font-bold" style={{ color: `${color}dd` }}>MP4</span>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -120,7 +120,7 @@ function AudioMergerMockup() {
         </div>
         <span className="text-[8px] font-bold font-mono shrink-0" style={{ color: `${color}dd` }}>MP3</span>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -161,7 +161,7 @@ function FileShufflerMockup() {
           ))}
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -194,13 +194,13 @@ function VideoDownloaderMockup() {
             <Download size={11} style={{ color }} strokeWidth={2} />
           </div>
           <div className="flex-1 h-[3px] rounded-full overflow-hidden bg-black/[0.08] dark:bg-white/[0.08]">
-            <div className="h-full rounded-full" style={{ width: "72%", background: "linear-gradient(90deg, #3D7EFD, #0047D1)" }} />
+            <div className="h-full rounded-full" style={{ width: "72%", background: "var(--brand-gradient)" }} />
           </div>
           <span className="text-[9px] font-bold font-mono shrink-0" style={{ color }}>72%</span>
         </div>
         <span className="text-[9px] font-mono pl-8 text-zinc-400 dark:text-white/[0.22]">video.mp4 · 87.3 MB</span>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -217,7 +217,7 @@ function ScriptMockup() {
           <div className="w-[2px] h-[14px] rounded-full animate-pulse" style={{ background: "#0057FC" }} />
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-12 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -277,7 +277,7 @@ function FilmstripMockup() {
           )}
         </div>
       ))}
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -298,7 +298,7 @@ function TextToVoiceMockup() {
             style={{ height: `${h}px`, background: `${color}${(50 + i * 5).toString(16).padStart(2, "0")}` }} />
         ))}
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -326,7 +326,7 @@ function VoiceToTextMockup() {
           <div className="w-[2px] h-[14px] rounded-full animate-pulse" style={{ background: color }} />
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -352,7 +352,7 @@ function ScriptToImageMockup() {
           ))}
         </div>
       </div>
-      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-[#f4f4f5] dark:from-[#101012] to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-8 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
     </div>
   );
 }
@@ -360,11 +360,11 @@ function ScriptToImageMockup() {
 /* ─── macOS window chrome ─────────────────────────────────────────────────── */
 function WindowChrome({ label }: { label: string }) {
   return (
-    <div className="flex items-center gap-1.5 px-3 h-8 shrink-0 border-b border-black/[0.07] dark:border-white/[0.08]">
-      <div className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(255,95,87,0.85)"  }} />
-      <div className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(255,189,46,0.85)" }} />
-      <div className="w-2.5 h-2.5 rounded-full" style={{ background: "rgba(40,200,64,0.85)"  }} />
-      <span className="text-[10px] font-medium ml-1.5 truncate text-zinc-400 dark:text-white/30">{label}</span>
+    <div className="flex items-center gap-1.5 px-3 h-8 shrink-0 border-b border-black/[0.06] dark:border-white/[0.06]">
+      <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-white/15" />
+      <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-white/15" />
+      <div className="w-2 h-2 rounded-full bg-zinc-300 dark:bg-white/15" />
+      <span className="text-[10.5px] font-medium ml-1.5 truncate text-zinc-400 dark:text-zinc-500 font-mono">{label}</span>
     </div>
   );
 }
@@ -403,14 +403,12 @@ export const STUDIO_TOOLS: GalleryTool[] = [
 
 /* ─── Tool card ──────────────────────────────────────────────────────────── */
 export function ToolCard({ tool }: { tool: GalleryTool }) {
-  const { name, desc, href, color, badge, cat, fileName, Mockup } = tool;
+  const { name, desc, href, badge, cat, fileName, Mockup } = tool;
   return (
     <Link href={href}
-      className="group flex flex-col rounded-2xl overflow-hidden no-underline transition-all duration-200 cursor-pointer hover:-translate-y-1.5 border border-zinc-200/80 dark:border-white/[0.07] shadow-sm shadow-black/[0.04] dark:shadow-none"
-      onMouseEnter={e => { (e.currentTarget as HTMLElement).style.boxShadow = `0 20px 48px rgba(0,0,0,0.18), 0 0 0 1px ${color}35`; }}
-      onMouseLeave={e => { (e.currentTarget as HTMLElement).style.boxShadow = ""; }}>
-      {/* Window area — light screen in light mode, dark glass in dark mode */}
-      <div className="flex flex-col relative bg-[#f4f4f5] dark:bg-[#101012]" style={{ height: 160 }}>
+      className="group flex flex-col rounded-xl overflow-hidden no-underline cursor-pointer bg-surface border border-zinc-200 dark:border-white/[0.07] shadow-xs transition-[transform,box-shadow,border-color] duration-200 ease-out hover:-translate-y-0.5 hover:shadow-lg hover:border-zinc-300 dark:hover:border-white/[0.14]">
+      {/* Window area — a quiet preview of what the tool does */}
+      <div className="flex flex-col relative bg-surface-muted" style={{ height: 152 }}>
         <WindowChrome label={fileName} />
         <div className="flex-1 overflow-hidden relative">
           <Mockup />
@@ -418,29 +416,38 @@ export function ToolCard({ tool }: { tool: GalleryTool }) {
       </div>
 
       {/* Info footer */}
-      <div className="flex flex-col px-4 pt-4 pb-4 bg-white dark:bg-[#18181b] bg-linear-to-b from-violet-500/[0.08] to-violet-500/[0.03] dark:from-violet-500/[0.13] dark:to-violet-500/[0.05] border-t border-zinc-100 dark:border-white/[0.05]">
+      <div className="flex flex-col px-4 pt-3.5 pb-4 border-t border-zinc-200/70 dark:border-white/[0.06]">
         {/* Title gets its own row so it never truncates — only the arrow sits beside it */}
-        <div className="flex items-center gap-2 mb-2">
-          <span className="flex-1 min-w-0 truncate text-[15px] font-semibold text-zinc-900 dark:text-zinc-100 tracking-tight">{name}</span>
-          <ArrowRight size={14} className="shrink-0 text-zinc-300 dark:text-zinc-600 group-hover:text-violet-400 transition-colors" />
+        <div className="flex items-center gap-2 mb-1">
+          <span className="flex-1 min-w-0 truncate text-[14.5px] font-semibold text-zinc-900 dark:text-zinc-100 tracking-[-0.01em]">{name}</span>
+          <ArrowRight size={15} className="shrink-0 text-zinc-300 dark:text-zinc-600 -translate-x-1 opacity-0 group-hover:translate-x-0 group-hover:opacity-100 group-hover:text-brand transition-all duration-200" />
         </div>
-        {/* Badges on their own row */}
-        <div className="flex items-center gap-2 mb-2.5">
+        {/* Description — clamped to a uniform two lines so every card is the same height */}
+        <p className="text-[13px] text-zinc-500 dark:text-zinc-400 leading-relaxed line-clamp-2 min-h-[42px]">{desc}</p>
+        {/* Tags */}
+        <div className="flex items-center gap-1.5 mt-3">
           {badge && (
-            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full leading-none"
-              style={{ color, background: `${color}18`, border: `1px solid ${color}38` }}>
-              {badge.toUpperCase()}
+            <span className="inline-flex items-center h-5 px-2 rounded-md text-[11px] font-medium leading-none bg-brand-soft text-brand">
+              {badge}
             </span>
           )}
-          <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-md leading-none"
-            style={{ color, background: `${color}12`, border: `1px solid ${color}28` }}>
+          <span className="inline-flex items-center h-5 px-2 rounded-md text-[11px] font-medium leading-none bg-surface-muted text-zinc-600 dark:text-zinc-400 border border-zinc-200/80 dark:border-white/[0.06]">
             {cat}
           </span>
         </div>
-        {/* Description — clamped to a uniform two lines so every card is the same height */}
-        <p className="text-[13px] text-zinc-500 dark:text-zinc-500 leading-relaxed line-clamp-2 min-h-[42px]">{desc}</p>
       </div>
     </Link>
+  );
+}
+
+/** Heading above a group of tool cards: title · count, with a muted hint. */
+export function SectionHeading({ id, title, hint, count }: { id?: string; title: string; hint?: string; count?: number }) {
+  return (
+    <div className="flex items-baseline gap-2 mb-3.5">
+      <h2 id={id} className="text-[15px] font-semibold tracking-[-0.01em] text-zinc-900 dark:text-zinc-100">{title}</h2>
+      {count != null && <span className="text-[12px] font-medium tabular-nums text-zinc-400 dark:text-zinc-500">{count}</span>}
+      {hint && <span className="hidden sm:inline text-[12.5px] text-zinc-400 dark:text-zinc-500 ml-1">— {hint}</span>}
+    </div>
   );
 }
 

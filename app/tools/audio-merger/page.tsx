@@ -583,7 +583,7 @@ export default function AudioMergerPage() {
           {/* ── LEFT — controls ── */}
           {/* Glassy/translucent so the app's ambient background shows through —
               seamless with the (transparent) queue panel on the right. */}
-          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-white/55 dark:bg-zinc-900/40 backdrop-blur-xl overflow-hidden">
+          <div className="w-[324px] shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             <div className="flex-1 overflow-y-auto px-5 py-4 space-y-5">
 
               {/* Function picker — each entry is a first-class audio tool */}
@@ -811,7 +811,7 @@ export default function AudioMergerPage() {
                   </div>
                   <div className="h-1.5 rounded-full bg-zinc-100 dark:bg-white/8 overflow-hidden">
                     <div className="h-full rounded-full transition-all duration-300 ease-out"
-                      style={{ width: `${progress}%`, background: "linear-gradient(90deg,#0047D1,#0057FC)" }} />
+                      style={{ width: `${progress}%`, background: "var(--brand-gradient)" }} />
                   </div>
                 </div>
               ) : (
@@ -826,7 +826,7 @@ export default function AudioMergerPage() {
                     onClick={mode === "loop" ? runLoopBatch : merge}
                     disabled={!canRun}
                     className="w-full h-10 rounded-xl text-[13px] font-bold text-white cursor-pointer border-none flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed hover:opacity-90 transition-opacity"
-                    style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}
+                    style={{ background: "var(--brand-gradient)" }}
                   >
                     {mode === "loop" ? <Repeat size={14} /> : <Music size={14} />}
                     {mode === "loop"
@@ -948,7 +948,7 @@ export default function AudioMergerPage() {
                       </div>
                       <button onClick={download}
                         className="flex items-center gap-1.5 h-8 px-3.5 rounded-lg text-[12px] font-semibold text-white cursor-pointer border-none hover:opacity-90 transition-opacity shadow-sm shrink-0"
-                        style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}>
+                        style={{ background: "var(--brand-gradient)" }}>
                         <Download size={12} /> Download {OUTPUT_FORMATS[format].ext.toUpperCase()}
                       </button>
                     </div>
@@ -975,7 +975,7 @@ export default function AudioMergerPage() {
                       {!merging && loopJobs.some(j => j.status === "done" && !j.saved && j.blob) && (
                         <button onClick={downloadAllLoops}
                           className="flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-semibold text-white cursor-pointer border-none hover:opacity-90 transition-opacity shadow-sm shrink-0"
-                          style={{ background: "linear-gradient(135deg,#0047D1,#0057FC)" }}>
+                          style={{ background: "var(--brand-gradient)" }}>
                           <Download size={12} /> Download all
                         </button>
                       )}
@@ -999,7 +999,7 @@ export default function AudioMergerPage() {
                             <p className="text-[12px] font-medium text-zinc-800 dark:text-zinc-200 truncate">{fmtName(j.outName, 34)}</p>
                             {j.status === "running" && (
                               <div className="mt-1 h-0.5 rounded-full bg-zinc-200 dark:bg-white/8 overflow-hidden">
-                                <div className="h-full rounded-full transition-all" style={{ width: `${j.progress}%`, background: "linear-gradient(90deg,#0047D1,#0057FC)" }} />
+                                <div className="h-full rounded-full transition-all" style={{ width: `${j.progress}%`, background: "var(--brand-gradient)" }} />
                               </div>
                             )}
                             {j.status === "error" && j.error && (

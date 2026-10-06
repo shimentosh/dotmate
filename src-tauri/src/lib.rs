@@ -21,6 +21,8 @@ mod fs_command;
 mod deps_command;
 /// CLI brains — the user's own Claude Code / Codex / Gemini CLI driven as a local LLM.
 mod cli_brain_command;
+/// API brains — the user's own cloud AI provider via an API key (opt-in, Settings → API Keys).
+mod api_brain_command;
 /// Local ffmpeg utility ops (video/audio merge) — on-device, no server.
 mod tools_command;
 /// Shared security helpers: path confinement + no-shell native open/reveal.
@@ -871,6 +873,11 @@ pub fn run() {
             tts_command::tts_synthesize,
             cli_brain_command::cli_brain_detect,
             cli_brain_command::cli_brain_run,
+            api_brain_command::api_brain_list,
+            api_brain_command::api_brain_save,
+            api_brain_command::api_brain_remove,
+            api_brain_command::api_brain_run,
+            api_brain_command::api_brain_test,
             staging::export_save_clip,
             staging::stage_append,
             staging::stage_discard,

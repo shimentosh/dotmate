@@ -8,7 +8,7 @@ export default function ToolsPage() {
   return (
     <AppLayout>
       <div className="min-h-full">
-        <div className="w-full px-8 pt-10 pb-20">
+        <div className="w-full max-w-[1360px] mx-auto px-6 lg:px-10 pt-8 lg:pt-10 pb-16">
           <PageHero
             title="Media"
             accent="Tools"

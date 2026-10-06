@@ -108,7 +108,7 @@ export function RenderGuard() {
 
           {/* Badge — subtle glass pill */}
           <div className="flex justify-center mb-3">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wider text-amber-300 bg-amber-400/10 border border-amber-400/20">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-[0.06em] text-amber-300 bg-amber-400/10 border border-amber-400/20">
               <span className="w-1 h-1 rounded-full bg-amber-400 animate-pulse" />
               Task in progress
             </span>

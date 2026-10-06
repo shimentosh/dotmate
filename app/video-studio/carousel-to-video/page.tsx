@@ -2573,9 +2573,9 @@ export default function CarouselToVideoPage() {
 
         <div className="flex flex-1 min-h-0">
           {/* ── LEFT PANEL ── */}
-          {/* Transparent so the ambient AppBackground gradient shows through (the
-              border-r still separates it from the preview). */}
-          <div className="w-95 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 overflow-hidden">
+          {/* Shared panel surface (bg-panel); the border-r separates it from the
+              preview. */}
+          <div className="w-95 shrink-0 flex flex-col border-r border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
             {/* overflow-x-hidden: `overflow-y-auto` alone makes the x-axis compute
                 to `auto` too (CSS spec), so a 1px-wide child would show a stray
                 horizontal scrollbar. This panel only ever scrolls vertically. */}
@@ -2704,7 +2704,7 @@ export default function CarouselToVideoPage() {
                 <div className="space-y-4">
                   {/* Aspect ratio */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-2">Aspect Ratio</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-2">Aspect Ratio</p>
                     <div className="grid grid-cols-5 gap-1.5">
                       {([
                         { id: "16:9", label: "Wide",   Icon: RectangleHorizontal },
@@ -2728,7 +2728,7 @@ export default function CarouselToVideoPage() {
 
                   {/* Fit mode */}
                   <div>
-                    <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-2">Fit Mode</p>
+                    <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-2">Fit Mode</p>
                     <div className="grid grid-cols-3 gap-1.5">
                       {([
                         { id: "contain",   label: "Contain", sub: "Fit inside", Icon: Shrink },
@@ -2764,7 +2764,7 @@ export default function CarouselToVideoPage() {
                   <div className="grid grid-cols-2 gap-2.5">
                     <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-zinc-50 dark:bg-white/4 p-2.5">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="flex items-center gap-1 text-[9.5px] font-semibold uppercase tracking-wide text-zinc-400">
+                        <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">
                           <Clock size={10} className="text-violet-500" /> Duration
                         </span>
                         {items.length > 0 && (
@@ -2784,7 +2784,7 @@ export default function CarouselToVideoPage() {
                       <p className="text-[8.5px] text-zinc-400 mt-1 leading-tight">Per new slide</p>
                     </div>
                     <div className="rounded-xl border border-zinc-200 dark:border-white/8 bg-zinc-50 dark:bg-white/4 p-2.5">
-                      <span className="flex items-center gap-1 text-[9.5px] font-semibold uppercase tracking-wide text-zinc-400 mb-1.5">
+                      <span className="flex items-center gap-1 text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-1.5">
                         <Palette size={10} className="text-violet-500" /> Background
                       </span>
                       <div className="flex items-center gap-1.5">
@@ -2858,7 +2858,7 @@ export default function CarouselToVideoPage() {
                   ] as const).map(({ label, value, set, min, max, unit, isDefault, defaultVal }) => (
                     <div key={label}>
                       <div className="flex items-center justify-between mb-1">
-                        <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-400">{label}</label>
+                        <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">{label}</label>
                         <div className="flex items-center gap-1">
                           <span className="text-[11px] text-zinc-400 tabular-nums w-10 text-right">{value}{unit}</span>
                           {!isDefault && (
@@ -2973,7 +2973,7 @@ export default function CarouselToVideoPage() {
             {/* ── Watermark (upcoming — controls hidden for now) ── */}
             <div>
               <div className="flex items-center gap-2 py-1">
-                <span className="text-[11px] font-bold uppercase tracking-widest text-zinc-400">Watermark</span>
+                <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Watermark</span>
                 <span className="text-[8.5px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-full bg-violet-500/12 text-violet-500 dark:text-violet-400">Upcoming</span>
               </div>
               <p className="text-[10.5px] text-zinc-400 leading-snug">Custom watermarks are coming soon.</p>
@@ -3019,7 +3019,7 @@ export default function CarouselToVideoPage() {
               onClick={generate}
               disabled={genState === "generating" || items.length === 0}
               className="w-full h-10 rounded-xl text-[13px] font-bold text-white cursor-pointer border-none transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              style={{ background: "linear-gradient(135deg,#3D7EFD,#003AAC)" }}>
+              style={{ background: "var(--brand-gradient)" }}>
               {genState === "generating" ? (
                 <><Loader2 size={14} className="animate-spin" /> Rendering…</>
               ) : genState === "done" ? (
@@ -3033,11 +3033,11 @@ export default function CarouselToVideoPage() {
 
         {/* ── RIGHT SIDEBAR: layout & template design (toggleable) ── */}
         {rightOpen && (
-        <div className="w-88 shrink-0 order-last flex flex-col border-l border-zinc-200 dark:border-white/8 overflow-hidden">
+        <div className="w-88 shrink-0 order-last flex flex-col border-l border-zinc-200 dark:border-white/8 bg-panel overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-zinc-100 dark:border-white/8 shrink-0">
             <div className="flex items-center gap-2">
-              <span className="w-1 h-4 rounded-full bg-violet-500" />
-              <h2 className="text-[14px] font-bold text-zinc-900 dark:text-zinc-50">Design</h2>
+              <Palette size={14} className="text-brand" />
+              <h2 className="text-[14px] font-semibold text-zinc-900 dark:text-zinc-50">Design</h2>
             </div>
             <button onClick={() => setRightOpen(false)} title="Hide panel"
               className="w-7 h-7 rounded-lg flex items-center justify-center text-zinc-400 hover:text-zinc-700 dark:hover:text-zinc-200 hover:bg-zinc-100 dark:hover:bg-white/8 bg-transparent border-none cursor-pointer transition-colors">
@@ -3083,7 +3083,7 @@ export default function CarouselToVideoPage() {
               {/* Fan style sub-picker — only when fan is active */}
               {layoutMode === "fan" && (
                 <div className="pt-2 border-t border-zinc-100 dark:border-white/8">
-                  <p className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-2">Card Layout</p>
+                  <p className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-2">Card Layout</p>
                   <div className="grid grid-cols-5 gap-1.5">
                     {FAN_STYLE_META.map(({ id, label, desc }) => {
                       const active = fanStyle === id;
@@ -3116,7 +3116,7 @@ export default function CarouselToVideoPage() {
               {/* Card size slider — applies to all layouts */}
               <div className="mt-2">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Card Size</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Card Size</span>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[11px] tabular-nums text-zinc-400">{Math.round(cardScale * 100)}%</span>
                     {cardScale !== 1.0 && (
@@ -3151,7 +3151,7 @@ export default function CarouselToVideoPage() {
                   top of the fit mode. Works on every layout. */}
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Image Size</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Image Size</span>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[11px] tabular-nums text-zinc-400">{Math.round(imageZoom * 100)}%</span>
                     {imageZoom !== 1.0 && (
@@ -3186,7 +3186,7 @@ export default function CarouselToVideoPage() {
               {/* Card radius — rounds the CARD / frame container on every layout. */}
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Card Radius</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Card Radius</span>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[11px] tabular-nums text-zinc-400">{Math.round(cardRadius * 200)}%</span>
                     {cardRadius !== 0 && (
@@ -3212,7 +3212,7 @@ export default function CarouselToVideoPage() {
               {/* Image radius — rounds the MEDIA itself (inside the card). */}
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-widest text-zinc-400">Image Radius</span>
+                  <span className="text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400">Image Radius</span>
                   <div className="flex items-center gap-1.5">
                     <span className="text-[11px] tabular-nums text-zinc-400">{Math.round(imageRadius * 200)}%</span>
                     {imageRadius !== 0 && (
@@ -3271,7 +3271,7 @@ export default function CarouselToVideoPage() {
               {/* Template config fields — always visible */}
               <div className="space-y-2.5 pt-2 border-t border-zinc-100 dark:border-white/8">
                 <div>
-                  <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-1">
+                  <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-1">
                     {layoutMode === "story"    ? "Handle / Username" :
                      layoutMode === "magazine" ? "Magazine Name" :
                      layoutMode === "gallery"  ? "Caption / Title" :
@@ -3299,7 +3299,7 @@ export default function CarouselToVideoPage() {
                 </div>
                 {layoutMode !== "vintage" && layoutMode !== "polaroid" && template !== "film" && (
                   <div>
-                    <label className="block text-[10px] font-semibold uppercase tracking-widest text-zinc-400 mb-1">
+                    <label className="block text-[11px] font-semibold uppercase tracking-[0.08em] text-zinc-500 dark:text-zinc-400 mb-1">
                       {layoutMode === "story"    ? "Subtitle" :
                        layoutMode === "magazine" ? "Headline" :
                        layoutMode === "gallery"  ? "Medium / Year" :
@@ -3342,7 +3342,7 @@ export default function CarouselToVideoPage() {
           {!rightOpen && (
             <button onClick={() => setRightOpen(true)} title="Show design panel"
               className="absolute top-3 right-3 z-10 flex items-center gap-1.5 h-8 px-3 rounded-lg text-[12px] font-semibold text-violet-600 dark:text-violet-300 bg-violet-500/10 hover:bg-violet-500/20 border border-violet-500/25 cursor-pointer transition-colors">
-              <span className="w-1 h-3.5 rounded-full bg-violet-500" /> Design
+              <Palette size={13} /> Design
             </button>
           )}
           <div className="flex-1 flex items-center justify-center p-6">
