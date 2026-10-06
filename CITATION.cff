@@ -11,8 +11,8 @@ authors:
 repository-code: "https://github.com/shimentosh/dotmate"
 url: "https://shimentosh.github.io/dotmate/"
 license: MIT
-version: 0.1.2
-date-released: "2026-10-05"
+version: 0.1.3
+date-released: "2026-10-06"
 keywords:
   - video editor
   - text-to-speech
