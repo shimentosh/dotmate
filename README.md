@@ -6,7 +6,7 @@
 
 # DotMate — Free Offline Video, Voice & AI Toolbox for Creators
 
-**Trim and merge videos, turn images into videos, download from YouTube & TikTok, transcribe with Whisper, generate voiceovers with Kokoro TTS and write scripts with a local LLM — all in one desktop app that runs 100% on your own computer.**
+**Trim and merge videos, add background music to many videos at once, turn images into videos, download from YouTube & TikTok, transcribe with Whisper, generate voiceovers with Kokoro TTS and write scripts with a local LLM — all in one desktop app that runs 100% on your own computer.**
 
 No account. No subscription. No cloud required. No telemetry. Open source under the MIT licence.
 
@@ -31,6 +31,7 @@ No account. No subscription. No cloud required. No telemetry. Open source under 
 ## 📖 Table of contents
 
 - [Why DotMate?](#-why-dotmate)
+- [What's new in v0.1.4](#-whats-new-in-v014)
 - [Features](#-features)
 - [Screenshots](#-screenshots)
 - [Download & install](#-download--install)
@@ -60,7 +61,19 @@ server, and put the useful parts behind a paywall. **DotMate** is the opposite:
   or, if you prefer, **your own API key** for Claude, OpenAI, Gemini or OpenRouter.
 - ⚡ **Fast and small** — a ~12 MB installer built on [Tauri 2](https://tauri.app) and Rust,
   with hardware-accelerated video encoding through WebCodecs where your PC supports it.
-- 🧰 **12 tools in one app** — replace a handful of websites and single-purpose apps.
+- 🧰 **13 tools in one app** — replace a handful of websites and single-purpose apps.
+
+## 🆕 What's new in v0.1.4
+
+- **Quick Edit** — a new batch tool: put one background track under dozens of
+  videos (or just make their own audio louder or quieter), hear the mix live in the
+  preview and render them all in parallel in seconds, with no quality loss.
+- **Clip Merger** background music now plays at the level the slider shows (it was
+  half as loud before).
+- **Video Downloader** no longer names single downloads `NA-<title>`, and
+  **Open** / **Show in folder** now point at the finished file.
+
+[Download v0.1.4](https://github.com/shimentosh/dotmate/releases/latest) · [Full changelog](CHANGELOG.md)
 
 ## 🧰 Features
 
@@ -69,7 +82,7 @@ server, and put the useful parts behind a paywall. **DotMate** is the opposite:
 | Tool | What it does |
 |---|---|
 | **Quick Trim** | **Batch Clips:** drop several long recordings, mark as many short moments as you like (2.5 s by default, drag to slide or resize, edit any clip later) and export the whole queue as `clip_001.mp4 … clip_500.mp4` at the source resolution and frame rate. **Trim Files:** batch-trim many whole videos with one draggable range. |
-| **Quick Edit** | Select many videos, add one background track (music up to 300%, original audio up to 200%, fades), hear it live in the preview, then render all of them in parallel. The video is copied untouched, so each render takes seconds. |
+| **Quick Edit** | Select many videos and lay one background track under all of them — or just turn their own audio up or down. Music goes up to 300% and original audio up to 200% (a limiter keeps boosts from distorting), with adjustable start point, fade in and fade out. Hear the mix live in the preview, then render every video in parallel. The video stream is copied untouched, so each render takes seconds and loses no quality; your originals are never changed. |
 | **Clip Merger** | Pair main clips with random B-roll, add background music, pick aspect-ratio presets, run in batches. |
 | **Image to Video** | Turn photos into a slideshow video with effects, colour adjustment, a progress bar, your own watermark and music. |
 | **Carousel Video** | Mix images and videos with 18 cinematic transitions, layout styles, sound effects and music — great for Reels, Shorts and TikTok. |
@@ -285,8 +298,8 @@ with a GPU but small models such as Llama 3.2 3B work on most modern laptops.
 <details>
 <summary><b>Is it a CapCut / Descript / ElevenLabs alternative?</b></summary>
 
-For many everyday jobs — batch trimming, slideshows, carousel videos, voiceovers
-and transcripts — yes, and it runs offline. It is not a full timeline editor.
+For many everyday jobs — batch trimming, adding music to many videos, slideshows,
+carousel videos, voiceovers and transcripts — yes, and it runs offline. It is not a full timeline editor.
 </details>
 
 <details>
