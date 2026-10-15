@@ -6,6 +6,8 @@ All notable changes to DotMate are documented here. The format follows
 
 ## [Unreleased]
 
+## [0.1.4] — 2026-10-15
+
 ### Added
 
 - **Quick Edit** (Tools → Quick Edit): pick many videos at once, lay one background
@@ -91,7 +93,8 @@ First open-source release. 🎉
 - First-run setup, Settings (General / Local AI / About), render dock, task
   guard, minimise to tray, light and dark themes.
 
-[Unreleased]: https://github.com/shimentosh/dotmate/compare/v0.1.3...HEAD
+[Unreleased]: https://github.com/shimentosh/dotmate/compare/v0.1.4...HEAD
+[0.1.4]: https://github.com/shimentosh/dotmate/compare/v0.1.3...v0.1.4
 [0.1.3]: https://github.com/shimentosh/dotmate/compare/v0.1.2...v0.1.3
 [0.1.2]: https://github.com/shimentosh/dotmate/compare/v0.1.1...v0.1.2
 [0.1.1]: https://github.com/shimentosh/dotmate/compare/v0.1.0...v0.1.1
