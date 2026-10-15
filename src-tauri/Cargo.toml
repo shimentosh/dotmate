@@ -54,7 +54,10 @@ bzip2 = "0.4"
 flate2 = "1"
 zip = "2"
 # "tray-icon": system tray for the "Minimize to system tray" close option.
-tauri = { version = "2.11.1", features = ["tray-icon"] }
+# "protocol-asset": Quick Edit previews the user's picked videos from disk. Its
+# scope is empty in tauri.conf.json — only files picked in a native dialog are
+# added at runtime (quick_edit_command.rs).
+tauri = { version = "2.11.1", features = ["tray-icon", "protocol-asset"] }
 tauri-plugin-log = "2"
 # Native folder/file pickers + Save dialogs.
 tauri-plugin-dialog = "2"

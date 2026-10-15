@@ -42,6 +42,36 @@ function BatchClipsMockup() {
   );
 }
 
+function QuickEditMockup() {
+  const color = "#0057FC";
+  // Several videos, one music bar laid under each, a boosted volume knob.
+  const bars = [6, 10, 7, 12, 8, 11, 6, 9, 13, 7, 10, 8];
+  return (
+    <div className="relative w-full h-full flex flex-col justify-center gap-2 px-5 overflow-hidden">
+      {[0, 1, 2].map((row) => (
+        <div key={row} className="flex items-center gap-2">
+          <div className="w-[46px] h-[24px] shrink-0 rounded-md flex items-center justify-center"
+            style={{ background: `${color}${18 + row * 8}`, border: `1px solid ${color}45` }}>
+            <Film size={10} style={{ color: `${color}cc` }} strokeWidth={1.8} />
+          </div>
+          <div className="flex-1 h-[24px] rounded-md flex items-center gap-[2px] px-1.5"
+            style={{ background: `${color}10`, border: `1px solid ${color}28` }}>
+            <Music2 size={9} className="shrink-0 mr-0.5" style={{ color: `${color}aa` }} strokeWidth={1.8} />
+            {bars.map((h, i) => (
+              <div key={i} className="flex-1 rounded-full" style={{ height: h + row, maxWidth: 3, background: `${color}66` }} />
+            ))}
+          </div>
+        </div>
+      ))}
+      <div className="flex items-center justify-between">
+        <span className="text-[9px] font-mono text-zinc-400 dark:text-white/[0.28]">music 180% · original 100%</span>
+        <span className="text-[9px] font-bold px-1.5 py-0.5 rounded" style={{ color, background: `${color}18` }}>RENDER ALL</span>
+      </div>
+      <div className="absolute bottom-0 left-0 right-0 h-6 pointer-events-none bg-gradient-to-t from-surface-muted to-transparent" />
+    </div>
+  );
+}
+
 function ClipMergerMockup() {
   const color = "#3D7EFD";
   return (
@@ -384,6 +414,7 @@ export interface GalleryTool {
 /** Everyday media utilities (the /tools hub). */
 export const UTILITY_TOOLS: GalleryTool[] = [
   { name: "Quick Trim", desc: "Mark many short clips across long recordings and export them all — or trim whole files.", href: "/tools/quick-trim", color: "#0057FC", cat: "Visual", badge: "Batch", fileName: "clip_001.mp4", Mockup: BatchClipsMockup },
+  { name: "Quick Edit", desc: "Add background music to many videos at once, preview it live, render them all in seconds.", href: "/tools/quick-edit", color: "#0057FC", cat: "Visual", badge: "Batch", fileName: "video_edit.mp4", Mockup: QuickEditMockup },
   { name: "Clip Merger", desc: "Merge main clips with random B-roll and music in bulk.", href: "/tools/merger", color: "#3D7EFD", cat: "Visual", fileName: "merged.mp4", Mockup: ClipMergerMockup },
   { name: "Audio Toolkit", desc: "Merge, loop, or extract audio — one hub for your audio tasks.", href: "/tools/audio-merger", color: "#0047D1", cat: "Voice", fileName: "audio.mp3", Mockup: AudioMergerMockup },
   { name: "File Shuffler", desc: "Randomize video names, order, and file dates before reposting.", href: "/tools/file-shuffler", color: "#3D7EFD", cat: "Visual", fileName: "shuffle.zip", Mockup: FileShufflerMockup },

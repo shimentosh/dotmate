@@ -25,6 +25,8 @@ mod cli_brain_command;
 mod api_brain_command;
 /// Local ffmpeg utility ops (video/audio merge) — on-device, no server.
 mod tools_command;
+// Quick Edit — background music / volume over many videos, read in place.
+mod quick_edit_command;
 /// Shared security helpers: path confinement + no-shell native open/reveal.
 mod security;
 
@@ -213,7 +215,9 @@ fn ytdlp_start(
         "--no-warnings".into(),
         "--no-part".into(),
         "-o".into(),
-        format!("{}/%(playlist_index)02d-%(title)s.%(ext)s", out_dir),
+        // The `01-` index only for playlist items — a single video has no
+        // playlist_index and the plain `%(playlist_index)02d` printed "NA-".
+        format!("{}/%(playlist_index&{{:02d}}-|)s%(title)s.%(ext)s", out_dir),
         "-f".into(),
         format_code,
     ];
@@ -313,15 +317,16 @@ fn ytdlp_start(
                     current_item,
                     total_items,
                 });
-            } else if line.contains("[download] Destination:") {
-                current_file = line
-                    .trim_start_matches("[download] Destination:")
-                    .trim()
-                    .to_string();
+            } else if let Some(dest) = final_destination(&line) {
+                // The download's file, then — after an audio extract or a merge —
+                // the file that's actually kept, so Open / Show in folder find it.
+                current_file = dest;
+                // A new download starts at 0; an extract / merge is the last step.
+                let post = !line.starts_with("[download]");
                 let _ = app_clone.emit("ytdlp_progress", ProgressPayload {
                     id: id_clone.clone(),
-                    percent: 0.0,
-                    speed: String::new(),
+                    percent: if post { 99.0 } else { 0.0 },
+                    speed: if post { "merging…".into() } else { String::new() },
                     eta: String::new(),
                     filename: current_file.clone(),
                     current_item,
@@ -884,6 +889,10 @@ pub fn run() {
             staging::stage_promote,
             tools_command::ffmpeg_merge_videos,
             tools_command::ffmpeg_merge_audio,
+            quick_edit_command::quick_edit_pick_videos,
+            quick_edit_command::quick_edit_probe,
+            quick_edit_command::quick_edit_render,
+            quick_edit_command::quick_edit_cancel,
             whisper_command::whisper_model_status,
             whisper_command::whisper_download_model,
             whisper_command::transcribe_local,
@@ -902,9 +911,31 @@ pub fn run() {
         .expect("error while running tauri application");
 }
 
+/// The output path a yt-dlp line announces: the download's `Destination:`, the
+/// extracted audio's (`[ExtractAudio] Destination: x.mp3`) or the merged file's
+/// (`[Merger] Merging formats into "x.mp4"`).
+fn final_destination(line: &str) -> Option<String> {
+    let path = if let Some(rest) = line.split("Merging formats into").nth(1) {
+        rest.trim().trim_matches('"')
+    } else if line.starts_with("[download] Destination:") || line.starts_with("[ExtractAudio] Destination:") {
+        line.split_once("Destination:")?.1.trim()
+    } else {
+        return None;
+    };
+    (!path.is_empty()).then(|| path.to_string())
+}
+
 #[cfg(test)]
 mod tests {
-    use super::sanitize_ytdlp_extra_args;
+    use super::{final_destination, sanitize_ytdlp_extra_args};
+
+    #[test]
+    fn finds_the_file_that_is_kept() {
+        assert_eq!(final_destination("[download] Destination: /d/Flip.webm").as_deref(), Some("/d/Flip.webm"));
+        assert_eq!(final_destination("[ExtractAudio] Destination: /d/Flip.mp3").as_deref(), Some("/d/Flip.mp3"));
+        assert_eq!(final_destination("[Merger] Merging formats into \"/d/Flip.mp4\"").as_deref(), Some("/d/Flip.mp4"));
+        assert_eq!(final_destination("[download]  42.0% of 3MiB"), None);
+    }
 
     #[test]
     fn ytdlp_extra_args_allow_known_flags() {

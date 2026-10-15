@@ -5,7 +5,7 @@
  */
 import {
   Home, Scissors, Film, Shuffle, Images, GalleryHorizontal, Music2, Mic, Layers,
-  Ear, FileText, Wand2, Download, type LucideIcon,
+  Ear, FileText, Wand2, Download, AudioLines, type LucideIcon,
 } from "lucide-react";
 
 export interface RouteEntry {
@@ -18,6 +18,7 @@ export const ROUTES: Record<string, RouteEntry> = {
   "/tools":                                 { label: "Tools" },
   "/tools/quick-trim":                      { label: "Quick Trim",        parent: "/tools" },
   "/tools/video-trimmer":                   { label: "Quick Trim",        parent: "/tools" },
+  "/tools/quick-edit":                      { label: "Quick Edit",        parent: "/tools" },
   "/tools/merger":                          { label: "Clip Merger",       parent: "/tools" },
   "/tools/audio-merger":                    { label: "Audio Toolkit",     parent: "/tools" },
   "/tools/file-shuffler":                   { label: "File Shuffler",     parent: "/tools" },
@@ -43,6 +44,7 @@ export const NAV: NavGroup[] = [
     section: "Video",
     items: [
       { href: "/tools/quick-trim",               label: "Quick Trim",       icon: Scissors },
+      { href: "/tools/quick-edit",               label: "Quick Edit",       icon: AudioLines },
       { href: "/tools/merger",                   label: "Clip Merger",      icon: Film },
       { href: "/video-studio/image-to-video",    label: "Image to Video",   icon: Images },
       { href: "/video-studio/carousel-to-video", label: "Carousel Video",   icon: GalleryHorizontal },

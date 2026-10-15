@@ -71,6 +71,33 @@ pub fn confine_app_file(app: &AppHandle, requested: &str) -> Result<PathBuf, Str
     Ok(safe)
 }
 
+/// Files the user picked in a NATIVE (Rust-side) open dialog this session. A path
+/// lands here only through that dialog, never from a webview argument, so an
+/// injected script can't add to it — it can only name files the user already chose.
+fn user_granted() -> &'static std::sync::Mutex<std::collections::HashSet<PathBuf>> {
+    static GRANTED: std::sync::OnceLock<std::sync::Mutex<std::collections::HashSet<PathBuf>>> =
+        std::sync::OnceLock::new();
+    GRANTED.get_or_init(Default::default)
+}
+
+/// Record a file the user picked in a native dialog (`canon` must be canonical).
+pub fn grant_user_file(canon: PathBuf) {
+    user_granted().lock().unwrap_or_else(|e| e.into_inner()).insert(canon);
+}
+
+/// `confine_app_file`, plus the files the user picked natively this session
+/// (`grant_user_file`) — for tools that read the user's originals in place
+/// instead of staging a temp copy.
+pub fn confine_user_or_app_file(app: &AppHandle, requested: &str) -> Result<PathBuf, String> {
+    if let Ok(canon) = std::fs::canonicalize(requested) {
+        let granted = user_granted().lock().unwrap_or_else(|e| e.into_inner()).contains(&canon);
+        if granted && !is_secret_path(app, &canon) {
+            return Ok(canon);
+        }
+    }
+    confine_app_file(app, requested)
+}
+
 /// Confine an EXISTING file path to one of `roots`. Returns the canonical path on
 /// success. Both sides are canonicalized, so `..` / symlink escapes are resolved
 /// away before the `starts_with` check (and Windows `\\?\` prefixes match).

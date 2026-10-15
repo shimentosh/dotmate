@@ -9,7 +9,7 @@ dotmate/
 ├── app/                 Next.js App Router pages (static export → out/)
 │   ├── page.tsx         home gallery
 │   ├── setup/           first-run downloader
-│   ├── tools/           quick-trim, merger, audio-merger, file-shuffler,
+│   ├── tools/           quick-trim, quick-edit, merger, audio-merger, file-shuffler,
 │   │                    video-downloader, video-trimmer (redirect), bulk-voice
 │   └── video-studio/    image-to-video, carousel-to-video, voice-to-text,
 │                        text-to-voice, script-writer, script-to-image-prompts
@@ -28,6 +28,7 @@ dotmate/
 │       ├── sources.rs           ALL download URLs (upstream publishers only)
 │       ├── deps_command.rs      FFmpeg / yt-dlp download + resumable downloader
 │       ├── tools_command.rs     FFmpeg merge (video, audio)
+│       ├── quick_edit_command.rs Quick Edit: music/volume over many videos, read in place
 │       ├── whisper_command.rs   model download + transcription
 │       ├── tts_command.rs       Kokoro / Supertonic download + synthesis
 │       ├── cli_brain_command.rs Claude Code / Codex / Gemini CLI runner
@@ -46,7 +47,7 @@ dotmate/
 |---|---|---|
 | Quick Trim, Image to Video, Carousel Video | WebCodecs via [Mediabunny](https://github.com/Vanilagy/mediabunny) | WebView |
 | File Shuffler | [fflate](https://github.com/101arrowz/fflate) | WebView |
-| Clip Merger, Audio Toolkit | FFmpeg | Rust → FFmpeg process |
+| Clip Merger, Audio Toolkit, Quick Edit | FFmpeg | Rust → FFmpeg process |
 | Video Downloader | yt-dlp + FFmpeg | Rust → yt-dlp process |
 | Speech to Text | whisper.cpp (`crates/whisper`) | Rust, in-process |
 | AI Voiceover, Bulk Voice | Kokoro / Supertonic (`crates/tts`, `crates/supertonic`) | Rust, in-process |
@@ -70,7 +71,11 @@ dotmate/
   connection.
 - **Big files never sit in the WebView.** They cross the IPC bridge as raw
   bodies or in 8 MB chunks (`lib/tauri-bytes.ts`, `staging.rs`), and video export
-  streams to disk (`lib/mp4-disk-writer.ts`).
+  streams to disk (`lib/mp4-disk-writer.ts`). Quick Edit skips the bridge
+  entirely: videos picked in a native dialog are granted for that session
+  (`security::grant_user_file`, plus the asset protocol for preview, whose
+  static scope is empty), so ffmpeg reads the originals in place and writes
+  straight to the output folder.
 - **Hardened native surface.** `security.rs` confines file operations to
   user-chosen paths and opens/reveals files without a shell. CLI brains run in
   read-only / plan modes inside a scratch folder with the prompt on stdin.

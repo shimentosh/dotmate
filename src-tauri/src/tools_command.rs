@@ -16,7 +16,7 @@ fn ffmpeg_bin() -> String {
     std::env::var(crate::deps_command::FFMPEG_ENV).unwrap_or_else(|_| "ffmpeg".to_string())
 }
 
-fn ffmpeg_command() -> Command {
+pub(crate) fn ffmpeg_command() -> Command {
     let mut c = Command::new(ffmpeg_bin());
     #[cfg(windows)]
     c.creation_flags(CREATE_NO_WINDOW);
@@ -60,7 +60,7 @@ fn probe_resolution(path: &str) -> (u32, u32) {
 
 /// The first video stream's WxH from `ffmpeg -i` output, swapped when the stream
 /// carries a quarter-turn rotation (`rotate: 90` or `displaymatrix: rotation of -90.00`).
-fn parse_probe(stderr: &str) -> Option<(u32, u32)> {
+pub(crate) fn parse_probe(stderr: &str) -> Option<(u32, u32)> {
     let mut lines = stderr.lines();
     let (w, h) = lines.by_ref().find(|l| l.contains("Video:")).and_then(parse_wxh)?;
     // Rotation metadata follows its stream line, before the next stream starts.
@@ -145,7 +145,7 @@ fn cleanup(dir: &Path) {
     let _ = std::fs::remove_dir_all(dir);
 }
 
-fn s(v: &str) -> String {
+pub(crate) fn s(v: &str) -> String {
     v.to_string()
 }
 
@@ -153,7 +153,7 @@ fn s(v: &str) -> String {
 /// (belt-and-suspenders with `confine_existing` on the caller side) refuses every
 /// ffmpeg input protocol except local files, so `-i` can never reach the network
 /// (http/https) or auxiliary readers even if confinement is somehow bypassed.
-fn push_input(args: &mut Vec<String>, path: &str) {
+pub(crate) fn push_input(args: &mut Vec<String>, path: &str) {
     args.push(s("-protocol_whitelist"));
     args.push(s("file"));
     args.push(s("-i"));
@@ -164,7 +164,7 @@ fn push_input(args: &mut Vec<String>, path: &str) {
 /// the export/whisper temp dirs where the frontend stages merge inputs via
 /// `export_save_clip`). Rejects traversal / arbitrary on-disk files / non-file URLs
 /// before the path reaches ffmpeg.
-fn confine_one(app: &tauri::AppHandle, path: &str) -> Result<String, String> {
+pub(crate) fn confine_one(app: &tauri::AppHandle, path: &str) -> Result<String, String> {
     crate::security::confine_app_file(app, path).map(|pb| pb.to_string_lossy().to_string())
 }
 
@@ -364,6 +364,8 @@ pub fn ffmpeg_merge_videos(
     }
 
     // Mix background music (optional): loop it, apply volume, amix with clip audio.
+    // normalize=0 — amix otherwise divides each input by the input count, so the
+    // music came out at half the chosen volume (and the clips' own audio halved too).
     if let Some(mp) = music_path.as_ref() {
         let mut mix_args: Vec<String> = vec![s("-y")];
         push_input(&mut mix_args, concat_path.to_string_lossy().as_ref());
@@ -372,7 +374,8 @@ pub fn ffmpeg_merge_videos(
             s("-filter_complex"),
             format!(
                 "[1:a]volume={vol},aloop=loop=-1:size=2e+09[bgm];\
-                 [0:a][bgm]amix=inputs=2:duration=first:dropout_transition=2[aout]"
+                 [0:a][bgm]amix=inputs=2:duration=first:dropout_transition=2:normalize=0,\
+                 alimiter=limit=0.97:level=0[aout]"
             ),
             s("-map"), s("0:v"), s("-map"), s("[aout]"),
             s("-c:v"), s("copy"), s("-c:a"), s("aac"), s("-b:a"), s("192k"),

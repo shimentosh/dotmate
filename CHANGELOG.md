@@ -6,6 +6,24 @@ All notable changes to DotMate are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- **Quick Edit** (Tools → Quick Edit): pick many videos at once, lay one background
+  track under all of them (or just turn their own audio up or down) and render them
+  all in parallel. Music goes up to 300% and original audio up to 200%, with a
+  limiter so a boost doesn't distort. Start point, fade in and fade out are
+  adjustable. The preview plays the mix live, so you hear a change before you
+  render. The video stream is copied untouched, so each render takes seconds and
+  loses no quality. Originals are read in place and never copied or changed.
+
+### Fixed
+
+- **Clip Merger background music was quieter than the slider said.** The mix halved
+  both the music and the clips' own audio; both now play at the chosen level.
+- **Video Downloader named single downloads `NA-<title>`.** The `01-` number is
+  now added only for playlist items. Open and Show in folder on an MP3/M4A or a
+  merged video now point at the finished file instead of the deleted original.
+
 ## [0.1.3] — 2026-10-06
 
 ### Added
