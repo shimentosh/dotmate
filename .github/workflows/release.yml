@@ -14,7 +14,7 @@ jobs:
     name: Create release
     runs-on: ubuntu-latest
     steps:
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           name: DotMate ${{ github.ref_name }}
           body: |
@@ -81,7 +81,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm tauri build --bundles ${{ matrix.bundle }}
 
-      - uses: softprops/action-gh-release@v2
+      - uses: softprops/action-gh-release@v3
         with:
           files: ${{ matrix.file }}
           fail_on_unmatched_files: true
